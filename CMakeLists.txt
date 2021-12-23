@@ -33,10 +33,15 @@ target_link_libraries(${projname}
 	)
 
 add_compile_options(-Wall
-	-O0
+	-Wformat-overflow
+	-Wbad-function-cast
+	-Wcast-qual
+	-Werror
+	-Wpedantic
 	-Wno-format          # int != int32_t as far as the compiler is concerned because gcc has int32_t as long int
 	-Wno-unused-function # we have some for the docs that aren't called
 	-Wno-maybe-uninitialized
+	-Wpadded
 	)
 
 pico_enable_stdio_usb(${projname} 0)

@@ -35,7 +35,13 @@ int main(void)
     gpio_set_function(19, GPIO_FUNC_I2C);
 
     mcp_set_mode(i2c1, ADDRESS1, GPIOB, 0x00);
-    mcp_write(i2c1, ADDRESS1, GPIOB, 0x00);
+    mcp_write(i2c1, ADDRESS1, GPIOB, 0x00, true);
+    mcp_init();
+    mcp_write(i2c1, ADDRESS1, GPIOA, 0xFE, true);
+    mcp_write_single(i2c1, ADDRESS1, 15, HIGH, true);
+    mcp_get_output_value(ADDRESS1);
+    mcp_update_out_state(i2c1, ADDRESS1);
+    mcp_update_out_state_all(i2c1);
 
     uint8_t state[8] = {0x06, 0x04, 0x00, 0x02, 0x06, 0x04, 0x02, 0x00};
     uint8_t port_value;
@@ -50,10 +56,10 @@ int main(void)
         }
         led_state ^= 1;
         gpio_put(LED_PIN, led_state);
-        mcp_write(i2c1, ADDRESS1, GPIOB, state[i]);
+        mcp_write(i2c1, ADDRESS1, GPIOB, state[i], true);
         i ++;
         sleep_ms(200);
-        port_value = mcp_get_port_value(ADDRESS1, GPIOB);
+        port_value = mcp_get_output_value_port(ADDRESS1, GPIOB);
         printf("Port B value: %d", port_value);
     }
 }

@@ -1,6 +1,7 @@
 #include "hardware/i2c.h"
 
-#define GET_ORDER_NUBER(ADDR) ((int)ADDR - 32)
+#define GET_ORDER_NUMBER(ADDR) ((int)ADDR - 32)
+#define GET_ADDR_FROM_NO(NUMBER) ((int)NUMBER + 32)
 
 #define ADDRESS0    0x20
 #define ADDRESS1    0x21
@@ -10,6 +11,7 @@
 #define ADDRESS5    0x25
 #define ADDRESS6    0x26
 #define ADDRESS7    0x27
+#define ALL_ADDR    0xFF // Not defined in datasheet
 
 #define IODIRA      0x00
 #define IODIRB      0x01
@@ -73,6 +75,8 @@ typedef struct
     union IOMode_u mode;
 } mcpData_t;
 
+void mcp_init(void);
+
 /**
  * @brief 
  * 
@@ -89,7 +93,18 @@ void mcp_set_mode(i2c_inst_t *i2c, uint8_t address, uint8_t port, uint8_t config
  * @param port 
  * @param value 
  */
-void mcp_write(i2c_inst_t *i2c, uint8_t address, uint8_t port, uint8_t value);
+void mcp_write(i2c_inst_t *i2c, uint8_t address, uint8_t port, uint8_t value, bool update);
+
+/**
+ * @brief 
+ * 
+ * @param i2c 
+ * @param address 
+ * @param output 
+ * @param value 
+ * @param update 
+ */
+void mcp_write_single(i2c_inst_t *i2c, uint8_t address, uint8_t output, bool value, bool update);
 
 /**
  * @brief 
@@ -98,4 +113,36 @@ void mcp_write(i2c_inst_t *i2c, uint8_t address, uint8_t port, uint8_t value);
  * @param port 
  * @return uint8_t 
  */
-uint8_t mcp_get_port_value(uint8_t address, uint8_t port);
+uint8_t mcp_get_output_value_port(uint8_t address, uint8_t port);
+
+/**
+ * @brief 
+ * 
+ * @param address 
+ * @return uint16_t 
+ */
+uint16_t mcp_get_output_value(uint8_t address);
+
+/**
+ * @brief 
+ * 
+ * @param i2c 
+ * @param address 
+ * @param port 
+ */
+void mcp_update_out_state_port(i2c_inst_t *i2c, uint8_t address, uint8_t port);
+
+/**
+ * @brief 
+ * 
+ * @param i2c 
+ * @param address 
+ */
+void mcp_update_out_state(i2c_inst_t *i2c, int8_t address);
+
+/**
+ * @brief 
+ * 
+ * @param i2c 
+ */
+void mcp_update_out_state_all(i2c_inst_t *i2c);
