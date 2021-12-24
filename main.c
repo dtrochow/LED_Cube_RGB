@@ -7,8 +7,8 @@
 #include "pico/stdlib.h"
 #include "pico/multicore.h"
 #include "pico/time.h"
-#include "hardware/i2c.h"
-#include "mcp23017.h"
+#include "hardware/i2c.h"s
+#include "led_cube.h"
 
 const uint LED_PIN = 25;
 
@@ -33,6 +33,10 @@ int main(void)
     i2c_init(i2c1, 400 * 1000);
     gpio_set_function(18, GPIO_FUNC_I2C);
     gpio_set_function(19, GPIO_FUNC_I2C);
+
+    mcp_enable(ADDRESS1);
+    mcp_enable(ADDRESS2);
+    lc_enable_diode(0, 0, 0, RED, true);
 
     mcp_set_mode(i2c1, ADDRESS1, GPIOB, 0x00);
     mcp_write(i2c1, ADDRESS1, GPIOB, 0x00, true);

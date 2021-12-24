@@ -30,6 +30,7 @@ target_link_libraries(${projname}
 	pico_multicore
 	hardware_i2c
 	mcp23017_lib
+	led_cube
 	)
 
 add_compile_options(-Wall

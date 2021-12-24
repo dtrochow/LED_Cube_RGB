@@ -11,6 +11,36 @@ void mcp_init(void)
     memcpy(mcpBuf, 0, sizeof(mcpBuf));
 }
 
+void mcp_enable(mcpAddress_e address)
+{
+    if(ALL_ADDR == address)
+    {
+        for(int i = 0; i < MAX_NUMBER_OF_MCP_MODULES; i ++)
+        {
+            mcpData[i].status = MCP_ENABLED;
+        }
+    }
+    else
+    {
+        mcpData[address].status == MCP_ENABLED;
+    }
+}
+
+void mcp_disable(mcpAddress_e address)
+{
+    if(ALL_ADDR == address)
+    {
+        for(int i = 0; i < MAX_NUMBER_OF_MCP_MODULES; i ++)
+        {
+            mcpData[i].status = MCP_DISABLED;
+        }
+    }
+    else
+    {
+        mcpData[address].status == MCP_DISABLED;
+    }
+}
+
 void mcp_set_mode(i2c_inst_t *i2c, uint8_t address, uint8_t port, uint8_t config)
 {
     mcpBuf[0] = port;
@@ -53,8 +83,8 @@ void mcp_write_single(i2c_inst_t *i2c, uint8_t address, uint8_t output, bool val
     if(HIGH == value)
     {
         // Need to check the outputs order (which pin enable which output)
-        // Output needs to be in range 1-16
-        // mcpData[GET_ORDER_NUMBER(address)].state.all |= (1 << (16 -output));
+        // Output needs to be in range 0-15
+        // mcpData[GET_ORDER_NUMBER(address)].state.all |= (1 << (15 -output));
         mcpData[GET_ORDER_NUMBER(address)].state.all |= (1 << output);
     }
     else if (LOW == value)
@@ -104,6 +134,9 @@ void mcp_update_out_state_all(i2c_inst_t *i2c)
 {
     for(int i = 0; i < MAX_NUMBER_OF_MCP_MODULES; i ++)
     {
-        mcp_update_out_state(i2c, GET_ADDR_FROM_NO(i));
+        if(MCP_ENABLED == mcpData[i].status)
+        {
+            mcp_update_out_state(i2c, GET_ADDR_FROM_NO(i));
+        }
     }
 }

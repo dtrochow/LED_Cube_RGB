@@ -3,16 +3,6 @@
 #define GET_ORDER_NUMBER(ADDR) ((int)ADDR - 32)
 #define GET_ADDR_FROM_NO(NUMBER) ((int)NUMBER + 32)
 
-#define ADDRESS0    0x20
-#define ADDRESS1    0x21
-#define ADDRESS2    0x22
-#define ADDRESS3    0x23
-#define ADDRESS4    0x24
-#define ADDRESS5    0x25
-#define ADDRESS6    0x26
-#define ADDRESS7    0x27
-#define ALL_ADDR    0xFF // Not defined in datasheet
-
 #define IODIRA      0x00
 #define IODIRB      0x01
 #define GPIOA       0x12
@@ -38,6 +28,24 @@
 #define OLATB       0x15
 
 #define MAX_NUMBER_OF_MCP_MODULES       (8)
+
+typedef enum
+{
+    ADDRESS1 = 0x21,
+    ADDRESS2 = 0x22,
+    ADDRESS3 = 0x23,
+    ADDRESS4 = 0x24,
+    ADDRESS5 = 0x25,
+    ADDRESS6 = 0x26,
+    ADDRESS7 = 0x27,
+    ALL_ADDR = 0xFF // Not defined in datasheet
+} mcpAddress_e;
+
+typedef enum
+{
+    MCP_DISABLED = 0,
+    MCP_ENABLED
+} mcpStatus_e;
 
 typedef enum
 {
@@ -73,9 +81,28 @@ typedef struct
 {   
     union IOStates_u state;
     union IOMode_u mode;
+    mcpStatus_e status;
 } mcpData_t;
 
+/**
+ * @brief 
+ * 
+ */
 void mcp_init(void);
+
+/**
+ * @brief 
+ * 
+ * @param address 
+ */
+void mcp_enable(mcpAddress_e address);
+
+/**
+ * @brief 
+ * 
+ * @param address 
+ */
+void mcp_disable(mcpAddress_e address);
 
 /**
  * @brief 
