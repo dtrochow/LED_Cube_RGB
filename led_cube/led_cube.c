@@ -13,6 +13,12 @@ void lc_enable_diode(uint8_t x_pos, uint8_t y_pos, uint8_t z_pos, diodeColor_e c
     ledCube[x_pos][y_pos][z_pos].color = color;
     lc_write_one_rgbled_state(lc_get_led_states_from_color(color), &ledCube[x_pos][y_pos][z_pos]);
 
+    // 1. Get the position
+    // 2. Get the led value (each led color for rgb led)
+    // 3. Map the rgb led value to output value
+    // 4. AND it with current output columns/rows
+    // 5. Write it to mcp static structure
+    // 6. Update all output values
     if(true == update)
     {
         // Update IO state usin mcp23017
@@ -20,22 +26,29 @@ void lc_enable_diode(uint8_t x_pos, uint8_t y_pos, uint8_t z_pos, diodeColor_e c
     }
 }
 
+static bool lc_if_any_led_enable_on_layer()
+{
+
+}
+
 static void lc_update_one_rgbled_state(uint8_t columns_address, uint8_t rows_address, ledPos_t pos)
 {
     rgbLedOutputs_t rgbLedOutputs = lc_get_led_outputs(pos);
     ledRGB_t led = ledCube[pos.x][pos.y][pos.z];
 
-    // 1. Get the position
-    // 2. Get the led value (each led color for rgb led)
-    // 3. Map the rgb led value to output value
-    // 4. AND it with current output columns/rows
-    // 5. Write it to mcp static structure
-    // 6. Update all output values
-    mcp_write_single(MCP23017_I2C_INST, MCP23017_COLUMNS_ADDR, rgbLedOutputs.column, HIGH, false);
-    mcp_write_single(MCP23017_I2C_INST, MCP23017_ROWS_ADDR, rgbLedOutputs.green_output, led.green, false);
-    mcp_write_single(MCP23017_I2C_INST, MCP23017_ROWS_ADDR, rgbLedOutputs.red_output, led.red, false);
-    mcp_write_single(MCP23017_I2C_INST, MCP23017_ROWS_ADDR, rgbLedOutputs.blue_output, led.blue, false);
-    mcp_update_out_state_all(MCP23017_I2C_INST);
+    if(led.color == DISABLED)
+    {
+        mcp_write_single(MCP23017_I2C_INST, MCP23017_COLUMNS_ADDR, rgbLedOutputs.column, LOW, true);
+    }
+    else if(led.color != DISABLED)
+    {
+        mcp_write_single(MCP23017_I2C_INST, MCP23017_COLUMNS_ADDR, rgbLedOutputs.column, HIGH, true);
+    }
+
+    
+    mcp_write_single(MCP23017_I2C_INST, MCP23017_ROWS_ADDR, rgbLedOutputs.green_output, !led.green, true);
+    mcp_write_single(MCP23017_I2C_INST, MCP23017_ROWS_ADDR, rgbLedOutputs.red_output, !led.red, true);
+    mcp_write_single(MCP23017_I2C_INST, MCP23017_ROWS_ADDR, rgbLedOutputs.blue_output, !led.blue, true);
 }
 
 static void lc_write_one_rgbled_state(rgbValues_t rgbValues, ledRGB_t *ledRGB)
@@ -85,7 +98,7 @@ static rgbValues_t lc_get_led_states_from_color(diodeColor_e color)
             rgbValues.green = true;
             rgbValues.blue = true;
             break;
-        default:
+        case DISABLED:
             rgbValues.red = false;
             rgbValues.green = false;
             rgbValues.blue = false;

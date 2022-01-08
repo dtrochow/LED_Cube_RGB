@@ -5,8 +5,8 @@
 #define LED_CUBE_RGB_Y      4
 #define LED_CUBE_RGB_Z      4
 
-#define MCP23017_COLUMNS_ADDR   ADDRESS1
-#define MCP23017_ROWS_ADDR      ADDRESS2
+#define MCP23017_COLUMNS_ADDR   ADDRESS2
+#define MCP23017_ROWS_ADDR      ADDRESS1
 #define MCP23017_I2C_INST       i2c1
 
 typedef enum
