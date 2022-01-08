@@ -43,15 +43,16 @@ void mcp_disable(mcpAddress_e address)
 
 void mcp_set_mode(i2c_inst_t *i2c, uint8_t address, uint8_t port, uint8_t config)
 {
-    mcpBuf[0] = port;
     mcpBuf[1] = config;
     switch(port)
     {
         case GPIOA:
             mcpData[GET_ORDER_NUMBER(address)].mode.portMode.porta = config;
+            mcpBuf[0] = IODIRA;
             break;
         case GPIOB:
             mcpData[GET_ORDER_NUMBER(address)].mode.portMode.portb = config;
+            mcpBuf[0] = IODIRB;
             break;
         default:
             break;
@@ -120,7 +121,17 @@ uint16_t mcp_get_output_value(uint8_t address)
 void mcp_update_out_state_port(i2c_inst_t *i2c, uint8_t address, uint8_t port)
 {
     mcpBuf[0] = port;
-    mcpBuf[1] = mcpData[GET_ORDER_NUMBER(address)].state.portState.porta;
+    switch(port)
+    {
+        case GPIOA:
+            mcpBuf[1] = mcpData[GET_ORDER_NUMBER(address)].state.portState.porta;
+            break;
+        case GPIOB:
+            mcpBuf[1] = mcpData[GET_ORDER_NUMBER(address)].state.portState.portb;
+            break;
+        default:
+            break;
+    }
     i2c_write_blocking(i2c, address, mcpBuf, 2, false);
 }
 

@@ -31,13 +31,13 @@
 
 typedef enum
 {
-    ADDRESS1 = 0x21,
-    ADDRESS2 = 0x22,
-    ADDRESS3 = 0x23,
-    ADDRESS4 = 0x24,
-    ADDRESS5 = 0x25,
-    ADDRESS6 = 0x26,
-    ADDRESS7 = 0x27,
+    ADDRESS1 = 0x20,
+    ADDRESS2 = 0x21,
+    ADDRESS3 = 0x22,
+    ADDRESS4 = 0x23,
+    ADDRESS5 = 0x24,
+    ADDRESS6 = 0x25,
+    ADDRESS7 = 0x26,
     ALL_ADDR = 0xFF // Not defined in datasheet
 } mcpAddress_e;
 
