@@ -11,7 +11,7 @@
 
 typedef enum
 {
-    DISABLED = 0,
+    NONE = 0,
     RED,
     GREEN,
     BLUE,
@@ -51,6 +51,7 @@ typedef struct
     bool green;
     bool blue;
     diodeColor_e color;
+    bool enabled;
 } ledRGB_t;
 
 /**
@@ -100,3 +101,6 @@ typedef enum
 void lc_init(i2c_inst_t *i2c);
 
 void lc_enable_diode(uint8_t x_pos, uint8_t y_pos, uint8_t z_pos, diodeColor_e color, bool update);
+void lc_disable_layer(uint8_t z_pos, bool update);
+void lc_disable_all_layers(bool update);
+void lc_disable_one_diode(uint8_t x_pos, uint8_t y_pos, uint8_t z_pos,  bool update);

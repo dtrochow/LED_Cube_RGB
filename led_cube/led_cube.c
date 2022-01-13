@@ -3,52 +3,119 @@
 static ledRGB_t ledCube[LED_CUBE_RGB_X][LED_CUBE_RGB_Y][LED_CUBE_RGB_Z];
 
 static rgbValues_t lc_get_led_states_from_color(diodeColor_e color);
-static void lc_update_one_rgbled_state(uint8_t columns_address, uint8_t rows_address, ledPos_t pos);
+static void lc_update_one_rgbled_state(ledPos_t pos);
+static void lc_update_layer_state(uint8_t z_pos);
 static void lc_write_one_rgbled_state(rgbValues_t rgbValues, ledRGB_t *ledRGB);
 static rgbLedOutputs_t lc_get_led_outputs(ledPos_t pos);
 
+void lc_init(i2c_inst_t *i2c)
+{
+    memset(ledCube, 0, sizeof(ledRGB_t));
+    mcp_enable(ADDRESS1);
+    mcp_enable(ADDRESS2);
+    mcp_set_mode(i2c1, ADDRESS1, GPIOA, 0x00);
+    mcp_set_mode(i2c1, ADDRESS1, GPIOB, 0x00);
+    mcp_set_mode(i2c1, ADDRESS2, GPIOA, 0x00);
+    mcp_set_mode(i2c1, ADDRESS2, GPIOB, 0x00);
+
+    mcp_write(i2c1, ADDRESS1, GPIOA, 0xFF, true);
+    mcp_write(i2c1, ADDRESS1, GPIOB, 0xFF, true);
+    mcp_write(i2c1, ADDRESS2, GPIOA, 0x00, true);
+    mcp_write(i2c1, ADDRESS2, GPIOB, 0x00, true);
+}
+
 void lc_enable_diode(uint8_t x_pos, uint8_t y_pos, uint8_t z_pos, diodeColor_e color, bool update)
 {
-    ledPos_t pos = {x_pos, y_pos, z_pos};
-    ledCube[x_pos][y_pos][z_pos].color = color;
     lc_write_one_rgbled_state(lc_get_led_states_from_color(color), &ledCube[x_pos][y_pos][z_pos]);
+    ledCube[x_pos][y_pos][z_pos].color = color;
+    ledCube[x_pos][y_pos][z_pos].enabled = true;
 
-    // 1. Get the position
-    // 2. Get the led value (each led color for rgb led)
-    // 3. Map the rgb led value to output value
-    // 4. AND it with current output columns/rows
-    // 5. Write it to mcp static structure
-    // 6. Update all output values
     if(true == update)
     {
+        ledPos_t pos = {x_pos, y_pos, z_pos};
         // Update IO state usin mcp23017
-        lc_update_one_rgbled_state(MCP23017_COLUMNS_ADDR, MCP23017_ROWS_ADDR, pos);        
+        lc_update_one_rgbled_state(pos);        
     }
 }
 
-static bool lc_if_any_led_enable_on_layer()
+void lc_disable_one_diode(uint8_t x_pos, uint8_t y_pos, uint8_t z_pos,  bool update)
 {
+    rgbValues_t values;
+    values.red = false;
+    values.green = false;
+    values.blue = false;
+    lc_write_one_rgbled_state(values , &ledCube[x_pos][y_pos][z_pos]);
+    ledCube[x_pos][y_pos][z_pos].color = NONE;
+    ledCube[x_pos][y_pos][z_pos].enabled = false;
 
+    if(true == update)
+    {
+        ledPos_t pos = {x_pos, y_pos, z_pos};
+        // Update IO state usin mcp23017
+        lc_update_one_rgbled_state(pos);        
+    }
 }
 
-static void lc_update_one_rgbled_state(uint8_t columns_address, uint8_t rows_address, ledPos_t pos)
+void lc_disable_layer(uint8_t z_pos, bool update)
+{
+    ledRGB_t led;
+    led.red = false;
+    led.green = false;
+    led.blue = false;
+    led.color = NONE;
+    led.enabled = false;
+
+    for(int x = 0; x < LED_CUBE_RGB_X; x++)
+    {
+        for(int y = 0; y < LED_CUBE_RGB_Y; y ++)
+        {
+            ledCube[x][y][z_pos]= led;
+        }
+    }
+
+    if(true == update)
+    {
+        // Update IO state usin mcp23017
+        lc_update_layer_state(z_pos);    
+    }
+}
+
+void lc_disable_all_layers(bool update)
+{
+    for(int i = 0; i < LED_CUBE_RGB_Z; i++)
+    {
+        lc_disable_layer(i, update);
+    }
+}
+
+static void lc_update_one_rgbled_state(ledPos_t pos)
 {
     rgbLedOutputs_t rgbLedOutputs = lc_get_led_outputs(pos);
     ledRGB_t led = ledCube[pos.x][pos.y][pos.z];
 
-    if(led.color == DISABLED)
-    {
-        mcp_write_single(MCP23017_I2C_INST, MCP23017_COLUMNS_ADDR, rgbLedOutputs.column, LOW, true);
-    }
-    else if(led.color != DISABLED)
+    if(true == led.enabled)
     {
         mcp_write_single(MCP23017_I2C_INST, MCP23017_COLUMNS_ADDR, rgbLedOutputs.column, HIGH, true);
     }
-
-    
+    else if(false == led.enabled)
+    {
+        mcp_write_single(MCP23017_I2C_INST, MCP23017_COLUMNS_ADDR, rgbLedOutputs.column, LOW, true);
+    }
     mcp_write_single(MCP23017_I2C_INST, MCP23017_ROWS_ADDR, rgbLedOutputs.green_output, !led.green, true);
     mcp_write_single(MCP23017_I2C_INST, MCP23017_ROWS_ADDR, rgbLedOutputs.red_output, !led.red, true);
     mcp_write_single(MCP23017_I2C_INST, MCP23017_ROWS_ADDR, rgbLedOutputs.blue_output, !led.blue, true);
+}
+
+static void lc_update_layer_state(uint8_t z_pos)
+{
+    for(int x = 0; x < LED_CUBE_RGB_X; x++)
+    {
+        for(int y = 0; y < LED_CUBE_RGB_Y; y ++)
+        {
+            ledPos_t pos = {x, y, z_pos};
+            lc_update_one_rgbled_state(pos);
+        }
+    }
 }
 
 static void lc_write_one_rgbled_state(rgbValues_t rgbValues, ledRGB_t *ledRGB)
@@ -98,7 +165,7 @@ static rgbValues_t lc_get_led_states_from_color(diodeColor_e color)
             rgbValues.green = true;
             rgbValues.blue = true;
             break;
-        case DISABLED:
+        default:
             rgbValues.red = false;
             rgbValues.green = false;
             rgbValues.blue = false;

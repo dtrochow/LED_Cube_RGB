@@ -7,8 +7,8 @@
 #include "pico/stdlib.h"
 #include "pico/multicore.h"
 #include "pico/time.h"
-#include "hardware/i2c.h"s
-#include "led_cube.h"
+#include "hardware/i2c.h"
+#include "led_animations_api.h"
 
 const uint LED_PIN = 25;
 
@@ -34,37 +34,13 @@ int main(void)
     gpio_set_function(18, GPIO_FUNC_I2C);
     gpio_set_function(19, GPIO_FUNC_I2C);
 
-    mcp_enable(ADDRESS1);
-    mcp_enable(ADDRESS2);
-    lc_enable_diode(0, 0, 0, RED, true);
+    lc_init(i2c1);
 
-    mcp_set_mode(i2c1, ADDRESS1, GPIOB, 0x00);
-    mcp_write(i2c1, ADDRESS1, GPIOB, 0x00, true);
-    mcp_init();
-    mcp_write(i2c1, ADDRESS1, GPIOA, 0xFE, true);
-    mcp_write_single(i2c1, ADDRESS1, 15, HIGH, true);
-    mcp_get_output_value(ADDRESS1);
-    mcp_update_out_state(i2c1, ADDRESS1);
-    mcp_update_out_state_all(i2c1);
+    la_test_all_leds(200);
 
-    uint8_t state[8] = {0x06, 0x04, 0x00, 0x02, 0x06, 0x04, 0x02, 0x00};
-    uint8_t port_value;
-
-    int i = 0;
-    int led_state = 0;
     while(true)
-    {
-        if(i >= sizeof(state))
-        {
-            i = 0;
-        }
-        led_state ^= 1;
-        gpio_put(LED_PIN, led_state);
-        mcp_write(i2c1, ADDRESS1, GPIOB, state[i], true);
-        i ++;
-        sleep_ms(200);
-        port_value = mcp_get_output_value_port(ADDRESS1, GPIOB);
-        printf("Port B value: %d", port_value);
+    {   
+        
     }
 }
  
