@@ -21,6 +21,13 @@ typedef enum
     WHITE
 } diodeColor_e;
 
+typedef enum
+{
+    X_PLANE = 0,
+    Y_PLANE,
+    Z_PLANE
+} planeAxis_e;
+
 typedef struct
 {
     uint8_t x;
@@ -104,3 +111,6 @@ void lc_enable_diode(uint8_t x_pos, uint8_t y_pos, uint8_t z_pos, diodeColor_e c
 void lc_disable_layer(uint8_t z_pos, bool update);
 void lc_disable_all_layers(bool update);
 void lc_disable_one_diode(uint8_t x_pos, uint8_t y_pos, uint8_t z_pos,  bool update);
+void lc_enable_plane(planeAxis_e orient, uint8_t pos, diodeColor_e color, bool update);
+void lc_disable_plane(planeAxis_e orient, uint8_t pos, bool update);
+void lc_update_all_diodes(void);

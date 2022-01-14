@@ -255,3 +255,76 @@ static rgbLedOutputs_t lc_get_led_outputs(ledPos_t pos)
     }
     return rgbLedOutputs;
 }
+
+void lc_enable_plane(planeAxis_e orient, uint8_t pos, diodeColor_e color, bool update)
+{
+    switch(orient)
+    {
+        case X_PLANE:
+            for(int z = 0; z < LED_CUBE_RGB_Z; z ++)
+            {
+                for(int y = 0; y < LED_CUBE_RGB_Y; y ++)
+                {
+                    lc_enable_diode(pos, y, z, color, update);
+                }
+            }
+            break;  
+        case Y_PLANE:
+            for(int z = 0; z < LED_CUBE_RGB_Z; z ++)
+            {
+                for(int x = 0; x < LED_CUBE_RGB_X; x ++)
+                {
+                    lc_enable_diode(x, pos, z, color, update);
+                }
+            }           
+            break;
+        case Z_PLANE:
+            for(int x = 0; x < LED_CUBE_RGB_X; x ++)
+            {
+                for(int y = 0; y < LED_CUBE_RGB_Y; y ++)
+                {
+                    lc_enable_diode(x, y, pos, color, update);
+                }
+            }
+            break;
+    }
+}
+
+void lc_disable_plane(planeAxis_e orient, uint8_t pos, bool update)
+{
+    switch(orient)
+    {
+        case X_PLANE:
+            for(int z = 0; z < LED_CUBE_RGB_Z; z ++)
+            {
+                for(int y = 0; y < LED_CUBE_RGB_Y; y ++)
+                {
+                    lc_disable_one_diode(pos, y, z, update);
+                }
+            }
+            break;  
+        case Y_PLANE:
+            for(int z = 0; z < LED_CUBE_RGB_Z; z ++)
+            {
+                for(int x = 0; x < LED_CUBE_RGB_X; x ++)
+                {
+                    lc_disable_one_diode(x, pos, z, update);
+                }
+            }           
+            break;
+        case Z_PLANE:
+            for(int x = 0; x < LED_CUBE_RGB_X; x ++)
+            {
+                for(int y = 0; y < LED_CUBE_RGB_Y; y ++)
+                {
+                    lc_disable_one_diode(x, y, pos, update);
+                }
+            }
+            break;
+    }
+}
+
+void lc_update_all_diodes(void)
+{
+
+}

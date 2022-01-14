@@ -36,7 +36,8 @@ int main(void)
 
     lc_init(i2c1);
 
-    la_test_all_leds(200);
+    // la_test_all_leds(100);
+    la_planes_animation(50);
 
     while(true)
     {   

@@ -2,7 +2,7 @@
 
 void la_test_all_leds(int delay_ms)
 {
-    uint8_t color[4] = {RED, GREEN, BLUE, WHITE};
+    const static uint8_t color[4] = {RED, GREEN, BLUE, WHITE};
 
     lc_disable_all_layers(true);
     
@@ -22,3 +22,40 @@ void la_test_all_leds(int delay_ms)
         }
     }
 }
+
+void la_planes_animation(int delay_ms)
+{
+    const static uint8_t color[7] = {RED, GREEN, BLUE, CYAN, MAGENTA, YELLOW, WHITE};
+    const static uint8_t sizes[3] = {LED_CUBE_RGB_X, LED_CUBE_RGB_Y, LED_CUBE_RGB_Z};
+    const static uint8_t planes[3] = {X_PLANE, Y_PLANE, Z_PLANE};
+
+    lc_disable_all_layers(true);
+
+    for(int c = 0; c < 7; c++)
+    {
+        for(int i = 0; i < 3; i++)
+        {
+            for(int s = 0; s < sizes[i]; s++)
+            {
+                lc_enable_plane(planes[i], s, color[c], true);
+                sleep_ms(delay_ms);
+                lc_disable_plane(planes[i], s, true);
+            }
+            for(int s = sizes[i]-1; s >= 0; s--)
+            {
+                lc_enable_plane(planes[i], s, color[c], true);
+                sleep_ms(delay_ms);
+                lc_disable_plane(planes[i], s, true);
+            }
+        }
+    }
+}
+
+// void la_rnd_led_rnd_color(int delay_ms)
+// {
+//     lc_disable_all_layers(true);
+
+//     const static uint8_t color[7] = {RED, GREEN, BLUE, CYAN, MAGENTA, YELLOW, WHITE};
+
+
+// }
