@@ -59,6 +59,10 @@ typedef struct
     bool blue;
     diodeColor_e color;
     bool enabled;
+    uint8_t red_pin;
+    uint8_t green_pin;
+    uint8_t blue_pin;
+    uint8_t colunm_pin;
 } ledRGB_t;
 
 /**
@@ -113,4 +117,5 @@ void lc_disable_all_layers(bool update);
 void lc_disable_one_diode(uint8_t x_pos, uint8_t y_pos, uint8_t z_pos,  bool update);
 void lc_enable_plane(planeAxis_e orient, uint8_t pos, diodeColor_e color, bool update);
 void lc_disable_plane(planeAxis_e orient, uint8_t pos, bool update);
-void lc_update_all_diodes(void);
+void lc_enable_column(uint8_t x, uint8_t y, diodeColor_e color, bool update);
+void lc_disable_column(uint8_t x, uint8_t y, bool update);

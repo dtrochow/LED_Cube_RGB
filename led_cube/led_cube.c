@@ -1,4 +1,5 @@
 #include "led_cube.h"
+#include <string.h>
 
 static ledRGB_t ledCube[LED_CUBE_RGB_X][LED_CUBE_RGB_Y][LED_CUBE_RGB_Z];
 
@@ -93,14 +94,7 @@ static void lc_update_one_rgbled_state(ledPos_t pos)
     rgbLedOutputs_t rgbLedOutputs = lc_get_led_outputs(pos);
     ledRGB_t led = ledCube[pos.x][pos.y][pos.z];
 
-    if(true == led.enabled)
-    {
-        mcp_write_single(MCP23017_I2C_INST, MCP23017_COLUMNS_ADDR, rgbLedOutputs.column, HIGH, true);
-    }
-    else if(false == led.enabled)
-    {
-        mcp_write_single(MCP23017_I2C_INST, MCP23017_COLUMNS_ADDR, rgbLedOutputs.column, LOW, true);
-    }
+    mcp_write_single(MCP23017_I2C_INST, MCP23017_COLUMNS_ADDR, rgbLedOutputs.column, led.enabled, true);
     mcp_write_single(MCP23017_I2C_INST, MCP23017_ROWS_ADDR, rgbLedOutputs.green_output, !led.green, true);
     mcp_write_single(MCP23017_I2C_INST, MCP23017_ROWS_ADDR, rgbLedOutputs.red_output, !led.red, true);
     mcp_write_single(MCP23017_I2C_INST, MCP23017_ROWS_ADDR, rgbLedOutputs.blue_output, !led.blue, true);
@@ -324,7 +318,18 @@ void lc_disable_plane(planeAxis_e orient, uint8_t pos, bool update)
     }
 }
 
-void lc_update_all_diodes(void)
+void lc_enable_column(uint8_t x, uint8_t y, diodeColor_e color, bool update)
 {
+    for(int z = 0; z < LED_CUBE_RGB_Z; z++)
+    {
+        lc_enable_diode(x, y, z, color, update);
+    }
+}
 
+void lc_disable_column(uint8_t x, uint8_t y, bool update)
+{
+    for(int z = 0; z < LED_CUBE_RGB_Z; z++)
+    {
+        lc_disable_one_diode(x, y, z, update);
+    }
 }
