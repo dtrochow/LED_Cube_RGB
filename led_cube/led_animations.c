@@ -155,7 +155,7 @@ void la_horizontal_spinning_line(int delay_ms, uint8_t layer)
                 sleep_ms(delay_ms);
                 for(int d = 0; d < 4; d ++)
                 {
-                    if(layer == 255)
+                    if(layer == LED_CUBE_RGB_Z)
                     {
                         lc_disable_column(led_to_enable[j][d][0], led_to_enable[j][d][1], true);
                     }

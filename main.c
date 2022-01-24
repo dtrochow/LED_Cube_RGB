@@ -40,11 +40,11 @@ int main(void)
     // la_test_all_leds(100);
     // la_planes_animation(70);
     // la_spinning_columns(70);
-    // la_horizontal_spinning_line(70);
+    la_horizontal_spinning_line(70, LED_CUBE_RGB_Z);
     // la_rnd_led_rnd_color(100);
     
-    uint8_t colors[3] = {RED, GREEN, BLUE};
-    la_rnd_led_rnd_color(200, 100, colors, 3);
+    // uint8_t colors[3] = {RED, GREEN, BLUE};
+    // la_rnd_led_rnd_color(200, 100, colors, 3);
 
     while(true)
     {   
