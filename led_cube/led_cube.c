@@ -46,7 +46,6 @@ void lc_disable_one_diode(uint8_t x_pos, uint8_t y_pos, uint8_t z_pos,  bool upd
     values.green = false;
     values.blue = false;
     lc_write_one_rgbled_state(values , &ledCube[x_pos][y_pos][z_pos]);
-    ledCube[x_pos][y_pos][z_pos].color = NONE;
     ledCube[x_pos][y_pos][z_pos].enabled = false;
 
     if(true == update)
@@ -63,7 +62,6 @@ void lc_disable_layer(uint8_t z_pos, bool update)
     led.red = false;
     led.green = false;
     led.blue = false;
-    led.color = NONE;
     led.enabled = false;
 
     for(int x = 0; x < LED_CUBE_RGB_X; x++)
@@ -331,5 +329,13 @@ void lc_disable_column(uint8_t x, uint8_t y, bool update)
     for(int z = 0; z < LED_CUBE_RGB_Z; z++)
     {
         lc_disable_one_diode(x, y, z, update);
+    }
+}
+
+void lc_enable_whole_cube(int color)
+{
+    for(int i = 0; i < LED_CUBE_RGB_Z; i ++)
+    {
+        lc_enable_plane(Z_PLANE, i, color, true);
     }
 }

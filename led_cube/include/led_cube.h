@@ -11,14 +11,14 @@
 
 typedef enum
 {
-    NONE = 0,
     RED,
     GREEN,
     BLUE,
     MAGENTA,
     CYAN,
     YELLOW,
-    WHITE
+    WHITE,
+    COLORS_SIZE
 } diodeColor_e;
 
 typedef enum
@@ -119,3 +119,4 @@ void lc_enable_plane(planeAxis_e orient, uint8_t pos, diodeColor_e color, bool u
 void lc_disable_plane(planeAxis_e orient, uint8_t pos, bool update);
 void lc_enable_column(uint8_t x, uint8_t y, diodeColor_e color, bool update);
 void lc_disable_column(uint8_t x, uint8_t y, bool update);
+void lc_enable_whole_cube(int color);

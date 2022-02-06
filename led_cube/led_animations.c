@@ -3,7 +3,7 @@
 #include "hardware/regs/rosc.h"
 #include "hardware/regs/addressmap.h"
 
-static void la_get_random_led(ledPos_t *position, int *color, uint8_t color_size);
+static void la_get_random_led(ledPos_t *position, int *color, int color_size);
 static void la_seed_random_from_rosc(void);
 
 static void la_seed_random_from_rosc(void)
@@ -169,7 +169,7 @@ void la_horizontal_spinning_line(int delay_ms, uint8_t layer)
     }
 }
 
-void la_rnd_led_rnd_color(int delay_ms, int repetitions, uint8_t *colors, uint8_t colors_size)
+void la_rnd_led_rnd_color(int delay_ms, int repetitions, uint8_t *colors)
 {
     lc_disable_all_layers(true);
 
@@ -178,14 +178,14 @@ void la_rnd_led_rnd_color(int delay_ms, int repetitions, uint8_t *colors, uint8_
 
     for(int i = 0; i < repetitions; i++)
     {
-        la_get_random_led(&led_pos, &color, colors_size);
+        la_get_random_led(&led_pos, &color, sizeof(colors));
         lc_enable_diode(led_pos.x, led_pos.y, led_pos.z, colors[color], true);
         sleep_ms(delay_ms);
         lc_disable_one_diode(led_pos.x, led_pos.y, led_pos.z, true);
     }
 }
 
-static void la_get_random_led(ledPos_t *position, int *color, uint8_t colors_size)
+static void la_get_random_led(ledPos_t *position, int *color, int color_size)
 {
     la_seed_random_from_rosc();
     position->x = rand()%LED_CUBE_RGB_X;
@@ -194,11 +194,136 @@ static void la_get_random_led(ledPos_t *position, int *color, uint8_t colors_siz
     la_seed_random_from_rosc();
     position->z = rand()%LED_CUBE_RGB_Z;
     la_seed_random_from_rosc();
-    *color = rand()%colors_size;
+    *color = rand()%color_size;
+}
+
+static void la_get_random_layer_pos(ledPos_t *position)
+{
+    la_seed_random_from_rosc();
+    position->x = rand()%LED_CUBE_RGB_X;
+    la_seed_random_from_rosc();
+    position->y = rand()%LED_CUBE_RGB_Y;
 }
 
 void la_led_bomb(int delay_ms)
 {
+    static uint8_t colors[7] = {RED, GREEN, BLUE, CYAN, MAGENTA, YELLOW, WHITE};
+
     lc_disable_all_layers(true);
+
+    ledPos_t led_pos;
+    int color;
+
+    la_get_random_led(&led_pos, &color, sizeof(colors));
+    lc_enable_diode(led_pos.x, led_pos.y, led_pos.z, colors[color], true);
+
+    int border = 0;
+    while(true)
+    {
+        border ++;
+        if((led_pos.y - border <= 0)                &&
+           (led_pos.y + border > LED_CUBE_RGB_Y)    &&
+           (led_pos.x - border <= 0)                &&
+           (led_pos.x + border > LED_CUBE_RGB_X)
+        )
+        {
+            border = 0;
+            break;
+        }
+        sleep_ms(delay_ms);
+        if(led_pos.x + border < LED_CUBE_RGB_X)
+        {
+            lc_enable_diode(led_pos.x + border, led_pos.y, led_pos.z, colors[color], true);
+        }
+        if(led_pos.y + border < LED_CUBE_RGB_Y)
+        {
+            lc_enable_diode(led_pos.x, led_pos.y + border, led_pos.z, colors[color], true);
+        }
+        if(led_pos.x - border >= 0)
+        {
+            lc_enable_diode(led_pos.x - border, led_pos.y, led_pos.z, colors[color], true);
+        }
+        if(led_pos.y - border >= 0)
+        {
+            lc_enable_diode(led_pos.x, led_pos.y - border, led_pos.z, colors[color], true);
+        }
+    }
+}
+
+void la_rain(int delay_ms)
+{
+    // static uint8_t colors[7] = {RED, GREEN, BLUE, CYAN, MAGENTA, YELLOW, WHITE};
+    static uint8_t colors[1] = {CYAN};
+
+    while(true)
+    {
+        lc_disable_all_layers(true);
+
+        ledPos_t led_pos;
+        int color;
+        verticalDirection_e direction = DOWN;
+
+        la_get_random_led(&led_pos, &color, sizeof(colors));
+
+        for(int i = LED_CUBE_RGB_Z - 1; i >= 0; i --)
+        {
+            lc_enable_diode(led_pos.x, led_pos.y, i, colors[color], true);
+            sleep_ms(delay_ms);
+            lc_disable_one_diode(led_pos.x, led_pos.y, i, true);
+        }        
+    }
+}
+
+void la_spinning_plane(int delay_ms)
+{
+    static int color = BLUE;
+
+    lc_disable_all_layers(true);
+
+    lc_enable_plane(X_PLANE, 0, color, true);
+    sleep_ms(delay_ms);
+    lc_disable_plane(X_PLANE, 0, true);
+
+    lc_enable_plane(Y_PLANE, 0, color, true);
+    sleep_ms(delay_ms);
+    lc_disable_plane(Y_PLANE, 0, true);
+
+    lc_enable_plane(X_PLANE, LED_CUBE_RGB_X-1, color, true);
+    sleep_ms(delay_ms);
+    lc_disable_plane(X_PLANE, LED_CUBE_RGB_X-1, true);
+
+    lc_enable_plane(Y_PLANE, LED_CUBE_RGB_Y-1, color, true);
+    sleep_ms(delay_ms);
+    lc_disable_plane(Y_PLANE, LED_CUBE_RGB_Y-1, true);
+
+}
+
+void la_spinning_four_columns(int delay_ms)
+{
+    static int color = WHITE;
+
+    for (int i = 0; i < 3; i ++)
+    {
+        lc_enable_column(0, i, color, true);
+        lc_enable_column(i, LED_CUBE_RGB_Y-1, color, true);
+        lc_enable_column(LED_CUBE_RGB_X-1, LED_CUBE_RGB_Y-1-i, color, true);
+        lc_enable_column(LED_CUBE_RGB_X-1-i, 0, color, true);
+        sleep_ms(delay_ms);
+        lc_disable_column(0, i, true);
+        lc_disable_column(i, LED_CUBE_RGB_Y-1, true);
+        lc_disable_column(LED_CUBE_RGB_X-1, LED_CUBE_RGB_Y-1-i, true);
+        lc_disable_column(LED_CUBE_RGB_X-1-i, 0, true);
+    }
+}
+
+void la_test_all_diodes(int delay_ms)
+{
+    static uint8_t colors[7] = {RED, GREEN, BLUE, CYAN, MAGENTA, YELLOW, WHITE};
+
+    for(int i = 0; i < sizeof(colors); i++)
+    {
+        lc_enable_whole_cube(colors[i]);
+        sleep_ms(delay_ms);        
+    }
 
 }
