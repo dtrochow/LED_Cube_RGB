@@ -1,42 +1,38 @@
 #include "mcp23017.h"
 #include "hardware/i2c.h"
 
-#define LED_CUBE_RGB_X      4
-#define LED_CUBE_RGB_Y      4
-#define LED_CUBE_RGB_Z      4
+#define LED_CUBE_RGB_X        4
+#define LED_CUBE_RGB_Y        4
+#define LED_CUBE_RGB_Z        4
 
-#define MCP23017_COLUMNS_ADDR   ADDRESS2
-#define MCP23017_ROWS_ADDR      ADDRESS1
-#define MCP23017_I2C_INST       i2c1
+#define MCP23017_COLUMNS_ADDR ADDRESS2
+#define MCP23017_ROWS_ADDR    ADDRESS1
+#define MCP23017_I2C_INST     i2c1
 
-typedef enum
-{
-    NONE = 0,
+typedef enum {
     RED,
     GREEN,
     BLUE,
     MAGENTA,
     CYAN,
     YELLOW,
-    WHITE
+    WHITE,
+    COLORS_SIZE
 } diodeColor_e;
 
-typedef enum
-{
+typedef enum {
     X_PLANE = 0,
     Y_PLANE,
     Z_PLANE
 } planeAxis_e;
 
-typedef struct
-{
+typedef struct {
     uint8_t x;
     uint8_t y;
     uint8_t z;
 } ledPos_t;
 
-typedef struct
-{
+typedef struct {
     uint8_t red_output;
     uint8_t green_output;
     uint8_t blue_output;
@@ -44,16 +40,14 @@ typedef struct
 } rgbLedOutputs_t;
 
 
-typedef struct
-{
+typedef struct {
     bool red;
     bool green;
     bool blue;
 } rgbValues_t;
 
 
-typedef struct
-{
+typedef struct {
     bool red;
     bool green;
     bool blue;
@@ -66,11 +60,10 @@ typedef struct
 } ledRGB_t;
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
-typedef enum
-{
+typedef enum {
     C_00 = 0, // mcp23017 output number in range 0-15
     C_01 = 1,
     C_02 = 2,
@@ -90,11 +83,10 @@ typedef enum
 } cubeColumns_e;
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
-typedef enum
-{
+typedef enum {
     RED_0   = 0,
     GREEN_0 = 1,
     BLUE_0  = 2,
@@ -119,3 +111,4 @@ void lc_enable_plane(planeAxis_e orient, uint8_t pos, diodeColor_e color, bool u
 void lc_disable_plane(planeAxis_e orient, uint8_t pos, bool update);
 void lc_enable_column(uint8_t x, uint8_t y, diodeColor_e color, bool update);
 void lc_disable_column(uint8_t x, uint8_t y, bool update);
+void lc_enable_whole_cube(int color);
