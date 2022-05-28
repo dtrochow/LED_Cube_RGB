@@ -1,8 +1,7 @@
 #include "led_cube.h"
 
-typedef enum
-{
-    UP = 1,
+typedef enum {
+    UP   = 1,
     DOWN = -1
 } verticalDirection_e;
 
