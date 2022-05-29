@@ -1,0 +1,40 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+jobs:
+  unittests:
+    docker:
+      - image: dtrochow/ledrgb:pico
+    environment:
+      PICO_SDK_PATH: "/tmp/deps/pico-sdk"
+    steps:
+      - run:
+          name: "Clone PICO-SDK"
+          command: "git clone https://github.com/raspberrypi/pico-sdk.git /tmp/deps/pico-sdk"
+      - checkout
+      - run:
+          name: "Run UNIT TESTS"
+          command: "bash build_run_utests.sh"
+  build_fw:
+    docker:
+      - image: dtrochow/ledrgb:pico
+    environment:
+      PICO_SDK_PATH: "/tmp/deps/pico-sdk"
+    steps:
+      - run:
+          name: "Clone PICO-SDK"
+          command: "git clone https://github.com/raspberrypi/pico-sdk.git /tmp/deps/pico-sdk"
+      - checkout
+      - run:
+          name: "Build LED Cube RGB FW"
+          command: "bash build_led_cube_rgb.sh"
+
+
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+workflows:
+  basic_checks:
+    jobs:
+      - unittests
+      - build_fw
