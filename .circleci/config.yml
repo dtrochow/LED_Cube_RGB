@@ -2,25 +2,39 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+  unittests:
     docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+      - image: dtrochow/ledrgb:pico
+    environment:
+      PICO_SDK_PATH: "/tmp/deps/pico-sdk"
     steps:
+      - run:
+          name: "Clone PICO-SDK"
+          command: "git clone https://github.com/raspberrypi/pico-sdk.git /tmp/deps/pico-sdk"
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          name: "Run UNIT TESTS"
+          command: "bash build_run_utests.sh"
+  build_fw:
+    docker:
+      - image: dtrochow/ledrgb:pico
+    environment:
+      PICO_SDK_PATH: "/tmp/deps/pico-sdk"
+    steps:
+      - run:
+          name: "Clone PICO-SDK"
+          command: "git clone https://github.com/raspberrypi/pico-sdk.git /tmp/deps/pico-sdk"
+      - checkout
+      - run:
+          name: "Build LED Cube RGB FW"
+          command: "bash build_led_cube_rgb.sh"
+
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
+  basic_checks:
     jobs:
-      - say-hello
+      - unittests
+      - build_fw
