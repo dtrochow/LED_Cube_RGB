@@ -1,4 +1,4 @@
-#include "led_cube.h"
+#include "led_cube.hpp"
 #include <string.h>
 
 static ledRGB_t ledCube[LED_CUBE_RGB_X][LED_CUBE_RGB_Y][LED_CUBE_RGB_Z];
@@ -91,7 +91,7 @@ static void lc_update_one_rgbled_state(ledPos_t pos) {
 static void lc_update_layer_state(uint8_t z_pos) {
     for (int x = 0; x < LED_CUBE_RGB_X; x++) {
         for (int y = 0; y < LED_CUBE_RGB_Y; y++) {
-            ledPos_t pos = { x, y, z_pos };
+            ledPos_t pos = { (uint8_t)x, (uint8_t)y, z_pos };
             lc_update_one_rgbled_state(pos);
         }
     }
@@ -337,6 +337,6 @@ void lc_disable_column(uint8_t x, uint8_t y, bool update) {
 
 void lc_enable_whole_cube(int color) {
     for (int i = 0; i < LED_CUBE_RGB_Z; i++) {
-        lc_enable_plane(Z_PLANE, i, color, true);
+        lc_enable_plane(Z_PLANE, i, (diodeColor_e)color, true);
     }
 }

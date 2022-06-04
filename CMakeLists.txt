@@ -13,16 +13,8 @@ pico_sdk_init()
 add_subdirectory(lib)
 add_subdirectory(led_cube)
 
-# Directories for mcp23017 library
-include_directories(lib/mcp23017)
-link_directories(lib/mcp23017)
-
-# Directories for led_cube
-include_directories(led_cube)
-link_directories(led_cuve)
-
 add_executable(${projname}
-	main.c
+	main.cpp
 	)
 
 target_link_libraries(${projname}

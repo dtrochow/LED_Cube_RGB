@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 3.14)
 project(my_project)
+include(../pico_sdk_import.cmake)
 
 # GoogleTest requires at least C++11
-set(CMAKE_CXX_STANDARD 11)
+project(${projname} C CXX ASM)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_BUILD_TYPE Debug)
 
 include(FetchContent)
 FetchContent_Declare(

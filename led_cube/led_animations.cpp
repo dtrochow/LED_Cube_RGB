@@ -1,4 +1,4 @@
-#include "led_animations_api.h"
+#include "led_animations_api.hpp"
 #include <stdlib.h>
 #include "hardware/regs/rosc.h"
 #include "hardware/regs/addressmap.h"
@@ -32,7 +32,7 @@ void la_test_all_leds(int delay_ms) {
         for (int z = 0; z < LED_CUBE_RGB_Z; z++) {
             for (int x = 0; x < LED_CUBE_RGB_X; x++) {
                 for (int y = 0; y < LED_CUBE_RGB_Y; y++) {
-                    lc_enable_diode(x, y, z, color[c], true);
+                    lc_enable_diode(x, y, z, (diodeColor_e)color[c], true);
                     sleep_ms(delay_ms);
                     lc_disable_one_diode(x, y, z, true);
                 }
@@ -51,15 +51,15 @@ void la_planes_animation(int delay_ms) {
     for (int c = 0; c < 7; c++) {
         for (int i = 0; i < 3; i++) {
             for (int s = 0; s < sizes[i]; s++) {
-                lc_enable_plane(planes[i], s, color[c], true);
+                lc_enable_plane((planeAxis_e)planes[i], s, (diodeColor_e)color[c], true);
                 sleep_ms(delay_ms);
-                lc_disable_plane(planes[i], s, true);
+                lc_disable_plane((planeAxis_e)planes[i], s, true);
             }
 
             for (int s = sizes[i] - 1; s >= 0; s--) {
-                lc_enable_plane(planes[i], s, color[c], true);
+                lc_enable_plane((planeAxis_e)planes[i], s, (diodeColor_e)color[c], true);
                 sleep_ms(delay_ms);
-                lc_disable_plane(planes[i], s, true);
+                lc_disable_plane((planeAxis_e)planes[i], s, true);
             }
         }
     }
@@ -76,25 +76,25 @@ void la_spinning_columns(int delay_ms) {
 
         do{
             for (int x = start; x <= end; x++) {
-                lc_enable_column(x, start, color[c], true);
+                lc_enable_column(x, start, (diodeColor_e)color[c], true);
                 sleep_ms(delay_ms);
                 lc_disable_column(x, start, true);
             }
 
             for (int y = start + 1; y <= end; y++) {
-                lc_enable_column(end, y, color[c], true);
+                lc_enable_column(end, y, (diodeColor_e)color[c], true);
                 sleep_ms(delay_ms);
                 lc_disable_column(end, y, true);
             }
 
             for (int x = end - 1; x >= start; x--) {
-                lc_enable_column(x, end, color[c], true);
+                lc_enable_column(x, end, (diodeColor_e)color[c], true);
                 sleep_ms(delay_ms);
                 lc_disable_column(x, end, true);
             }
 
             for (int y = end - 1; y >= start + 1; y--) {
-                lc_enable_column(0, y, color[c], true);
+                lc_enable_column(0, y, (diodeColor_e)color[c], true);
                 sleep_ms(delay_ms);
                 lc_disable_column(0, y, true);
             }
@@ -125,9 +125,9 @@ void la_horizontal_spinning_line(int delay_ms, uint8_t layer) {
             for (int j = 0; j < 6; j++) {
                 for (int d = 0; d < 4; d++) {
                     if (layer == 255) {
-                        lc_enable_column(led_to_enable[j][d][0], led_to_enable[j][d][1], color[c], true);
+                        lc_enable_column(led_to_enable[j][d][0], led_to_enable[j][d][1], (diodeColor_e)color[c], true);
                     } else if (layer < LED_CUBE_RGB_Z) {
-                        lc_enable_diode(led_to_enable[j][d][0], led_to_enable[j][d][1], layer, color[c], true);
+                        lc_enable_diode(led_to_enable[j][d][0], led_to_enable[j][d][1], layer, (diodeColor_e)color[c], true);
                     }
                 }
 
@@ -153,7 +153,7 @@ void la_rnd_led_rnd_color(int delay_ms, int repetitions, uint8_t *colors) {
 
     for (int i = 0; i < repetitions; i++) {
         la_get_random_led(&led_pos, &color, sizeof(colors));
-        lc_enable_diode(led_pos.x, led_pos.y, led_pos.z, colors[color], true);
+        lc_enable_diode(led_pos.x, led_pos.y, led_pos.z, (diodeColor_e)colors[color], true);
         sleep_ms(delay_ms);
         lc_disable_one_diode(led_pos.x, led_pos.y, led_pos.z, true);
     }
@@ -186,7 +186,7 @@ void la_led_bomb(int delay_ms) {
     int color;
 
     la_get_random_led(&led_pos, &color, sizeof(colors));
-    lc_enable_diode(led_pos.x, led_pos.y, led_pos.z, colors[color], true);
+    lc_enable_diode(led_pos.x, led_pos.y, led_pos.z, (diodeColor_e)colors[color], true);
 
     int border = 0;
 
@@ -205,19 +205,19 @@ void la_led_bomb(int delay_ms) {
         sleep_ms(delay_ms);
 
         if (led_pos.x + border < LED_CUBE_RGB_X) {
-            lc_enable_diode(led_pos.x + border, led_pos.y, led_pos.z, colors[color], true);
+            lc_enable_diode(led_pos.x + border, led_pos.y, led_pos.z, (diodeColor_e)colors[color], true);
         }
 
         if (led_pos.y + border < LED_CUBE_RGB_Y) {
-            lc_enable_diode(led_pos.x, led_pos.y + border, led_pos.z, colors[color], true);
+            lc_enable_diode(led_pos.x, led_pos.y + border, led_pos.z, (diodeColor_e)colors[color], true);
         }
 
         if (led_pos.x - border >= 0) {
-            lc_enable_diode(led_pos.x - border, led_pos.y, led_pos.z, colors[color], true);
+            lc_enable_diode(led_pos.x - border, led_pos.y, led_pos.z, (diodeColor_e)colors[color], true);
         }
 
         if (led_pos.y - border >= 0) {
-            lc_enable_diode(led_pos.x, led_pos.y - border, led_pos.z, colors[color], true);
+            lc_enable_diode(led_pos.x, led_pos.y - border, led_pos.z, (diodeColor_e)colors[color], true);
         }
     }
 }
@@ -236,7 +236,7 @@ void la_rain(int delay_ms) {
         la_get_random_led(&led_pos, &color, sizeof(colors));
 
         for (int i = LED_CUBE_RGB_Z - 1; i >= 0; i--) {
-            lc_enable_diode(led_pos.x, led_pos.y, i, colors[color], true);
+            lc_enable_diode(led_pos.x, led_pos.y, i, (diodeColor_e)colors[color], true);
             sleep_ms(delay_ms);
             lc_disable_one_diode(led_pos.x, led_pos.y, i, true);
         }
@@ -248,19 +248,19 @@ void la_spinning_plane(int delay_ms) {
 
     lc_disable_all_layers(true);
 
-    lc_enable_plane(X_PLANE, 0, color, true);
+    lc_enable_plane(X_PLANE, 0, (diodeColor_e)color, true);
     sleep_ms(delay_ms);
     lc_disable_plane(X_PLANE, 0, true);
 
-    lc_enable_plane(Y_PLANE, 0, color, true);
+    lc_enable_plane(Y_PLANE, 0, (diodeColor_e)color, true);
     sleep_ms(delay_ms);
     lc_disable_plane(Y_PLANE, 0, true);
 
-    lc_enable_plane(X_PLANE, LED_CUBE_RGB_X - 1, color, true);
+    lc_enable_plane(X_PLANE, LED_CUBE_RGB_X - 1, (diodeColor_e)color, true);
     sleep_ms(delay_ms);
     lc_disable_plane(X_PLANE, LED_CUBE_RGB_X - 1, true);
 
-    lc_enable_plane(Y_PLANE, LED_CUBE_RGB_Y - 1, color, true);
+    lc_enable_plane(Y_PLANE, LED_CUBE_RGB_Y - 1, (diodeColor_e)color, true);
     sleep_ms(delay_ms);
     lc_disable_plane(Y_PLANE, LED_CUBE_RGB_Y - 1, true);
 }
@@ -269,10 +269,10 @@ void la_spinning_four_columns(int delay_ms) {
     static int color = WHITE;
 
     for (int i = 0; i < 3; i++) {
-        lc_enable_column(0, i, color, true);
-        lc_enable_column(i, LED_CUBE_RGB_Y - 1, color, true);
-        lc_enable_column(LED_CUBE_RGB_X - 1, LED_CUBE_RGB_Y - 1 - i, color, true);
-        lc_enable_column(LED_CUBE_RGB_X - 1 - i, 0, color, true);
+        lc_enable_column(0, i, (diodeColor_e)color, true);
+        lc_enable_column(i, LED_CUBE_RGB_Y - 1, (diodeColor_e)color, true);
+        lc_enable_column(LED_CUBE_RGB_X - 1, LED_CUBE_RGB_Y - 1 - i, (diodeColor_e)color, true);
+        lc_enable_column(LED_CUBE_RGB_X - 1 - i, 0, (diodeColor_e)color, true);
         sleep_ms(delay_ms);
         lc_disable_column(0, i, true);
         lc_disable_column(i, LED_CUBE_RGB_Y - 1, true);

@@ -8,7 +8,7 @@
 #include "pico/multicore.h"
 #include "pico/time.h"
 #include "hardware/i2c.h"
-#include "led_animations_api.h"
+#include "led_animations_api.hpp"
 
 const int I2C_SPEED = 1000000;
 const uint LED_PIN = 25;

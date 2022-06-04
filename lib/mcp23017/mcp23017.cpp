@@ -1,4 +1,4 @@
-#include "mcp23017.h"
+#include "mcp23017.hpp"
 #include <stdio.h>
 #include <string.h>
 

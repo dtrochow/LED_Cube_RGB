@@ -1,4 +1,4 @@
-#include "led_cube.h"
+#include "led_cube.hpp"
 
 typedef enum {
     UP   = 1,

@@ -1,8 +1,8 @@
 set(SOURCES 
-        led_cube.c
-        led_animations.c
-        include/led_cube.h
-        include/led_animations_api.h
+        led_cube.cpp
+        led_animations.cpp
+        include/led_cube.hpp
+        include/led_animations_api.hpp
 )
 add_library(led_cube ${SOURCES})
 target_include_directories(led_cube PUBLIC include)

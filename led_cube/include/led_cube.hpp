@@ -1,4 +1,4 @@
-#include "mcp23017.h"
+#include "mcp23017.hpp"
 #include "hardware/i2c.h"
 
 #define LED_CUBE_RGB_X        4

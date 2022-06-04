@@ -1,6 +1,6 @@
 set(SOURCES 
-        mcp23017.c
-        include/mcp23017.h
+        mcp23017.cpp
+        include/mcp23017.hpp
 )
 add_library(mcp23017_lib ${SOURCES})
 target_include_directories(mcp23017_lib PUBLIC include)
