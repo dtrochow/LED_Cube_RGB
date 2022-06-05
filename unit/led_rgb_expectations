@@ -1,0 +1,6 @@
+x Can build LedRGB obj
+x Can set red, green, blue color
+- Can set one of seven colors with enum parameter
+- Can enable or disable led
+- When disabling led, the previous state should be saved, and after enabling it should have previous color
+

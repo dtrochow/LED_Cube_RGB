@@ -3,3 +3,7 @@
 LedRGB::LedRGB() {}
 
 LedRGB::~LedRGB() {}
+
+void LedRGB::setColor(Color color_) {
+    color = color_;
+}
