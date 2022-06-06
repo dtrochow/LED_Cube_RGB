@@ -19,8 +19,6 @@ Color LedColor::getLedColor() {
     return color;
 }
 
-
-
 LedRGB::LedRGB(std::map<Color, LedColor> colors_) {
     available_colors = colors_;
 }

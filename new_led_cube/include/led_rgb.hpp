@@ -23,6 +23,10 @@ struct Led_t {
     LedState red;
     LedState green;
     LedState blue;
+
+    bool operator==(const Led_t& rh) const {
+        return std::make_tuple( this->red, this->green, this->blue ) == std::make_tuple( rh.red, rh.green, rh.blue );
+    }
 };
 
 class LedColor {
