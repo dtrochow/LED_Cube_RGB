@@ -3,9 +3,14 @@
 #pragma once
 
 enum class Color : std::uint8_t {
+    NONE,
     RED,
     GREEN,
-    BLUE
+    BLUE,
+    CYAN,
+    MAGENTA,
+    YELLOW,
+    WHITE
 };
 
 enum class Led : std::uint8_t {
@@ -47,7 +52,10 @@ public:
     void setColor(Color color_);
     Color getColor();
     LedState getLedDiodeState(Led led);
+    void disable();
+    void enable();
 protected:
+    Color color_before_disable;
     Color color;
     Led_t led_states;
     std::map<Color, LedColor> available_colors;

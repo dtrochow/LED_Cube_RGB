@@ -70,6 +70,66 @@ TEST_F(LedRGBTest, RGBLedWithBlueColor) {
     EXPECT_EQ(states, expected_states);
 }
 
+TEST_F(LedRGBTest, RGBLedWithCyanColor) {
+    lRGB.setColor(Color::CYAN);
+    Led_t states = {
+        .red = lRGB.getLedDiodeState(Led::RED),
+        .green = lRGB.getLedDiodeState(Led::GREEN),
+        .blue = lRGB.getLedDiodeState(Led::BLUE)
+    };
+    Led_t expected_states = {
+        .red = LedState::DISABLED,
+        .green = LedState::ENABLED,
+        .blue = LedState::ENABLED
+    };
+    EXPECT_EQ(states, expected_states);
+}
+
+TEST_F(LedRGBTest, RGBLedWithMagentaColor) {
+    lRGB.setColor(Color::MAGENTA);
+    Led_t states = {
+        .red = lRGB.getLedDiodeState(Led::RED),
+        .green = lRGB.getLedDiodeState(Led::GREEN),
+        .blue = lRGB.getLedDiodeState(Led::BLUE)
+    };
+    Led_t expected_states = {
+        .red = LedState::ENABLED,
+        .green = LedState::DISABLED,
+        .blue = LedState::ENABLED
+    };
+    EXPECT_EQ(states, expected_states);
+}
+
+TEST_F(LedRGBTest, RGBLedWithYellowColor) {
+    lRGB.setColor(Color::YELLOW);
+    Led_t states = {
+        .red = lRGB.getLedDiodeState(Led::RED),
+        .green = lRGB.getLedDiodeState(Led::GREEN),
+        .blue = lRGB.getLedDiodeState(Led::BLUE)
+    };
+    Led_t expected_states = {
+        .red = LedState::ENABLED,
+        .green = LedState::ENABLED,
+        .blue = LedState::DISABLED
+    };
+    EXPECT_EQ(states, expected_states);
+}
+
+TEST_F(LedRGBTest, RGBLedWithWhiteColor) {
+    lRGB.setColor(Color::WHITE);
+    Led_t states = {
+        .red = lRGB.getLedDiodeState(Led::RED),
+        .green = lRGB.getLedDiodeState(Led::GREEN),
+        .blue = lRGB.getLedDiodeState(Led::BLUE)
+    };
+    Led_t expected_states = {
+        .red = LedState::ENABLED,
+        .green = LedState::ENABLED,
+        .blue = LedState::ENABLED
+    };
+    EXPECT_EQ(states, expected_states);
+}
+
 TEST_F(LedRGBTest, InitiallyAllLedsDisabled) {
     Led_t states = {
         .red = lRGB.getLedDiodeState(Led::RED),
@@ -82,4 +142,69 @@ TEST_F(LedRGBTest, InitiallyAllLedsDisabled) {
         .blue = LedState::DISABLED
     };
     EXPECT_EQ(states, expected_states);
+}
+
+TEST_F(LedRGBTest, CanDisableWholeRGBLed) {
+    lRGB.setColor(Color::WHITE);
+    Led_t enable_states = {
+        .red = lRGB.getLedDiodeState(Led::RED),
+        .green = lRGB.getLedDiodeState(Led::GREEN),
+        .blue = lRGB.getLedDiodeState(Led::BLUE)
+    };
+    Led_t enable_expected_states = {
+        .red = LedState::ENABLED,
+        .green = LedState::ENABLED,
+        .blue = LedState::ENABLED
+    };
+    lRGB.disable();
+    EXPECT_EQ(enable_states, enable_expected_states);
+    Led_t disable_states = {
+        .red = lRGB.getLedDiodeState(Led::RED),
+        .green = lRGB.getLedDiodeState(Led::GREEN),
+        .blue = lRGB.getLedDiodeState(Led::BLUE)
+    };
+    Led_t disable_expected_states = {
+        .red = LedState::DISABLED,
+        .green = LedState::DISABLED,
+        .blue = LedState::DISABLED
+    };
+    EXPECT_EQ(disable_states, disable_expected_states);
+    Color color = lRGB.getColor();
+    EXPECT_EQ(color, Color::NONE);
+}
+
+TEST_F(LedRGBTest, CanEnableWholeRGBLedWithPreviousState) {
+    lRGB.setColor(Color::CYAN);
+    Led_t cyan_states = {
+        .red = lRGB.getLedDiodeState(Led::RED),
+        .green = lRGB.getLedDiodeState(Led::GREEN),
+        .blue = lRGB.getLedDiodeState(Led::BLUE)
+    };
+    Led_t cyan_expected_states = {
+        .red = LedState::DISABLED,
+        .green = LedState::ENABLED,
+        .blue = LedState::ENABLED
+    };
+    lRGB.disable();
+    EXPECT_EQ(cyan_states, cyan_expected_states);
+    Led_t disable_states = {
+        .red = lRGB.getLedDiodeState(Led::RED),
+        .green = lRGB.getLedDiodeState(Led::GREEN),
+        .blue = lRGB.getLedDiodeState(Led::BLUE)
+    };
+    Led_t disable_expected_states = {
+        .red = LedState::DISABLED,
+        .green = LedState::DISABLED,
+        .blue = LedState::DISABLED
+    };
+    EXPECT_EQ(disable_states, disable_expected_states);
+    lRGB.enable();
+    Led_t enable_states = {
+        .red = lRGB.getLedDiodeState(Led::RED),
+        .green = lRGB.getLedDiodeState(Led::GREEN),
+        .blue = lRGB.getLedDiodeState(Led::BLUE)
+    };
+    EXPECT_EQ(enable_states, cyan_expected_states);
+    Color color = lRGB.getColor();
+    EXPECT_EQ(color, Color::CYAN);
 }

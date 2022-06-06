@@ -59,3 +59,18 @@ LedColor LedRGB::getColorObj(Color color_) {
     auto it = available_colors.find(color_);
     return it->second;
 }
+
+void LedRGB::disable() {
+    color_before_disable = color;
+    Led_t all_disabled = {
+        .red = LedState::DISABLED,
+        .green = LedState::DISABLED,
+        .blue = LedState::DISABLED
+    };
+    color = Color::NONE;
+    led_states = all_disabled;
+}
+
+void LedRGB::enable() {
+    setColor(color_before_disable);
+}

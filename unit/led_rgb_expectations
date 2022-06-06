@@ -3,7 +3,7 @@ x Can set red, green, blue color
 x Can get the color of led
 x Each color should have specified red, green, blue state
 x Initially all leds disabled
-- Can set one of seven colors with enum parameter
-- Can enable or disable led
-- When disabling led, the previous state should be saved, and after enabling it should have previous color
+x Can set one of seven colors with enum parameter
+x Can enable or disable rgb led
+x When disabling led, the previous state should be saved, and after enabling it should have previous color
 
