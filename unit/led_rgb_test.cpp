@@ -69,3 +69,17 @@ TEST_F(LedRGBTest, RGBLedWithBlueColor) {
     };
     EXPECT_EQ(states, expected_states);
 }
+
+TEST_F(LedRGBTest, InitiallyAllLedsDisabled) {
+    Led_t states = {
+        .red = lRGB.getLedDiodeState(Led::RED),
+        .green = lRGB.getLedDiodeState(Led::GREEN),
+        .blue = lRGB.getLedDiodeState(Led::BLUE)
+    };
+    Led_t expected_states = {
+        .red = LedState::DISABLED,
+        .green = LedState::DISABLED,
+        .blue = LedState::DISABLED
+    };
+    EXPECT_EQ(states, expected_states);
+}

@@ -31,5 +31,3 @@ enable_testing()
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../new_led_cube ${CMAKE_CURRENT_BINARY_DIR}/new_led_cube)
 
 add_utest("led_rgb_test" led_rgb_test.cpp new_led_cube)
-add_utest("3d_matrix_test" 3d_matrix_test.cpp new_led_cube)
-add_utest("animations_test" animations_test.cpp new_led_cube)

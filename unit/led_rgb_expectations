@@ -1,10 +1,9 @@
 x Can build LedRGB obj
 x Can set red, green, blue color
 x Can get the color of led
-- Each color should have specified red, green, blue state
-- Initially all leds disabled
+x Each color should have specified red, green, blue state
+x Initially all leds disabled
 - Can set one of seven colors with enum parameter
-- Initially led is idabled
 - Can enable or disable led
 - When disabling led, the previous state should be saved, and after enabling it should have previous color
 

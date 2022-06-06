@@ -21,6 +21,12 @@ Color LedColor::getLedColor() {
 
 LedRGB::LedRGB(std::map<Color, LedColor> colors_) {
     available_colors = colors_;
+    Led_t all_disabled = {
+        .red = LedState::DISABLED,
+        .green = LedState::DISABLED,
+        .blue = LedState::DISABLED
+    };
+    led_states = all_disabled;
 }
 
 LedRGB::~LedRGB() {}
