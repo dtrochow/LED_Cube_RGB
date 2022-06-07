@@ -1,5 +1,3 @@
-#include <iostream>
-
 #pragma once
 
 enum class Color : std::uint8_t {

@@ -1,10 +1,8 @@
 #include <gtest/gtest.h>
-#include <iostream>
 
 #include "colors_config.hpp"
 #include "led_rgb.hpp"
 
-using namespace std;
 
 class LedRGBTest : public ::testing::Test {
 public:
