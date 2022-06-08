@@ -1,8 +1,21 @@
 cmake_minimum_required(VERSION 3.14)
-project(my_project)
+set(projname "led_cube_rgb_unit")
+project(${projname})
+
+function(add_utest test_name test_files dependencies)
+  add_executable(${test_name}
+    ${test_files}
+  )
+  target_link_libraries(${test_name}
+    ${dependencies}
+    gtest_main
+  )
+  add_test(${test_name} ${test_name})
+endfunction()
+
 
 # GoogleTest requires at least C++11
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -15,14 +28,6 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-add_executable(
-  hello_test
-  hello_test.cc
-)
-target_link_libraries(
-  hello_test
-  gtest_main
-)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../new_led_cube ${CMAKE_CURRENT_BINARY_DIR}/new_led_cube)
 
-include(GoogleTest)
-gtest_discover_tests(hello_test)
+add_utest("led_rgb_test" led_rgb_test.cpp new_led_cube)
