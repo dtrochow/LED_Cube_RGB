@@ -23,6 +23,7 @@ target_link_libraries(${projname}
 	hardware_i2c
 	mcp23017_lib
 	led_cube
+	${CMAKE_SOURCE_DIR}/rusty/target/thumbv6m-none-eabi/release/librusty.a
 	)
 
 add_compile_options(-Wall

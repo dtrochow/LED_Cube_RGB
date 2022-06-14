@@ -13,8 +13,15 @@
 const int I2C_SPEED = 1000000;
 const uint LED_PIN = 25;
 
+void gpio_put_explicit(int pin, bool state){
+    gpio_put(pin, state);
+}
+
+int blink(int pin, int time);
+
 void core1_entry() {
     while (1) {
+        blink(LED_PIN, 100);
     }
 }
 
@@ -34,5 +41,7 @@ int main(void) {
     lc_init(i2c1);
 
     while (true) {
+        la_test_all_leds(200);
+
     }
 }
