@@ -11,6 +11,7 @@ public:
     ~LedMatrix();
     int getDimension(Dimension dim);
     vector<vector<vector<LedRGB*>>> leds;
+    void enableAll();
 protected:
     int size_x;
     int size_y;

@@ -1,7 +1,7 @@
 #include <map>
 #include "led_matrix.hpp"
 
-LedMatrix::LedMatrix(int x, int y, int z ,const LedCreator& factory) {
+LedMatrix::LedMatrix(int x, int y, int z, const LedCreator& factory) {
     size_x = x;
     size_y = y;
     size_z = z;
