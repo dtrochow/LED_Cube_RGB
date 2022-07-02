@@ -4,16 +4,16 @@
 #include "led_rgb.hpp"
 
 
-class LedRGBTest : public ::testing::Test {
+class LedRGBAnalogTest : public ::testing::Test {
 public:
-    LedRGBTest();
+    LedRGBAnalogTest();
 protected:
-    LedRGB lRGB;
+    LedRGBAnalog lRGB;
 };
 
-LedRGBTest::LedRGBTest() : lRGB(ledConfig_getColors()) {}
+LedRGBAnalogTest::LedRGBAnalogTest() : lRGB(ledConfig_getColors()) {}
 
-Led_t getLedStates(LedRGB led_rgb) {
+Led_t getLedStates(LedRGBAnalog led_rgb) {
     Led_t states = {
         .red = led_rgb.getLedDiodeState(Led::RED),
         .green = led_rgb.getLedDiodeState(Led::GREEN),
@@ -22,7 +22,7 @@ Led_t getLedStates(LedRGB led_rgb) {
     return states;
 }
 
-TEST_F(LedRGBTest, CanSetAndGetRGBColor) {
+TEST_F(LedRGBAnalogTest, CanSetAndGetRGBColor) {
     lRGB.setColor(Color::RED);
     EXPECT_EQ(lRGB.getColor(), Color::RED);
     lRGB.setColor(Color::GREEN);
@@ -31,7 +31,7 @@ TEST_F(LedRGBTest, CanSetAndGetRGBColor) {
     EXPECT_EQ(lRGB.getColor(), Color::BLUE);
 }
 
-TEST_F(LedRGBTest, RGBLedWithRedColor) {
+TEST_F(LedRGBAnalogTest, RGBLedWithRedColor) {
     lRGB.setColor(Color::RED);
     Led_t states = getLedStates(lRGB);
     Led_t expected_states = {
@@ -42,7 +42,7 @@ TEST_F(LedRGBTest, RGBLedWithRedColor) {
     EXPECT_EQ(states, expected_states);
 }
 
-TEST_F(LedRGBTest, RGBLedWithGreenColor) {
+TEST_F(LedRGBAnalogTest, RGBLedWithGreenColor) {
     lRGB.setColor(Color::GREEN);
     Led_t states = getLedStates(lRGB);
     Led_t expected_states = {
@@ -53,7 +53,7 @@ TEST_F(LedRGBTest, RGBLedWithGreenColor) {
     EXPECT_EQ(states, expected_states);
 }
 
-TEST_F(LedRGBTest, RGBLedWithBlueColor) {
+TEST_F(LedRGBAnalogTest, RGBLedWithBlueColor) {
     lRGB.setColor(Color::BLUE);
     Led_t states = getLedStates(lRGB);
     Led_t expected_states = {
@@ -64,7 +64,7 @@ TEST_F(LedRGBTest, RGBLedWithBlueColor) {
     EXPECT_EQ(states, expected_states);
 }
 
-TEST_F(LedRGBTest, RGBLedWithCyanColor) {
+TEST_F(LedRGBAnalogTest, RGBLedWithCyanColor) {
     lRGB.setColor(Color::CYAN);
     Led_t states = getLedStates(lRGB);
     Led_t expected_states = {
@@ -75,7 +75,7 @@ TEST_F(LedRGBTest, RGBLedWithCyanColor) {
     EXPECT_EQ(states, expected_states);
 }
 
-TEST_F(LedRGBTest, RGBLedWithMagentaColor) {
+TEST_F(LedRGBAnalogTest, RGBLedWithMagentaColor) {
     lRGB.setColor(Color::MAGENTA);
     Led_t states = getLedStates(lRGB);
     Led_t expected_states = {
@@ -86,7 +86,7 @@ TEST_F(LedRGBTest, RGBLedWithMagentaColor) {
     EXPECT_EQ(states, expected_states);
 }
 
-TEST_F(LedRGBTest, RGBLedWithYellowColor) {
+TEST_F(LedRGBAnalogTest, RGBLedWithYellowColor) {
     lRGB.setColor(Color::YELLOW);
     Led_t states = getLedStates(lRGB);
     Led_t expected_states = {
@@ -97,7 +97,7 @@ TEST_F(LedRGBTest, RGBLedWithYellowColor) {
     EXPECT_EQ(states, expected_states);
 }
 
-TEST_F(LedRGBTest, RGBLedWithWhiteColor) {
+TEST_F(LedRGBAnalogTest, RGBLedWithWhiteColor) {
     lRGB.setColor(Color::WHITE);
     Led_t states = getLedStates(lRGB);
     Led_t expected_states = {
@@ -108,7 +108,7 @@ TEST_F(LedRGBTest, RGBLedWithWhiteColor) {
     EXPECT_EQ(states, expected_states);
 }
 
-TEST_F(LedRGBTest, InitiallyAllLedsDisabled) {
+TEST_F(LedRGBAnalogTest, InitiallyAllLedsDisabled) {
     Led_t states = getLedStates(lRGB);
     Led_t expected_states = {
         .red = LedState::DISABLED,
@@ -118,7 +118,7 @@ TEST_F(LedRGBTest, InitiallyAllLedsDisabled) {
     EXPECT_EQ(states, expected_states);
 }
 
-TEST_F(LedRGBTest, CanDisableWholeRGBLed) {
+TEST_F(LedRGBAnalogTest, CanDisableWholeRGBLed) {
     lRGB.setColor(Color::WHITE);
     Led_t enable_states = getLedStates(lRGB);
     Led_t enable_expected_states = {
@@ -139,7 +139,7 @@ TEST_F(LedRGBTest, CanDisableWholeRGBLed) {
     EXPECT_EQ(color, Color::NONE);
 }
 
-TEST_F(LedRGBTest, CanEnableWholeRGBLedWithPreviousState) {
+TEST_F(LedRGBAnalogTest, CanEnableWholeRGBLedWithPreviousState) {
     lRGB.setColor(Color::CYAN);
     Led_t cyan_states = getLedStates(lRGB);
     Led_t cyan_expected_states = {

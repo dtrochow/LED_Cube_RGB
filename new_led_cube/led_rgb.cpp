@@ -18,8 +18,8 @@ Color LedColor::getLedColor() {
     return color;
 }
 
-LedRGB::LedRGB(std::map<Color, LedColor> colors_) {
-    available_colors = colors_;
+LedRGBAnalog::LedRGBAnalog(ColorDefs colors_config) {
+    available_colors = colors_config;
     Led_t all_disabled = {
         .red = LedState::DISABLED,
         .green = LedState::DISABLED,
@@ -28,19 +28,19 @@ LedRGB::LedRGB(std::map<Color, LedColor> colors_) {
     led_states = all_disabled;
 }
 
-LedRGB::~LedRGB() {}
+LedRGBAnalog::~LedRGBAnalog() {}
 
-void LedRGB::setColor(Color color_) {
+void LedRGBAnalog::setColor(Color color_) {
     LedColor colorObj = getColorObj(color_);
     color = colorObj.getLedColor();
     led_states = colorObj.getLedStates();
 }
 
-Color LedRGB::getColor() {
+Color LedRGBAnalog::getColor() {
     return color;
 }
 
-LedState LedRGB::getLedDiodeState(Led led_) {
+LedState LedRGBAnalog::getLedDiodeState(Led led_) {
     switch(led_) {
         case Led::RED:
             return led_states.red;
@@ -54,12 +54,12 @@ LedState LedRGB::getLedDiodeState(Led led_) {
     }
 }
 
-LedColor LedRGB::getColorObj(Color color_) {
+LedColor LedRGBAnalog::getColorObj(Color color_) {
     auto it = available_colors.find(color_);
     return it->second;
 }
 
-void LedRGB::disable() {
+void LedRGBAnalog::disable() {
     color_before_disable = color;
     Led_t all_disabled = {
         .red = LedState::DISABLED,
@@ -70,6 +70,19 @@ void LedRGB::disable() {
     led_states = all_disabled;
 }
 
-void LedRGB::enable() {
+void LedRGBAnalog::enable() {
     setColor(color_before_disable);
+}
+
+LedRGB* LedCreator::MakeLed() const {
+    LedRGB* led = this->CreateMethod();
+    return led;
+}
+
+AnalogLedCreator::AnalogLedCreator(ColorDefs color_config) {
+    colors = color_config;
+}
+
+LedRGB* AnalogLedCreator::CreateMethod() const {
+    return new LedRGBAnalog(colors);
 }
