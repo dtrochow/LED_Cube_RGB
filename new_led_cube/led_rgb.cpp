@@ -28,8 +28,6 @@ LedRGBAnalog::LedRGBAnalog(ColorDefs colors_config) {
     led_states = all_disabled;
 }
 
-LedRGBAnalog::~LedRGBAnalog() {}
-
 void LedRGBAnalog::setColor(Color color_) {
     LedColor colorObj = getColorObj(color_);
     color = colorObj.getLedColor();

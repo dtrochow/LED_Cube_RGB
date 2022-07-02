@@ -10,4 +10,6 @@ public:
     MOCK_METHOD(LedState, getLedDiodeState, (Led led));
     MOCK_METHOD(void, disable, ());
     MOCK_METHOD(void, enable, ());
+    MOCK_METHOD(void, Die, ());
+    ~MockLedRGB() override { Die(); }
 };

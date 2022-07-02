@@ -15,6 +15,7 @@ protected:
 
 class LedRGB {
 public:
+    virtual ~LedRGB() {};
     virtual void enable() {};
     virtual void disable() {};
     virtual void setColor(Color color_) {};
@@ -27,7 +28,7 @@ typedef std::map<Color, LedColor> ColorDefs;
 class LedRGBAnalog : public LedRGB {
 public:
     LedRGBAnalog(ColorDefs colors_config);
-    ~LedRGBAnalog();
+    ~LedRGBAnalog() {};
     void setColor(Color color_) override;
     Color getColor() override;
     LedState getLedDiodeState(Led led) override;
