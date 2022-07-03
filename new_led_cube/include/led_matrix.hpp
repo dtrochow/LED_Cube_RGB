@@ -5,8 +5,12 @@
 #include <map>
 using namespace std;
 
-typedef vector<LedRGB*> LedRGB3DMatrix;
+typedef vector<vector<vector<LedRGB*>>> LedRGB3DMatrix;
 typedef vector<vector<vector<int>>> Int3DMatrix;
+
+enum class Action {
+    ENABLE_ALL
+};
 
 class LedMatrix {
 public:
@@ -14,24 +18,19 @@ public:
     ~LedMatrix() {};
     int getDimension(Dimension dim);
     LedRGB3DMatrix leds;
+    void action(Action action);
     void enableAll();
 protected:
     int size_x;
     int size_y;
     int size_z;
     Int3DMatrix enable_counter;
+private:
+    void fillMatrixWithLeds(const LedCreator& factory);
 };
 
 class MatrixOperation {
 public:
     virtual ~MatrixOperation() {}
     virtual void run() {} 
-};
-
-class EnableAll : public MatrixOperation {
-public:
-    EnableAll(LedRGB3DMatrix matrix);
-    void run() override;
-private:
-    LedRGB3DMatrix led_matrix;
 };

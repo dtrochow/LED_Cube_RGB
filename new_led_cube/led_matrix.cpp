@@ -3,31 +3,41 @@
 
 using namespace std;
 
-EnableAll::EnableAll(LedRGB3DMatrix matrix) {
-    led_matrix = matrix;
-}
-
-void EnableAll::run() {
-    led_matrix[0]->enable();
-    led_matrix[1]->enable();
-    led_matrix[2]->enable();
-    led_matrix[3]->enable();
-    led_matrix[1]->enable();
-    // led_matrix[0][0][0]->enable();
-    // led_matrix[2][2][3]->enable();
-    // led_matrix[3][3][3]->enable();
-}
+class EnableAll : public MatrixOperation {
+public:
+    EnableAll(LedRGB3DMatrix matrix) {
+        led_matrix = matrix;
+    }
+    void run() override {
+        for (int i = 0; i < led_matrix.size(); i++) {
+            for (int j = 0; j < led_matrix[0].size(); j++) {
+                for (int k = 0; k < led_matrix[0][0].size(); k ++) {
+                    led_matrix[i][j][k]->enable();
+        }}}}
+private:
+    LedRGB3DMatrix led_matrix;
+};
 
 LedMatrix::LedMatrix(int x, int y, int z, const LedCreator& factory) {
     size_x = x;
     size_y = y;
     size_z = z;
-    // leds.resize(size_x, vector<vector<LedRGB*>>(size_y, vector<LedRGB*>(size_z, factory.MakeLed())));
-    leds.push_back(factory.MakeLed());
-    leds.push_back(factory.MakeLed());
-    leds.push_back(factory.MakeLed());
-    leds.push_back(factory.MakeLed());
+    fillMatrixWithLeds(factory);
     enable_counter.resize(size_x, vector<vector<int>>(size_y, vector<int>(size_z, 0)));
+}
+
+void LedMatrix::fillMatrixWithLeds(const LedCreator& factory) {
+    for (int i = 0; i < size_x; i++) {
+        vector<vector<LedRGB*>> v_y;
+        for (int j = 0; j < size_y; j++) {
+            vector<LedRGB*> v_z;
+            for (int k = 0; k < size_z; k ++) {
+                v_z.push_back(factory.MakeLed());
+            }
+            v_y.push_back(v_z);
+        }
+        leds.push_back(v_y);
+    }
 }
 
 int LedMatrix::getDimension(Dimension dim) {
@@ -41,7 +51,11 @@ int LedMatrix::getDimension(Dimension dim) {
     }
 }
 
-void LedMatrix::enableAll() {
-    EnableAll ea(leds);
-    ea.run();
+void LedMatrix::action(Action a) {
+    switch(a) {
+        case Action::ENABLE_ALL:
+            EnableAll act(leds);
+            act.run();
+            break;
+    }
 }
