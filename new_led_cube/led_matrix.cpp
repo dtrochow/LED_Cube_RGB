@@ -52,10 +52,14 @@ int LedMatrix::getDimension(Dimension dim) {
 }
 
 void LedMatrix::action(Action a) {
+    MatrixOperation* operation;
     switch(a) {
         case Action::ENABLE_ALL:
-            EnableAll act(leds);
-            act.run();
+            operation = new EnableAll(leds);
             break;
+        // case Action::ENABLE_SINGLE:
+        //     operation = new EnableSingle(leds);
+        //     break;
     }
+    operation->run();
 }

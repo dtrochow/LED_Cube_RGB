@@ -26,6 +26,8 @@ LedRGBAnalog::LedRGBAnalog(ColorDefs colors_config) {
         .blue = LedState::DISABLED
     };
     led_states = all_disabled;
+    color = Color::NONE;
+    color_before_disable = Color::NONE;
 }
 
 void LedRGBAnalog::setColor(Color color_) {

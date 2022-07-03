@@ -42,6 +42,15 @@ protected:
     vector<MockLedRGB*> mock_leds;
 };
 
+// What params operation method should contain:
+// * Action enum (choosing operation) [required]
+// * Coordinates (cartesian coordinates - x, y, z) [required] <- when choosing plane it should be different call
+//          - plane: coordinates base class
+//                  - cartesian: if cartesian, choode using x, y, z cartesian position
+//                  - plane: if plane, choose using X, Y, Z and posistion
+// * Color (color to be set) [optional] <- there is possibility to only enable/disable diode without changing color
+// * Enable/Disable parameter [required] <- if current color is NONE, error should occur
+
 // [X] 1. Make method for filling all matrix fields with LedRGB objects
 // [X] 2. Make helper method for destroying mock objects
 // [X] 3. Enable All
@@ -49,6 +58,9 @@ protected:
 // [ ] 5. Enaple row
 // [ ] 6. Enable plane
 // [ ] 7. Enable single led
+
+// Static assert example:
+//  -     static_assert(false, "something");
 
 TEST_F(LedMatrixTest, CanEnableAllLedsInArray) {
     LedMatrix* matrix = new LedMatrix(4, 4, 4, *ledFactory);

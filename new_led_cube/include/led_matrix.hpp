@@ -9,7 +9,8 @@ typedef vector<vector<vector<LedRGB*>>> LedRGB3DMatrix;
 typedef vector<vector<vector<int>>> Int3DMatrix;
 
 enum class Action {
-    ENABLE_ALL
+    ENABLE_ALL,
+    ENABLE_SINGLE
 };
 
 class LedMatrix {
