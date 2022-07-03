@@ -52,14 +52,14 @@ protected:
 
 TEST_F(LedMatrixTest, CanEnableAllLedsInArray) {
     LedMatrix* matrix = new LedMatrix(4, 4, 4, *ledFactory);
-    mock_leds.push_back(GetSingleLedMock(0, 0, 0, matrix->leds));
-    mock_leds.push_back(GetSingleLedMock(3, 3, 3, matrix->leds));
-    mock_leds.push_back(GetSingleLedMock(1, 2, 3, matrix->leds));
-    mock_leds.push_back(GetSingleLedMock(3, 3, 0, matrix->leds));
-    EXPECT_CALL(*mock_leds[0], enable()).Times(1);
-    EXPECT_CALL(*mock_leds[1], enable()).Times(1);
-    EXPECT_CALL(*mock_leds[2], enable()).Times(1);
-    EXPECT_CALL(*mock_leds[3], enable()).Times(1);
+    for (int i = 0; i < 4; i ++) {
+        for (int j = 0; j < 4; j ++) {
+            for (int k = 0; k < 4; k ++) {
+                mock_leds.push_back(GetSingleLedMock(i, j, k, matrix->leds));
+                EXPECT_CALL(*mock_leds.back(), enable()).Times(1);
+            }
+        }
+    }
     matrix->action(Action::ENABLE_ALL);
 }
 
