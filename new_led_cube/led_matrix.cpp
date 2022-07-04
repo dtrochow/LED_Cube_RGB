@@ -3,21 +3,6 @@
 
 using namespace std;
 
-class EnableAll : public MatrixOperation {
-public:
-    EnableAll(LedRGB3DMatrix matrix) {
-        led_matrix = matrix;
-    }
-    void run() override {
-        for (int i = 0; i < led_matrix.size(); i++) {
-            for (int j = 0; j < led_matrix[0].size(); j++) {
-                for (int k = 0; k < led_matrix[0][0].size(); k ++) {
-                    led_matrix[i][j][k]->enable();
-        }}}}
-private:
-    LedRGB3DMatrix led_matrix;
-};
-
 LedMatrix::LedMatrix(int x, int y, int z, const LedCreator& factory) {
     size_x = x;
     size_y = y;
@@ -51,15 +36,20 @@ int LedMatrix::getDimension(Dimension dim) {
     }
 }
 
-void LedMatrix::action(Action a) {
-    MatrixOperation* operation;
-    switch(a) {
-        case Action::ENABLE_ALL:
-            operation = new EnableAll(leds);
-            break;
-        // case Action::ENABLE_SINGLE:
-        //     operation = new EnableSingle(leds);
-        //     break;
+void LedMatrix::action(MatrixOperation* operation) {
+    operation->run(leds);
+}
+
+void EnableAll::run(LedRGB3DMatrix led_matrix) {
+    for (int x = 0; x < coordinates->x; x++) {
+        for (int y= 0; y < coordinates->y; y++) {
+            for (int z = 0; z < coordinates->z; z ++) {
+                led_matrix[x][y][z]->enable();
+            }
+        }
     }
-    operation->run();
+}
+
+void EnableSingle::run(LedRGB3DMatrix led_matrix) {
+    led_matrix[coordinates->x][coordinates->y][coordinates->z]->enable();
 }

@@ -13,13 +13,37 @@ enum class Action {
     ENABLE_SINGLE
 };
 
+class MatrixOperation {
+public:
+    virtual ~MatrixOperation() {}
+    virtual void run(LedRGB3DMatrix matrix) {} 
+};
+
+class EnableAll : public MatrixOperation {
+public:
+    EnableAll(CartesianCoordinates* coordinates_) {
+        coordinates = coordinates_;
+    };
+    void run(LedRGB3DMatrix matrix) override;
+    CartesianCoordinates* coordinates;
+};
+
+class EnableSingle : public MatrixOperation {
+public:
+    EnableSingle(CartesianCoordinates* coordinates_) {
+        coordinates = coordinates_;
+    }
+    void run(LedRGB3DMatrix matrix) override;
+    CartesianCoordinates* coordinates;
+};
+
 class LedMatrix {
 public:
     LedMatrix(int x, int y, int z, const LedCreator& factory);
     ~LedMatrix() {};
     int getDimension(Dimension dim);
     LedRGB3DMatrix leds;
-    void action(Action action);
+    void action(MatrixOperation* operation);
     void enableAll();
 protected:
     int size_x;
@@ -30,8 +54,4 @@ private:
     void fillMatrixWithLeds(const LedCreator& factory);
 };
 
-class MatrixOperation {
-public:
-    virtual ~MatrixOperation() {}
-    virtual void run() {} 
-};
+

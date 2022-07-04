@@ -54,13 +54,21 @@ protected:
 // [X] 1. Make method for filling all matrix fields with LedRGB objects
 // [X] 2. Make helper method for destroying mock objects
 // [X] 3. Enable All
-// [ ] 4. Enable column
-// [ ] 5. Enaple row
-// [ ] 6. Enable plane
-// [ ] 7. Enable single led
+// [X] 4. Enable single led
+// [ ] 5. Add all missing parameters
+// [ ] 6. Enable column
+// [ ] 7. Enaple row
+// [ ] 8. Enable plane
 
 // Static assert example:
 //  -     static_assert(false, "something");
+
+TEST_F(LedMatrixTest, CanSetTheMatrixSize) {
+    LedMatrix lMatrix(4, 5, 6, *ledFactory);
+    EXPECT_EQ(lMatrix.getDimension(Dimension::X), 4);
+    EXPECT_EQ(lMatrix.getDimension(Dimension::Y), 5);
+    EXPECT_EQ(lMatrix.getDimension(Dimension::Z), 6);
+}
 
 TEST_F(LedMatrixTest, CanEnableAllLedsInArray) {
     LedMatrix* matrix = new LedMatrix(4, 4, 4, *ledFactory);
@@ -72,12 +80,16 @@ TEST_F(LedMatrixTest, CanEnableAllLedsInArray) {
             }
         }
     }
-    matrix->action(Action::ENABLE_ALL);
+    CartesianCoordinates* cr = new CartesianCoordinates(4, 4, 4);
+    MatrixOperation* enable_all = new EnableAll(cr);
+    matrix->action(enable_all);
 }
 
-TEST_F(LedMatrixTest, CanSetTheMatrixSize) {
-    LedMatrix lMatrix(4, 5, 6, *ledFactory);
-    EXPECT_EQ(lMatrix.getDimension(Dimension::X), 4);
-    EXPECT_EQ(lMatrix.getDimension(Dimension::Y), 5);
-    EXPECT_EQ(lMatrix.getDimension(Dimension::Z), 6);
+TEST_F(LedMatrixTest, CanEnableSingleLedInArray) {
+    LedMatrix* matrix = new LedMatrix(4, 4, 4, *ledFactory);
+    mock_leds.push_back(GetSingleLedMock(1, 2, 3, matrix->leds));
+    EXPECT_CALL(*mock_leds[0], enable()).Times(1);
+    CartesianCoordinates* cr = new CartesianCoordinates(1, 2, 3);
+    MatrixOperation* enable_single = new EnableSingle(cr);
+    matrix->action(enable_single);
 }
