@@ -27,11 +27,18 @@ public:
     int z;
 };
 
-class PlaneCoordinates : public Coordinates {
-    PlaneCoordinates(Plane plane_, int position_) {
-        position = position_;
+class ColumnCoordinates : public Coordinates {
+public:
+    ColumnCoordinates(Plane plane_, int first_coordinate_, int second_coordinate_, int height_, int start_ = 0) {
+        first_coordinate = first_coordinate_;
+        second_coordinate = second_coordinate_;
+        start = start_;
+        height = height_;
         plane = plane_;
     }
-    int position;
+    int first_coordinate;
+    int second_coordinate;
+    int start;
+    int height;
     Plane plane;
 };

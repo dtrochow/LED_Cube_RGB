@@ -37,6 +37,15 @@ public:
     CartesianCoordinates* coordinates;
 };
 
+class EnableColumn: public MatrixOperation {
+public:
+    EnableColumn(ColumnCoordinates* coordinates_) {
+        coordinates = coordinates_;
+    }
+    void run(LedRGB3DMatrix led_matrix, LedSwitch switch_state, Color color = Color::NONE) override;
+    ColumnCoordinates* coordinates;
+};
+
 class LedMatrix {
 public:
     LedMatrix(int x, int y, int z, const LedCreator& factory);

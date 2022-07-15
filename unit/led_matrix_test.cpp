@@ -55,7 +55,7 @@ protected:
 // [X] 3. Enable All
 // [X] 4. Enable single led
 // [X] 5. Add all missing parameters
-// [ ] 6. Enable column
+// [X] 6. Enable column
 // [ ] 7. Enable plane
 // [ ] 8. Enable cuboid
 
@@ -124,4 +124,38 @@ TEST_F(LedMatrixTest, CanSetColorToSingleLed) {
     CartesianCoordinates* cr = new CartesianCoordinates(2, 2, 2);
     MatrixOperation* enable_single = new EnableSingle(cr);
     matrix->action(enable_single, LedSwitch::DISABLE, Color::RED);
+}
+
+TEST_F(LedMatrixTest, CanEnableSingleColumnAndSetColor) {
+    LedMatrix* matrix = new LedMatrix(3, 3, 3, *ledFactory);
+    // Plane Z
+    for (int i = 0; i < 3; i ++) {
+        // Get led mocks from column Z(1,2) <- plane Z, cartesian coordinates (x=1,y=2)
+        mock_leds.push_back(GetSingleLedMock(1, 2, i, matrix->leds));
+        EXPECT_CALL(*mock_leds.back(), enable()).Times(1);
+        EXPECT_CALL(*mock_leds.back(), setColor(Color::CYAN)).Times(1);
+    }
+    ColumnCoordinates* cr_z = new ColumnCoordinates(Plane::Z, 1, 2, 3);
+    MatrixOperation* enable_Z_column = new EnableColumn(cr_z);
+    matrix->action(enable_Z_column, LedSwitch::ENABLE, Color::CYAN);
+    // Plane X
+    for (int i = 0; i < 3; i ++) {
+        // Get led mocks from column X(0,2) <- plane X, cartesian coordinates (y=0,z=2)
+        mock_leds.push_back(GetSingleLedMock(i, 0, 2, matrix->leds));
+        EXPECT_CALL(*mock_leds.back(), enable()).Times(1);
+        EXPECT_CALL(*mock_leds.back(), setColor(Color::MAGENTA)).Times(1);
+    }
+    ColumnCoordinates* cr_x = new ColumnCoordinates(Plane::X, 0, 2, 3);
+    MatrixOperation* enable_X_column = new EnableColumn(cr_x);
+    matrix->action(enable_X_column, LedSwitch::ENABLE, Color::MAGENTA);
+    // Plane Y
+    for (int i = 0; i < 3; i ++) {
+        // Get led mocks from column Y(2,1) <- plane Y, cartesian coordinates (x=2,z=1)
+        mock_leds.push_back(GetSingleLedMock(2, i, 1, matrix->leds));
+        EXPECT_CALL(*mock_leds.back(), enable()).Times(1);
+        EXPECT_CALL(*mock_leds.back(), setColor(Color::BLUE)).Times(1);
+    }
+    ColumnCoordinates* cr_y = new ColumnCoordinates(Plane::Y, 2, 1, 3);
+    MatrixOperation* enable_Y_column = new EnableColumn(cr_y);
+    matrix->action(enable_Y_column, LedSwitch::ENABLE, Color::BLUE);
 }

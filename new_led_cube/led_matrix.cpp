@@ -70,3 +70,27 @@ void EnableSingle::run(LedRGB3DMatrix led_matrix, LedSwitch switch_state, Color 
     LM_EnableDisableLed(led_matrix, coordinates->x, coordinates->y, coordinates->z, switch_state);
     LM_SetLedColor(led_matrix, coordinates->x, coordinates->y, coordinates->z, color);
 }
+
+void EnableColumn::run(LedRGB3DMatrix led_matrix, LedSwitch switch_state, Color color) {
+    int end = coordinates->start + coordinates->height;
+    switch(coordinates->plane) {
+        case Plane::X:
+            for (int x = coordinates->start; x < end; x ++) {
+                LM_EnableDisableLed(led_matrix, x, coordinates->first_coordinate, coordinates->second_coordinate, switch_state);
+                LM_SetLedColor(led_matrix, x, coordinates->first_coordinate, coordinates->second_coordinate, color);
+            }
+            break;
+        case Plane::Y:
+            for (int y = coordinates->start; y < end; y ++) {
+                LM_EnableDisableLed(led_matrix, coordinates->first_coordinate, y, coordinates->second_coordinate, switch_state);
+                LM_SetLedColor(led_matrix, coordinates->first_coordinate, y, coordinates->second_coordinate, color);
+            }
+            break;
+        case Plane::Z:
+            for (int z = coordinates->start; z < end; z ++) {
+                LM_EnableDisableLed(led_matrix, coordinates->first_coordinate, coordinates->second_coordinate, z, switch_state);
+                LM_SetLedColor(led_matrix, coordinates->first_coordinate, coordinates->second_coordinate, z, color);
+            }
+            break;
+    }
+}
