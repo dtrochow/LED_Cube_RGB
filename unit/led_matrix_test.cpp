@@ -43,21 +43,21 @@ protected:
 };
 
 // What params operation method should contain:
-// [x] Action object with Coordinates (cartesian coordinates - x, y, z) [required] <- when choosing plane it should be different call
+// [X] Action object with Coordinates (cartesian coordinates - x, y, z) [required] <- when choosing plane it should be different call
 //          - plane: coordinates base class
 //                  - cartesian: if cartesian, choode using x, y, z cartesian position
 //                  - plane: if plane, choose using X, Y, Z and posistion
-// [ ] Color (color to be set) [optional] <- there is possibility to only enable/disable diode without changing color
+// [X] Color (color to be set) [optional] <- there is possibility to only enable/disable diode without changing color
 // [X] Enable/Disable parameter [required] <- if current color is NONE, error should occur
 
 // [X] 1. Make method for filling all matrix fields with LedRGB objects
 // [X] 2. Make helper method for destroying mock objects
 // [X] 3. Enable All
 // [X] 4. Enable single led
-// [ ] 5. Add all missing parameters
+// [X] 5. Add all missing parameters
 // [ ] 6. Enable column
-// [ ] 7. Enaple row
-// [ ] 8. Enable plane
+// [ ] 7. Enable plane
+// [ ] 8. Enable cuboid
 
 // Static assert example:
 //  -     static_assert(false, "something");
@@ -115,4 +115,13 @@ TEST_F(LedMatrixTest, CanDisableSingleLedInArray) {
     CartesianCoordinates* cr = new CartesianCoordinates(1, 2, 3);
     MatrixOperation* enable_single = new EnableSingle(cr);
     matrix->action(enable_single, LedSwitch::DISABLE);
+}
+
+TEST_F(LedMatrixTest, CanSetColorToSingleLed) {
+    LedMatrix* matrix = new LedMatrix(4, 4, 4, *ledFactory);
+    mock_leds.push_back(GetSingleLedMock(2, 2, 2, matrix->leds));
+    EXPECT_CALL(*mock_leds[0], setColor(Color::RED)).Times(1);
+    CartesianCoordinates* cr = new CartesianCoordinates(2, 2, 2);
+    MatrixOperation* enable_single = new EnableSingle(cr);
+    matrix->action(enable_single, LedSwitch::DISABLE, Color::RED);
 }

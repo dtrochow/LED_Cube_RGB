@@ -16,7 +16,7 @@ enum class Action {
 class MatrixOperation {
 public:
     virtual ~MatrixOperation() {}
-    virtual void run(LedRGB3DMatrix led_matrix, LedSwitch switch_state) {} 
+    virtual void run(LedRGB3DMatrix led_matrix, LedSwitch switch_state, Color color = Color::NONE) {} 
 };
 
 class EnableAll : public MatrixOperation {
@@ -24,7 +24,7 @@ public:
     EnableAll(CartesianCoordinates* coordinates_) {
         coordinates = coordinates_;
     };
-    void run(LedRGB3DMatrix led_matrix, LedSwitch switch_state) override;
+    void run(LedRGB3DMatrix led_matrix, LedSwitch switch_state, Color color = Color::NONE) override;
     CartesianCoordinates* coordinates;
 };
 
@@ -33,7 +33,7 @@ public:
     EnableSingle(CartesianCoordinates* coordinates_) {
         coordinates = coordinates_;
     }
-    void run(LedRGB3DMatrix led_matrix, LedSwitch switch_state) override;
+    void run(LedRGB3DMatrix led_matrix, LedSwitch switch_state, Color color = Color::NONE) override;
     CartesianCoordinates* coordinates;
 };
 
@@ -43,7 +43,7 @@ public:
     ~LedMatrix() {};
     int getDimension(Dimension dim);
     LedRGB3DMatrix leds;
-    void action(MatrixOperation* operation, LedSwitch switch_state);
+    void action(MatrixOperation* operation, LedSwitch switch_state, Color color = Color::NONE);
     void enableAll();
 protected:
     int size_x;
