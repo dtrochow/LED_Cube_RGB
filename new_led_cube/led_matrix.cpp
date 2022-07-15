@@ -36,20 +36,29 @@ int LedMatrix::getDimension(Dimension dim) {
     }
 }
 
-void LedMatrix::action(MatrixOperation* operation) {
-    operation->run(leds);
+void LedMatrix::action(MatrixOperation* operation, LedSwitch switch_state) {
+    operation->run(leds, switch_state);
 }
 
-void EnableAll::run(LedRGB3DMatrix led_matrix) {
+static void LM_EnableDisableLed(LedRGB3DMatrix led_matrix, int x, int y, int z, LedSwitch switch_state) {
+    if (LedSwitch::ENABLE == switch_state) {
+        led_matrix[x][y][z]->enable();
+    }
+    else if (LedSwitch::DISABLE == switch_state) {
+        led_matrix[x][y][z]->disable();
+    }
+}
+
+void EnableAll::run(LedRGB3DMatrix led_matrix, LedSwitch switch_state) {
     for (int x = 0; x < coordinates->x; x++) {
         for (int y= 0; y < coordinates->y; y++) {
             for (int z = 0; z < coordinates->z; z ++) {
-                led_matrix[x][y][z]->enable();
+                LM_EnableDisableLed(led_matrix, x, y, z, switch_state);
             }
         }
     }
 }
 
-void EnableSingle::run(LedRGB3DMatrix led_matrix) {
-    led_matrix[coordinates->x][coordinates->y][coordinates->z]->enable();
+void EnableSingle::run(LedRGB3DMatrix led_matrix, LedSwitch switch_state) {
+    LM_EnableDisableLed(led_matrix, coordinates->x, coordinates->y, coordinates->z, switch_state);
 }
