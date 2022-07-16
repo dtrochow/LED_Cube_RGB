@@ -6,7 +6,7 @@ function build {
 }
 
 if build ; then
-    cd build && ctest
+    cd build && ctest --output-on-failure
 else
     echo Build failed!
 fi
