@@ -58,3 +58,13 @@ public:
     int position;
     Plane plane;
 };
+
+class CuboidCoordinates : public Coordinates {
+public:
+    CuboidCoordinates(CartesianCoordinates* cr_start_, CartesianCoordinates* cr_end_) {
+        start = cr_start_;
+        end = cr_end_;
+    }
+    CartesianCoordinates* start;
+    CartesianCoordinates* end;
+};

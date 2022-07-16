@@ -57,7 +57,7 @@ protected:
 // [X] 5. Add all missing parameters
 // [X] 6. Enable column
 // [X] 7. Enable plane
-// [ ] 8. Enable cuboid
+// [X] 8. Enable cuboid
 
 // Static assert example:
 //  -     static_assert(false, "something");
@@ -195,4 +195,21 @@ TEST_F(LedMatrixTest, CanEnableSingleYPlane) {
     PlaneCoordinates* cr_y = new PlaneCoordinates(Plane::Y, 4);
     MatrixOperation* enable_Y_plane = new EnablePlane(cr_y);
     matrix->action(enable_Y_plane, LedSwitch::ENABLE);
+}
+
+TEST_F(LedMatrixTest, CanEnableSingleCuboid) {
+    LedMatrix* matrix = new LedMatrix(4, 4, 4, *ledFactory);
+    // Cuboid ((2, 2, 2),(3, 3, 3))
+    for (int x = 2; x < 3; x ++) {
+        for (int y = 2; y < 3; y ++) {
+            for (int z = 2; z < 3; z ++) 
+            mock_leds.push_back(GetSingleLedMock(x, y, z, matrix->leds));
+            EXPECT_CALL(*mock_leds.back(), enable()).Times(1);
+        }
+    }
+    CartesianCoordinates* cr_start = new CartesianCoordinates(2, 2, 2);
+    CartesianCoordinates* cr_end = new CartesianCoordinates(3, 3, 3);
+    CuboidCoordinates* cr = new CuboidCoordinates(cr_start, cr_end);
+    MatrixOperation* enable_cuboid = new EnableCuboid(cr);
+    matrix->action(enable_cuboid, LedSwitch::ENABLE);
 }

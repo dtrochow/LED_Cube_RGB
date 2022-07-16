@@ -55,6 +55,15 @@ public:
     PlaneCoordinates* coordinates;
 };
 
+class EnableCuboid: public MatrixOperation {
+public:
+    EnableCuboid(CuboidCoordinates* coordinates_) {
+        coordinates = coordinates_;
+    }
+    void run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color = Color::NONE) override;
+    CuboidCoordinates* coordinates;
+};
+
 class LedMatrix {
 public:
     LedMatrix(int x, int y, int z, const LedCreator& factory);
