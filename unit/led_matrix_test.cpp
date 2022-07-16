@@ -28,7 +28,7 @@ public:
 class LedMatrixTest : public ::testing::Test {
 public:
     void SetUp() override {
-        
+
     }
     void TearDown() override {
         for_each(mock_leds.begin(), mock_leds.end(), DeleteVector<MockLedRGB*>());
@@ -56,7 +56,7 @@ protected:
 // [X] 4. Enable single led
 // [X] 5. Add all missing parameters
 // [X] 6. Enable column
-// [ ] 7. Enable plane
+// [X] 7. Enable plane
 // [ ] 8. Enable cuboid
 
 // Static assert example:
@@ -99,13 +99,14 @@ TEST_F(LedMatrixTest, CanDisableAllLedsInArray) {
     matrix->action(enable_all, LedSwitch::DISABLE);
 }
 
-TEST_F(LedMatrixTest, CanEnableSingleLedInArray) {
+TEST_F(LedMatrixTest, CanSetColorToSingleLed) {
     LedMatrix* matrix = new LedMatrix(4, 4, 4, *ledFactory);
-    mock_leds.push_back(GetSingleLedMock(1, 2, 3, matrix->leds));
+    mock_leds.push_back(GetSingleLedMock(2, 2, 2, matrix->leds));
+    EXPECT_CALL(*mock_leds[0], setColor(Color::RED)).Times(1);
     EXPECT_CALL(*mock_leds[0], enable()).Times(1);
-    CartesianCoordinates* cr = new CartesianCoordinates(1, 2, 3);
+    CartesianCoordinates* cr = new CartesianCoordinates(2, 2, 2);
     MatrixOperation* enable_single = new EnableSingle(cr);
-    matrix->action(enable_single, LedSwitch::ENABLE);
+    matrix->action(enable_single, LedSwitch::ENABLE, Color::RED);
 }
 
 TEST_F(LedMatrixTest, CanDisableSingleLedInArray) {
@@ -115,15 +116,6 @@ TEST_F(LedMatrixTest, CanDisableSingleLedInArray) {
     CartesianCoordinates* cr = new CartesianCoordinates(1, 2, 3);
     MatrixOperation* enable_single = new EnableSingle(cr);
     matrix->action(enable_single, LedSwitch::DISABLE);
-}
-
-TEST_F(LedMatrixTest, CanSetColorToSingleLed) {
-    LedMatrix* matrix = new LedMatrix(4, 4, 4, *ledFactory);
-    mock_leds.push_back(GetSingleLedMock(2, 2, 2, matrix->leds));
-    EXPECT_CALL(*mock_leds[0], setColor(Color::RED)).Times(1);
-    CartesianCoordinates* cr = new CartesianCoordinates(2, 2, 2);
-    MatrixOperation* enable_single = new EnableSingle(cr);
-    matrix->action(enable_single, LedSwitch::DISABLE, Color::RED);
 }
 
 TEST_F(LedMatrixTest, CanEnableSingleColumnAndSetColor) {
@@ -158,4 +150,49 @@ TEST_F(LedMatrixTest, CanEnableSingleColumnAndSetColor) {
     ColumnCoordinates* cr_y = new ColumnCoordinates(Plane::Y, 2, 1, 3);
     MatrixOperation* enable_Y_column = new EnableColumn(cr_y);
     matrix->action(enable_Y_column, LedSwitch::ENABLE, Color::BLUE);
+}
+
+TEST_F(LedMatrixTest, CanEnableSingleZPlane) {
+    LedMatrix* matrix = new LedMatrix(4, 4, 4, *ledFactory);
+    // Plane Z
+    for (int x = 0; x < 4; x ++) {
+        for (int y = 0; y < 4; y ++) {
+            // Get all led mocks from plane Z(3) <- third Z plane
+            mock_leds.push_back(GetSingleLedMock(x, y, 2, matrix->leds));
+            EXPECT_CALL(*mock_leds.back(), enable()).Times(1);
+        }
+    }
+    PlaneCoordinates* cr_z = new PlaneCoordinates(Plane::Z, 2);
+    MatrixOperation* enable_Z_plane = new EnablePlane(cr_z);
+    matrix->action(enable_Z_plane, LedSwitch::ENABLE);
+}
+
+TEST_F(LedMatrixTest, CanEnableSingleXPlane) {
+    LedMatrix* matrix = new LedMatrix(4, 5, 6, *ledFactory);
+    // Plane X
+    for (int y = 0; y < 5; y ++) {
+        for (int z = 0; z < 6; z ++) {
+            // Get all led mocks from plane X(3) <- fourth X plane
+            mock_leds.push_back(GetSingleLedMock(3, y, z, matrix->leds));
+            EXPECT_CALL(*mock_leds.back(), enable()).Times(1);
+        }
+    }
+    PlaneCoordinates* cr_x = new PlaneCoordinates(Plane::X, 3);
+    MatrixOperation* enable_X_plane = new EnablePlane(cr_x);
+    matrix->action(enable_X_plane, LedSwitch::ENABLE);
+}
+
+TEST_F(LedMatrixTest, CanEnableSingleYPlane) {
+    LedMatrix* matrix = new LedMatrix(6, 5, 4, *ledFactory);
+    // Plane X
+    for (int x = 0; x < 6; x ++) {
+        for (int z = 0; z < 4; z ++) {
+            // Get all led mocks from plane Y(4) <- fifth Y plane
+            mock_leds.push_back(GetSingleLedMock(x, 4, z, matrix->leds));
+            EXPECT_CALL(*mock_leds.back(), enable()).Times(1);
+        }
+    }
+    PlaneCoordinates* cr_y = new PlaneCoordinates(Plane::Y, 4);
+    MatrixOperation* enable_Y_plane = new EnablePlane(cr_y);
+    matrix->action(enable_Y_plane, LedSwitch::ENABLE);
 }

@@ -16,7 +16,7 @@ enum class Action {
 class MatrixOperation {
 public:
     virtual ~MatrixOperation() {}
-    virtual void run(LedRGB3DMatrix led_matrix, LedSwitch switch_state, Color color = Color::NONE) {} 
+    virtual void run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color = Color::NONE) {} 
 };
 
 class EnableAll : public MatrixOperation {
@@ -24,7 +24,7 @@ public:
     EnableAll(CartesianCoordinates* coordinates_) {
         coordinates = coordinates_;
     };
-    void run(LedRGB3DMatrix led_matrix, LedSwitch switch_state, Color color = Color::NONE) override;
+    void run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color = Color::NONE) override;
     CartesianCoordinates* coordinates;
 };
 
@@ -33,7 +33,7 @@ public:
     EnableSingle(CartesianCoordinates* coordinates_) {
         coordinates = coordinates_;
     }
-    void run(LedRGB3DMatrix led_matrix, LedSwitch switch_state, Color color = Color::NONE) override;
+    void run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color = Color::NONE) override;
     CartesianCoordinates* coordinates;
 };
 
@@ -42,8 +42,17 @@ public:
     EnableColumn(ColumnCoordinates* coordinates_) {
         coordinates = coordinates_;
     }
-    void run(LedRGB3DMatrix led_matrix, LedSwitch switch_state, Color color = Color::NONE) override;
+    void run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color = Color::NONE) override;
     ColumnCoordinates* coordinates;
+};
+
+class EnablePlane: public MatrixOperation {
+public:
+    EnablePlane(PlaneCoordinates* coordinates_) {
+        coordinates = coordinates_;
+    }
+    void run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color = Color::NONE) override;
+    PlaneCoordinates* coordinates;
 };
 
 class LedMatrix {
@@ -55,9 +64,7 @@ public:
     void action(MatrixOperation* operation, LedSwitch switch_state, Color color = Color::NONE);
     void enableAll();
 protected:
-    int size_x;
-    int size_y;
-    int size_z;
+    matrixSize_t size;
     Int3DMatrix enable_counter;
 private:
     void fillMatrixWithLeds(const LedCreator& factory);

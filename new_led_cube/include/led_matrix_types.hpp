@@ -10,6 +10,12 @@ enum class Plane {
     Z
 };
 
+typedef struct {
+    int x;
+    int y;
+    int z;
+} matrixSize_t;
+
 class Coordinates {
 public:
     virtual ~Coordinates() {};
@@ -40,5 +46,15 @@ public:
     int second_coordinate;
     int start;
     int height;
+    Plane plane;
+};
+
+class PlaneCoordinates : public Coordinates {
+public:
+    PlaneCoordinates(Plane plane_, int position_ = 0) {
+        position = position_;
+        plane = plane_;
+    }
+    int position;
     Plane plane;
 };
