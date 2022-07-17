@@ -22,6 +22,11 @@ enum class LedState : bool {
     ENABLED
 };
 
+enum class LedSwitch : bool {
+    ENABLE,
+    DISABLE
+};
+
 struct Led_t {
     LedState red;
     LedState green;
