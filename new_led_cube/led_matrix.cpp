@@ -30,10 +30,13 @@ int LedMatrix::getDimension(Dimension dim) {
     switch(dim) {
         case Dimension::X:
             dimension = size.x;
+            break;
         case Dimension::Y:
             dimension = size.y;
+            break;
         case Dimension::Z:
             dimension = size.z;
+            break;
     }
     return dimension;
 }
