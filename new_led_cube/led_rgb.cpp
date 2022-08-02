@@ -41,17 +41,19 @@ Color LedRGBAnalog::getColor() {
 }
 
 LedState LedRGBAnalog::getLedDiodeState(Led led_) {
+    LedState state = LedState::DISABLED;
     switch(led_) {
         case Led::RED:
-            return led_states.red;
+            state = led_states.red;
         break;
         case Led::GREEN:
-            return led_states.green;
+            state = led_states.green;
         break;
         case Led::BLUE:
-            return led_states.blue;
+            state = led_states.blue;
         break;
     }
+    return state;
 }
 
 LedColor LedRGBAnalog::getColorObj(Color color_) {

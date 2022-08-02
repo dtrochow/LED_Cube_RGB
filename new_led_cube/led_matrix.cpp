@@ -26,14 +26,16 @@ void LedMatrix::fillMatrixWithLeds(const LedCreator& factory) {
 }
 
 int LedMatrix::getDimension(Dimension dim) {
+    int dimension = 0;
     switch(dim) {
         case Dimension::X:
-            return size.x;
+            dimension = size.x;
         case Dimension::Y:
-            return size.y;
+            dimension = size.y;
         case Dimension::Z:
-            return size.z;
+            dimension = size.z;
     }
+    return dimension;
 }
 
 void LedMatrix::action(MatrixOperation* operation, LedSwitch switch_state, Color color) {
