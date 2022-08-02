@@ -17,6 +17,7 @@ endmacro()
 
 # GoogleTest requires at least C++11
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_BUILD_TYPE Debug)
 
 include(FetchContent)
 FetchContent_Declare(
