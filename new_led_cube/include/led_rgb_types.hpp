@@ -1,5 +1,6 @@
 #pragma once
 #include <cinttypes>
+#include <tuple>
 
 enum class Color : std::uint8_t {
     NONE,

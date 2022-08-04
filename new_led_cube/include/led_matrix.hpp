@@ -1,3 +1,5 @@
+#pragma once
+
 #include "led_matrix_types.hpp"
 #include "led_rgb.hpp"
 
