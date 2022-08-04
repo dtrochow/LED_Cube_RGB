@@ -8,15 +8,10 @@ using namespace std;
 typedef vector<vector<vector<LedRGB*>>> LedRGB3DMatrix;
 typedef vector<vector<vector<int>>> Int3DMatrix;
 
-enum class Action {
-    ENABLE_ALL,
-    ENABLE_SINGLE
-};
-
 class MatrixOperation {
 public:
-    virtual ~MatrixOperation() {}
-    virtual void run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color = Color::NONE) {} 
+    virtual ~MatrixOperation() {};
+    virtual void run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color = Color::NONE) {};
 };
 
 class EnableAll : public MatrixOperation {
@@ -50,7 +45,7 @@ class EnablePlane: public MatrixOperation {
 public:
     EnablePlane(PlaneCoordinates* coordinates_) {
         coordinates = coordinates_;
-    }
+    };
     void run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color = Color::NONE) override;
     PlaneCoordinates* coordinates;
 };
@@ -78,5 +73,3 @@ protected:
 private:
     void fillMatrixWithLeds(const LedCreator& factory);
 };
-
-
