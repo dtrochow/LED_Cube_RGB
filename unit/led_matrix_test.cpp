@@ -3,7 +3,7 @@
 
 #include "led_matrix.hpp"
 #include "led_rgb.hpp"
-#include "mocks/led_rgb_mock.h"
+#include "led_rgb_mock.h"
 
 using ::testing::Return;
 
