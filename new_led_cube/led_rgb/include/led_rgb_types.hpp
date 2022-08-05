@@ -14,7 +14,7 @@ enum class Color : std::uint8_t {
 };
 
 enum class Led : std::uint8_t {
-    RED,
+    RED = 0,
     GREEN,
     BLUE
 };

@@ -16,7 +16,7 @@ void mcp_enable(mcpAddress_e address) {
             mcpData[i].status = MCP_ENABLED;
         }
     } else {
-        mcpData[address].status == MCP_ENABLED;
+        mcpData[GET_ORDER_NUMBER(address)].status == MCP_ENABLED;
     }
 }
 
@@ -26,7 +26,7 @@ void mcp_disable(mcpAddress_e address) {
             mcpData[i].status = MCP_DISABLED;
         }
     } else {
-        mcpData[address].status == MCP_DISABLED;
+        mcpData[GET_ORDER_NUMBER(address)].status == MCP_DISABLED;
     }
 }
 
@@ -128,8 +128,8 @@ void mcp_update_out_state(i2c_inst_t *i2c, int8_t address) {
 
 void mcp_update_out_state_all(i2c_inst_t *i2c) {
     for (int i = 0; i < MAX_NUMBER_OF_MCP_MODULES; i++) {
-        if (MCP_ENABLED == mcpData[i].status) {
+        // if (MCP_ENABLED == mcpData[i].status) {
             mcp_update_out_state(i2c, GET_ADDR_FROM_NO(i));
-        }
+        // }
     }
 }

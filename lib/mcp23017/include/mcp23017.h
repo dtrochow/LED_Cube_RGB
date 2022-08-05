@@ -29,6 +29,11 @@
 
 #define MAX_NUMBER_OF_MCP_MODULES (8)
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
     ADDRESS1 = 0x20,
     ADDRESS2 = 0x21,
@@ -165,3 +170,8 @@ void mcp_update_out_state(i2c_inst_t *i2c, int8_t address);
  * @param i2c
  */
 void mcp_update_out_state_all(i2c_inst_t *i2c);
+
+// Declarations of this file
+#ifdef __cplusplus
+}
+#endif

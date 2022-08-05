@@ -63,15 +63,15 @@ public:
 
 class LedMatrix {
 public:
-    LedMatrix(int x, int y, int z, const LedCreator& factory);
+    LedMatrix(int x, int y, int z, LedCreator* factory);
     ~LedMatrix() {};
     int getDimension(Dimension dim);
     LedRGB3DMatrix leds;
     void action(MatrixOperation* operation, LedSwitch switch_state, Color color = Color::NONE);
-    void enableAll();
+    void reset();
 protected:
     matrixSize_t size;
     Int3DMatrix enable_counter;
 private:
-    void fillMatrixWithLeds(const LedCreator& factory);
+    void fillMatrixWithLeds(LedCreator* factory);
 };

@@ -11,10 +11,10 @@ set(CMAKE_BUILD_TYPE Debug)
 pico_sdk_init()
 
 add_subdirectory(lib)
-add_subdirectory(led_cube)
+add_subdirectory(new_led_cube)
 
 add_executable(${projname}
-	main.c
+	main.cpp
 	)
 
 target_link_libraries(${projname}
@@ -22,10 +22,12 @@ target_link_libraries(${projname}
 	pico_multicore
 	hardware_i2c
 	mcp23017_lib
-	led_cube
+	cube
+	memory_hub
 	)
 
 add_compile_options(-Wall
+	-O0
 	-Wformat-overflow
 	-Wbad-function-cast
 	-Wcast-qual
