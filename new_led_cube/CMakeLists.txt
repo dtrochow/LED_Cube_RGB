@@ -1,4 +1,0 @@
-add_subdirectory(cube)
-add_subdirectory(led_matrix)
-add_subdirectory(led_rgb)
-add_subdirectory(memory_hub)

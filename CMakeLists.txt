@@ -11,7 +11,7 @@ set(CMAKE_BUILD_TYPE Debug)
 pico_sdk_init()
 
 add_subdirectory(lib)
-add_subdirectory(new_led_cube)
+add_subdirectory(led_cube)
 
 add_executable(${projname}
 	main.cpp
@@ -23,20 +23,6 @@ target_link_libraries(${projname}
 	hardware_i2c
 	mcp23017_lib
 	cube
-	memory_hub
-	)
-
-add_compile_options(-Wall
-	-O0
-	-Wformat-overflow
-	-Wbad-function-cast
-	-Wcast-qual
-	-Werror
-	-Wpedantic
-	-Wno-format          # int != int32_t as far as the compiler is concerned because gcc has int32_t as long int
-	-Wno-unused-function # we have some for the docs that aren't called
-	-Wno-maybe-uninitialized
-	-Wpadded
 	)
 
 pico_enable_stdio_usb(${projname} 0)
