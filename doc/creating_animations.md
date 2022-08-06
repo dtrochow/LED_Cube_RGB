@@ -1,243 +1,169 @@
-# **Environment setup on Linux Environment**
+# **Creating Animatons**
 
-## Table of Contents
-[**Requirements**](#requirements)  
-[**Build environment preparation**](#build-environment-preparation)  
-[**Debug environment preparation**](#debug-environment-preparation)  
-
+### Table of Contents
+[**Requirements**](#requirements)   
+[**How to create new animation**](#how-to-create-new-animation)    
+[**Available tools for creating animations**](#available-tools-for-creating-animations)    
+[**Update led states**](#update-led-states)
 
 
 ## **Requirements**
 
-* Linux operating system
-    * Tested on Ubuntu Server 22.04 LTS (https://ubuntu.com/download/server)
-* 2 x Raspberry Pi Pico microcontrollers (https://www.raspberrypi.com/products/raspberry-pi-pico/)
+* Building environment prepared -> [environment_setup_linux](environment_setup_linux.md)
 
-* Raspberry Pi Pico documentation might be helpful:
-  * https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf
-  * https://datasheets.raspberrypi.com/pico/pico-datasheet.pdf
-  * https://datasheets.raspberrypi.com/pico/raspberry-pi-pico-c-sdk.pdf
+## **How to create new animation**
 
+1. Create new animation class in _animations.hpp_ file.
 
-
-
-## **Build environment preparation**
-
-1. Install all required tools
-
-* arm-non-eabi compiller from producer site
-    1. Download from gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2: 
-        * https://developer.arm.com/downloads/-/gnu-rm
-    2. Install arm-non-eabi
-
-        ```bash
-        sudo tar xjf gcc-arm-none-eabi-your-version.bz2 -C /usr/share/
-        ```
-    3. Create links to arm-non-eabi binaries
-
-        ```bash
-        sudo ln -s /usr/share/gcc-arm-none-eabi-your-version/bin/arm-none-eabi-gcc /usr/bin/arm-none-eabi-gcc 
-        sudo ln -s /usr/share/gcc-arm-none-eabi-your-version/bin/arm-none-eabi-g++ /usr/bin/arm-none-eabi-g++
-        sudo ln -s /usr/share/gcc-arm-none-eabi-your-version/bin/arm-none-eabi-gdb /usr/bin/arm-none-eabi-gdb
-        sudo ln -s /usr/share/gcc-arm-none-eabi-your-version/bin/arm-none-eabi-size /usr/bin/arm-none-eabi-size
-        sudo ln -s /usr/share/gcc-arm-none-eabi-your-version/bin/arm-none-eabi-objcopy /usr/bin/arm-none-eabi-objcopy
-        sudo ln -s /usr/share/gcc-arm-none-eabi-your-version/bin/arm-none-eabi-objdump /usr/bin/arm-none-eabi-objdump
-        ```
-    4. Install libncurses-dev and create links
-
-        ```bash
-        sudo apt install libncurses-dev
-        sudo ln -s /usr/lib/x86_64-linux-gnu/libncurses.so.6 /usr/lib/x86_64-linux-gnu/libncurses.so.5
-        sudo ln -s /usr/lib/x86_64-linux-gnu/libtinfo.so.6 /usr/lib/x86_64-linux-gnu/libtinfo.so.5
-        ```
-    5. Check if everythink works as expected
-
-        ```bash
-        arm-none-eabi-gcc --version
-        arm-none-eabi-g++ --version
-        arm-none-eabi-gdb --version
-        arm-none-eabi-size --version
-        ```
-
-* All remaining Toolchain
-    ```bash
-    $ sudo apt update
-    $ sudo apt install cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential 
+    e.g.
+    _animations.hpp_
+    ```cpp
+    class AnimationName : public Animation {
+    public:
+        AnimationName() {};
+        ~AnimationName() override {};
+    public:
+        void run(LedCube* cube, AnimationSpeed speed) override;
+    };
     ```
 
-2. Prepare pico-sdk
+2. Add the animation name to _AnimationType_ enum in _animations_types.hpp_
 
-    * Clone pico-sdk repsitory
-
-        ```bash
-        $ git clone https://github.com/raspberrypi/pico-sdk
-        ```
-
-    * Uptade it
-
-        ```bash
-        $ cd pico-sdk
-        $ git pull
-        $ git submodule update
-        ```
-
-    * Set the PICO_SKD_PATH to the pico-sdk loaction
-  
-        * Add exporting this environment variable to .bashrc file
-
-        ```bash
-        $ vim .bashrc
-        export PICO_SDK_PATH=~/path/to/pico-sdk
-        ".bashrc" 119L, 3809B
-        ```
-
-        * Restart terminal
-
-3. Check if everything is configured properly
-
-    * Build Led Cube FW
-
-        ```bash
-        $ ./build_led_cube_rgb.sh
-        ```
-
-    * Build Unit Tests
-
-        ```bash
-        $ ./build_utests.sh
-        ```
-
-## **Debug environment preparation**
-
-1. Wiring
-
-   All wiring is presented on _Figure 37_ (page 62) in [Getting started with Raspberry Pi Pico](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf)
-
-2. Prepare PicoProbe
-   
-   * Clone picoprobe repository
-
-    ```bash
-    $ cd ~/pico
-    $ git clone https://github.com/raspberrypi/picoprobe.git
+    e.g.
+    _animations_types.hpp_
+    ```cpp
+    enum class AnimationType {
+        ALL_LEDS_ALL_COLORS,
+        ANIMATION_NAME,
+        NONE
+    };
     ```
 
-    * Build picoprobe
+3. Implement _run()_ method to newly created animation in _animations.cpp_ file
 
-    ```bash
-    $ cd picoprobe
-    $ mkdir build
-    $ cd build
-    $ cmake ..
-    $ make -j4
+    e.g.
+    _animations.cpp_
+    ```cpp
+    void AnimationName::run(LedCube* cube, AnimationSpeed speed) {
+
+    }
+    ``` 
+    You can use all tools described in [Available tools for creating animations](#available-tools-for-creating-animations)
+
+4. Add newly created animation to _AnimationsRunner()_ constructor
+
+    e.g.
+    _animations.cpp_
+    ```cpp
+    AnimationsRunner::AnimationsRunner(LedCube* cube_) {
+        cube = cube_;
+        animations = {
+            { AnimationType::ALL_LEDS_ALL_COLORS, new AllLedsAllColors() },
+            { AnimationType::ANIMATION_NAME,      new AnimationName()    }
+        };
+    }
+    ```
+5. Now you should be able to use animation in your program.
+
+    e.g.
+    _main.cpp_
+    ```cpp
+    int main(void) {
+        .
+        .
+        .
+
+        AnalogLedCreator ledFactory(ledConfig_getColors());
+        AnalogLedCubeRGB4x4x4MCP23017 memory_hub(i2c1);
+        LedCubeAnalog4x4x4 cube(&memory_hub, &ledFactory);
+
+        AnimationsRunner a_runner(&cube);
+        a_runner.run(AnimationType::ANIMATION_NAME);
+
+        .
+        .
+        .
+    }
     ```
 
-    * Flash the picoprobe FW on Raspberry Pi Pico
+## Available tools for creating animations
 
-        * Boot the Raspberry Pi Pico which will be used as a debugger with the BOOTSEL button pressed and drag on picoprobe.uf2.
+All animations can use matrix operations, to manipulate led states in led matrix.
 
-3. Change PicoProbe USB device privilages
+#### EnableAll
+Enable all leds from (0, 0, 0) position to position given through `CartesianCoordinates`.
 
-    The PicoProbe USB device needs to has proper privilages in Linux OS, to avoid using sudo privilages during debugging
+e.g.
+```cpp
+CartesianCoordinates cc(3, 3, 3);
+EnableAll all(&cc);
+cube->action(&all, LedSwitch::ENABLE, Color::YELLOW);
+cube->render();
+``` 
 
-    1. Use following command
-        ```bash
-        $ echo 'SUBSYSTEMS=="usb", ATTRS{idVendor}=="2e8a", ATTRS{idProduct}=="0004", GROUP="users", MODE="0666"' | sudo tee -a /etc/udev/rules.d/98-PicoProbe.rules
-        $ sudo udevadm control --reload
-        ```
-        To find the _idVendor_ and _idProducd_ you can use `lsudb -vvv` command. 
+Leds can be also disabled in this way `LedSwitch::DISABLE`.
 
-        You need to find thhose fields under `Raspberry Pi Picoprobe`.
+#### EnableSingle
+Enable single led with position given in `CartesianCoordinates`.
 
-4. Prepare OpenOCD server
+e.g.
+```cpp
+CartesianCoordinates cc(1, 2, 2);
+EnableSingle single(&cc);
+cube->action(&single, LedSwitch::ENABLE, Color::BLUE);
+cube->render();
+``` 
 
-    * Install required tools
+#### EnableColumn
+Enable single column, which is being described by `ColumnCoordinates`.
+ColumnCoordinates parameters:
+1. Base plane
+2. First coordinate (depending on plane)
+3. Second coordinate (depending on plane)
+4. Column height
+5. Column start (optional, default=0)
 
-        ```bash
-        $ cd ~/pico
-        $ sudo apt install automake autoconf build-essential texinfo libtool libftdi-dev libusb-1.0-0-dev
-        ```
-    * Clone openocd repository
+e.g.
+```cpp
+ColumnCoordinates cl(Plane::Y, 1, 1, 4);
+EnableColumn column(&cl);
+cube->action(&column, LedSwitch::ENABLE, Color::GREEN);
+cube->render();
+``` 
 
-        ```bash
-        $ git clone https://github.com/raspberrypi/openocd.git
-        ```
-    * Build openocd with picoprobe support enabled
+#### EnablePlane
+Enable single plane, which can be described by `PlaneCoordinates`.
+e.g.
+PlaneCoordinates parameters:
+1. Plane
+2. Height (optional, default=0)
 
-        ```bash
-        $ cd openocd
-        $ ./bootstrap
-        $ ./configure --enable-picoprobe
-        $ make -j4
-        ```
-    * You can check if PicoProbe and OpenOCD server works properly by running this command when every connection is established properly
-        ```bash
-        $ src/openocd -f interface/picoprobe.cfg -f target/rp2040.cfg -s tcl
-        ```
+e.g.
+```cpp
+PlaneCoordinates p(Plane::Z, 2);
+EnablePlane plane(&p);
+cube->action(&eplane, LedSwitch::ENABLE, Color::CYAN);
+cube->render();
+``` 
 
-5. Prepare VSCode debug configuration
-    
-    1. Install `Cortex-Debug` extension in VSCode
-    2. Install `C/C++` and `C/C++ Extension Pack` extensions in VSCode
-    3. Create following configuration files under `.vscode` directory
+#### EnableCuboid
+Enable single cuboid, which can be described by `CuboidCoordinates`, which consists of two `CartesianCoordinates` (Position of two opposite corners).
 
-    * **launch.json**
-        ```json
-        {
-            "version": "0.2.0",
-            "configurations": [
-                {
-                    "name": "Pico Debug",
-                    "cwd": "${workspaceRoot}",
-                    "executable": "<path_to_binary_with_FW>",
-                    "request": "launch",
-                    "type": "cortex-debug",
-                    "servertype": "openocd",
-                    "serverpath": "<path_to_openocd_repo>/src/openocd",
-                    // This may need to be arm-none-eabi-gdb depending on your system
-                    "gdbPath" : "arm-none-eabi-gdb",
-                    "device": "RP2040",
-                    "configFiles": [
-                        "interface/picoprobe.cfg",
-                        "target/rp2040.cfg"
-                    ],
-                    "svdFile": "${env:PICO_SDK_PATH}/src/rp2040/hardware_regs/rp2040.svd",
-                    "runToMain": true,
-                    // Work around for stopping at main on restart
-                    "postRestartCommands": [
-                        "break main",
-                        "continue"
-                    ],
-                    "searchDir": ["<path_to_openocd_repo>/openocd/tcl"]
-                }
-            ]
-        }
-        ```
-        In some cases the serverpath field needs to be added
-        (https://github.com/Marus/cortex-debug/issues/201#issuecomment-541278876)
+e.g.
+```cpp
+CartesianCoordinates cc1(1, 1, 1);
+CartesianCoordinates cc2(2, 2, 2);
+CuboidCoordinates cb(&cc1, &cc2);
+EnableCuboid cuboid(&cb);
+cube->action(&cuboid, LedSwitch::ENABLE, Color::RED);
+cube->render();
+``` 
 
-    * **settings.json**
-        ```json
-        {
-            // These settings tweaks to the cmake plugin will ensure
-            // that you debug using cortex-debug instead of trying to launch
-            // a Pico binary on the host
-            "cmake.statusbar.advanced": {
-                "debug": {
-                    "visibility": "hidden"
-                },
-                "launch": {
-                    "visibility": "hidden"
-                },
-                "build": {
-                    "visibility": "default"
-                },
-                "buildTarget": {
-                    "visibility": "hidden"
-                }
-            },
-            "cmake.buildBeforeRun": true,
-            "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
-            "cortex-debug.openocdPath": "<path_to_openocd_repo>/openocd/src/openocd"
-        }
-        ```
+## **Update led states**
+
+To update the actual state of the leds depending on LedMatrix state, you can use `LedCube.render()` method.
+It will write all the leds data to LedCube hardware.
+
+```cpp
+cube->render();
+```
