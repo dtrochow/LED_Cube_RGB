@@ -1,3 +1,5 @@
+#pragma once
+
 #include "led_matrix_types.hpp"
 #include "led_rgb.hpp"
 
@@ -8,15 +10,10 @@ using namespace std;
 typedef vector<vector<vector<LedRGB*>>> LedRGB3DMatrix;
 typedef vector<vector<vector<int>>> Int3DMatrix;
 
-enum class Action {
-    ENABLE_ALL,
-    ENABLE_SINGLE
-};
-
 class MatrixOperation {
 public:
-    virtual ~MatrixOperation() {}
-    virtual void run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color = Color::NONE) {} 
+    virtual ~MatrixOperation() {};
+    virtual void run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color = Color::NONE) {};
 };
 
 class EnableAll : public MatrixOperation {
@@ -50,7 +47,7 @@ class EnablePlane: public MatrixOperation {
 public:
     EnablePlane(PlaneCoordinates* coordinates_) {
         coordinates = coordinates_;
-    }
+    };
     void run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color = Color::NONE) override;
     PlaneCoordinates* coordinates;
 };
@@ -66,17 +63,15 @@ public:
 
 class LedMatrix {
 public:
-    LedMatrix(int x, int y, int z, const LedCreator& factory);
+    LedMatrix(int x, int y, int z, LedCreator* factory);
     ~LedMatrix() {};
     int getDimension(Dimension dim);
     LedRGB3DMatrix leds;
     void action(MatrixOperation* operation, LedSwitch switch_state, Color color = Color::NONE);
-    void enableAll();
+    void reset();
 protected:
     matrixSize_t size;
     Int3DMatrix enable_counter;
 private:
-    void fillMatrixWithLeds(const LedCreator& factory);
+    void fillMatrixWithLeds(LedCreator* factory);
 };
-
-

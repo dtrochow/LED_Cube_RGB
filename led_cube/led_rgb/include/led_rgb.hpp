@@ -1,6 +1,7 @@
 #pragma once
 
 #include "led_rgb_types.hpp"
+#include <map>
 
 class LedColor {
 public:

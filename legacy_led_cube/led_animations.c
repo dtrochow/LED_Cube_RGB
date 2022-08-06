@@ -6,6 +6,11 @@
 static void la_get_random_led(ledPos_t *position, int *color, int color_size);
 static void la_seed_random_from_rosc(void);
 
+// Base class for animation
+//     * will contain run() method
+// Need to think through the run animation API
+// Any new animation will be a separate class
+
 static void la_seed_random_from_rosc(void) {
     uint32_t random = 0x811c9dc5;
     uint8_t next_byte = 0;

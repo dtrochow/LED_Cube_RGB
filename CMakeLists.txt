@@ -14,7 +14,7 @@ add_subdirectory(lib)
 add_subdirectory(led_cube)
 
 add_executable(${projname}
-	main.c
+	main.cpp
 	)
 
 target_link_libraries(${projname}
@@ -22,19 +22,7 @@ target_link_libraries(${projname}
 	pico_multicore
 	hardware_i2c
 	mcp23017_lib
-	led_cube
-	)
-
-add_compile_options(-Wall
-	-Wformat-overflow
-	-Wbad-function-cast
-	-Wcast-qual
-	-Werror
-	-Wpedantic
-	-Wno-format          # int != int32_t as far as the compiler is concerned because gcc has int32_t as long int
-	-Wno-unused-function # we have some for the docs that aren't called
-	-Wno-maybe-uninitialized
-	-Wpadded
+	cube
 	)
 
 pico_enable_stdio_usb(${projname} 0)

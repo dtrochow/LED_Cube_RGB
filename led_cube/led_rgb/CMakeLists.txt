@@ -1,7 +1,7 @@
-set(modulename "new_led_cube")
+set(modulename "led_rgb")
 set(SOURCES 
         led_rgb.cpp
-        led_matrix.cpp
 )
 add_library(${modulename} ${SOURCES})
+target_include_directories(${modulename} PUBLIC mocks)
 target_include_directories(${modulename} PUBLIC include)

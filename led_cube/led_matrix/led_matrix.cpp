@@ -3,7 +3,27 @@
 
 using namespace std;
 
-LedMatrix::LedMatrix(int x, int y, int z, const LedCreator& factory) {
+static void LM_EnableDisableLed(LedRGB3DMatrix led_matrix, int x, int y, int z, LedSwitch switch_state) {
+    if (LedSwitch::ENABLE == switch_state) {
+        led_matrix[x][y][z]->enable();
+    }
+    else if (LedSwitch::DISABLE == switch_state) {
+        led_matrix[x][y][z]->disable();
+    }
+}
+
+static void LM_SetLedColor(LedRGB3DMatrix led_matrix, int x, int y, int z, Color color) {
+    if (!(Color::NONE == color)) {
+        led_matrix[x][y][z]->setColor(color);
+    }
+}
+
+static void LM_SetLedState(LedRGB3DMatrix led_matrix, int x, int y, int z, LedSwitch switch_state, Color color) {
+    LM_EnableDisableLed(led_matrix, x, y, z, switch_state);
+    LM_SetLedColor(led_matrix, x, y, z, color);
+}
+
+LedMatrix::LedMatrix(int x, int y, int z, LedCreator* factory) {
     size.x = x;
     size.y = y;
     size.z = z;
@@ -11,13 +31,13 @@ LedMatrix::LedMatrix(int x, int y, int z, const LedCreator& factory) {
     enable_counter.resize(size.x, vector<vector<int>>(size.y, vector<int>(size.z, 0)));
 }
 
-void LedMatrix::fillMatrixWithLeds(const LedCreator& factory) {
+void LedMatrix::fillMatrixWithLeds(LedCreator* factory) {
     for (int i = 0; i < size.x; i++) {
         vector<vector<LedRGB*>> v_y;
         for (int j = 0; j < size.y; j++) {
             vector<LedRGB*> v_z;
             for (int k = 0; k < size.z; k ++) {
-                v_z.push_back(factory.MakeLed());
+                v_z.push_back(factory->MakeLed());
             }
             v_y.push_back(v_z);
         }
@@ -41,28 +61,18 @@ int LedMatrix::getDimension(Dimension dim) {
     return dimension;
 }
 
+void LedMatrix::reset() {
+    for (int x = 0; x < size.x; x ++) {
+        for (int y = 0; y < size.y; y ++) {
+            for (int z = 0; z < size.z; z ++) {
+                LM_SetLedState(leds, x, y, z, LedSwitch::DISABLE, Color::NONE);
+            }
+        }
+    }
+}
+
 void LedMatrix::action(MatrixOperation* operation, LedSwitch switch_state, Color color) {
     operation->run(leds, size, switch_state, color);
-}
-
-static void LM_EnableDisableLed(LedRGB3DMatrix led_matrix, int x, int y, int z, LedSwitch switch_state) {
-    if (LedSwitch::ENABLE == switch_state) {
-        led_matrix[x][y][z]->enable();
-    }
-    else if (LedSwitch::DISABLE == switch_state) {
-        led_matrix[x][y][z]->disable();
-    }
-}
-
-static void LM_SetLedColor(LedRGB3DMatrix led_matrix, int x, int y, int z, Color color) {
-    if (!(Color::NONE == color)) {
-        led_matrix[x][y][z]->setColor(color);
-    }
-}
-
-static void LM_SetLedState(LedRGB3DMatrix led_matrix, int x, int y, int z, LedSwitch switch_state, Color color) {
-    LM_EnableDisableLed(led_matrix, x, y, z, switch_state);
-    LM_SetLedColor(led_matrix, x, y, z, color);
 }
 
 void EnableAll::run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color) {

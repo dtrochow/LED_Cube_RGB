@@ -3,7 +3,7 @@
 
 #include "led_matrix.hpp"
 #include "led_rgb.hpp"
-#include "mocks/led_rgb_mock.h"
+#include "led_rgb_mock.h"
 
 using ::testing::Return;
 
@@ -43,14 +43,14 @@ protected:
 };
 
 TEST_F(LedMatrixTest, CanSetTheMatrixSize) {
-    LedMatrix lMatrix(4, 5, 6, *ledFactory);
+    LedMatrix lMatrix(4, 5, 6, ledFactory);
     EXPECT_EQ(lMatrix.getDimension(Dimension::X), 4);
     EXPECT_EQ(lMatrix.getDimension(Dimension::Y), 5);
     EXPECT_EQ(lMatrix.getDimension(Dimension::Z), 6);
 }
 
 TEST_F(LedMatrixTest, CanEnableAllLedsInArray) {
-    LedMatrix* matrix = new LedMatrix(4, 4, 4, *ledFactory);
+    LedMatrix* matrix = new LedMatrix(4, 4, 4, ledFactory);
     for (int i = 0; i < 4; i ++) {
         for (int j = 0; j < 4; j ++) {
             for (int k = 0; k < 4; k ++) {
@@ -65,7 +65,7 @@ TEST_F(LedMatrixTest, CanEnableAllLedsInArray) {
 }
 
 TEST_F(LedMatrixTest, CanDisableAllLedsInArray) {
-    LedMatrix* matrix = new LedMatrix(4, 4, 4, *ledFactory);
+    LedMatrix* matrix = new LedMatrix(4, 4, 4, ledFactory);
     for (int i = 0; i < 4; i ++) {
         for (int j = 0; j < 4; j ++) {
             for (int k = 0; k < 4; k ++) {
@@ -80,7 +80,7 @@ TEST_F(LedMatrixTest, CanDisableAllLedsInArray) {
 }
 
 TEST_F(LedMatrixTest, CanSetColorToSingleLed) {
-    LedMatrix* matrix = new LedMatrix(4, 4, 4, *ledFactory);
+    LedMatrix* matrix = new LedMatrix(4, 4, 4, ledFactory);
     mock_leds.push_back(GetSingleLedMock(2, 2, 2, matrix->leds));
     EXPECT_CALL(*mock_leds[0], setColor(Color::RED)).Times(1);
     EXPECT_CALL(*mock_leds[0], enable()).Times(1);
@@ -90,7 +90,7 @@ TEST_F(LedMatrixTest, CanSetColorToSingleLed) {
 }
 
 TEST_F(LedMatrixTest, CanDisableSingleLedInArray) {
-    LedMatrix* matrix = new LedMatrix(4, 4, 4, *ledFactory);
+    LedMatrix* matrix = new LedMatrix(4, 4, 4, ledFactory);
     mock_leds.push_back(GetSingleLedMock(1, 2, 3, matrix->leds));
     EXPECT_CALL(*mock_leds[0], disable()).Times(1);
     CartesianCoordinates* cr = new CartesianCoordinates(1, 2, 3);
@@ -99,7 +99,7 @@ TEST_F(LedMatrixTest, CanDisableSingleLedInArray) {
 }
 
 TEST_F(LedMatrixTest, CanEnableSingleColumnAndSetColor) {
-    LedMatrix* matrix = new LedMatrix(3, 3, 3, *ledFactory);
+    LedMatrix* matrix = new LedMatrix(3, 3, 3, ledFactory);
     // Plane Z
     for (int i = 0; i < 3; i ++) {
         // Get led mocks from column Z(1,2) <- plane Z, cartesian coordinates (x=1,y=2)
@@ -133,7 +133,7 @@ TEST_F(LedMatrixTest, CanEnableSingleColumnAndSetColor) {
 }
 
 TEST_F(LedMatrixTest, CanEnableSingleZPlane) {
-    LedMatrix* matrix = new LedMatrix(4, 4, 4, *ledFactory);
+    LedMatrix* matrix = new LedMatrix(4, 4, 4, ledFactory);
     // Plane Z
     for (int x = 0; x < 4; x ++) {
         for (int y = 0; y < 4; y ++) {
@@ -148,7 +148,7 @@ TEST_F(LedMatrixTest, CanEnableSingleZPlane) {
 }
 
 TEST_F(LedMatrixTest, CanEnableSingleXPlane) {
-    LedMatrix* matrix = new LedMatrix(4, 5, 6, *ledFactory);
+    LedMatrix* matrix = new LedMatrix(4, 5, 6, ledFactory);
     // Plane X
     for (int y = 0; y < 5; y ++) {
         for (int z = 0; z < 6; z ++) {
@@ -163,7 +163,7 @@ TEST_F(LedMatrixTest, CanEnableSingleXPlane) {
 }
 
 TEST_F(LedMatrixTest, CanEnableSingleYPlane) {
-    LedMatrix* matrix = new LedMatrix(6, 5, 4, *ledFactory);
+    LedMatrix* matrix = new LedMatrix(6, 5, 4, ledFactory);
     // Plane X
     for (int x = 0; x < 6; x ++) {
         for (int z = 0; z < 4; z ++) {
@@ -178,7 +178,7 @@ TEST_F(LedMatrixTest, CanEnableSingleYPlane) {
 }
 
 TEST_F(LedMatrixTest, CanEnableSingleCuboid) {
-    LedMatrix* matrix = new LedMatrix(4, 4, 4, *ledFactory);
+    LedMatrix* matrix = new LedMatrix(4, 4, 4, ledFactory);
     // Cuboid ((2, 2, 2),(3, 3, 3))
     for (int x = 2; x < 3; x ++) {
         for (int y = 2; y < 3; y ++) {

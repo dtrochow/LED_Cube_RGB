@@ -9,6 +9,15 @@ static void lc_update_layer_state(uint8_t z_pos);
 static void lc_write_one_rgbled_state(rgbValues_t rgbValues, ledRGB_t *ledRGB);
 static rgbLedOutputs_t lc_get_led_outputs(ledPos_t pos);
 
+// Ideas for splitting responsibilities to separate classes
+// Base classes needed
+// 1. Class which will be responsible for translating led_matrix data to data, which can be send to cube board
+//      * will get the led_matrix reference in constructor and will be able to "render" the page
+//      * responsible for translating the data to form, which can be undestand by board
+//      * knows about leds layout and which bit is responsible for enabling each diode in LedCube
+// 2. Class which will be responsible for comunicating with board and sending the data
+// 3. LedCube Class which will containt led_matrix, translating class, animations runner class
+
 void lc_init(i2c_inst_t *i2c) {
     memset(ledCube, 0, sizeof(ledRGB_t));
     mcp_enable(ADDRESS1);
