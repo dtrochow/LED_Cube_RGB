@@ -17,7 +17,7 @@ enum class AnimationType {
 };
 
 enum class AnimationSpeed {
-    VERY_SLOW,
+    VERY_SLOW = 1,
     SLOW,
     NORMAL,
     FAST,
