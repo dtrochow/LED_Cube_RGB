@@ -59,7 +59,7 @@ TEST_F(LedMatrixTest, CanEnableAllLedsInArray) {
             }
         }
     }
-    CartesianCoordinates* cr = new CartesianCoordinates(4, 4, 4);
+    CartesianCoordinates* cr = new CartesianCoordinates(3, 3, 3);
     MatrixOperation* enable_all = new EnableAll(cr);
     matrix->action(enable_all, LedSwitch::ENABLE);
 }
@@ -74,7 +74,7 @@ TEST_F(LedMatrixTest, CanDisableAllLedsInArray) {
             }
         }
     }
-    CartesianCoordinates* cr = new CartesianCoordinates(4, 4, 4);
+    CartesianCoordinates* cr = new CartesianCoordinates(3, 3, 3);
     MatrixOperation* enable_all = new EnableAll(cr);
     matrix->action(enable_all, LedSwitch::DISABLE);
 }
@@ -180,9 +180,9 @@ TEST_F(LedMatrixTest, CanEnableSingleYPlane) {
 TEST_F(LedMatrixTest, CanEnableSingleCuboid) {
     LedMatrix* matrix = new LedMatrix(4, 4, 4, ledFactory);
     // Cuboid ((2, 2, 2),(3, 3, 3))
-    for (int x = 2; x < 3; x ++) {
-        for (int y = 2; y < 3; y ++) {
-            for (int z = 2; z < 3; z ++) 
+    for (int x = 2; x <= 3; x ++) {
+        for (int y = 2; y <= 3; y ++) {
+            for (int z = 2; z <= 3; z ++) 
             mock_leds.push_back(GetSingleLedMock(x, y, z, matrix->leds));
             EXPECT_CALL(*mock_leds.back(), enable()).Times(1);
         }
