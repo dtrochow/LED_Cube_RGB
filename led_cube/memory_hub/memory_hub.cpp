@@ -57,7 +57,7 @@ void AnalogLedCubeRGB4x4x4MCP23017::writeMatrixToMemory(LedMatrix* led_matrix) {
                                         30 - 31 - 32 - 33
     */
 
-    // 3. Update static memory basing on led_matrix
+    // 3. Update memory buffer basing on led_matrix
     for (int z = 0; z < 4; z ++) {
         for (int x = 0; x < 4; x ++) {
             for (int y = 0; y < 4; y ++) {
@@ -78,7 +78,7 @@ void AnalogLedCubeRGB4x4x4MCP23017::writeMatrixToMemory(LedMatrix* led_matrix) {
         }
     }
 
-    // 4. Write data to hardware
+    // 4. Write data to hardware from prepared buffer
     rows.flip(); // Rows outputs have inverted logic
     for (int r = 0; r < rows_count; r ++) {
         mcp_write_single(i2c, mcp_rows_addr, r, rows[r], false);

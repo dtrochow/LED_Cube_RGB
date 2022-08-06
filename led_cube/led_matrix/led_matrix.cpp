@@ -76,9 +76,9 @@ void LedMatrix::action(MatrixOperation* operation, LedSwitch switch_state, Color
 }
 
 void EnableAll::run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color) {
-    for (int x = 0; x < coordinates->x; x++) {
-        for (int y= 0; y < coordinates->y; y++) {
-            for (int z = 0; z < coordinates->z; z ++) {
+    for (int x = 0; x <= coordinates->x; x++) {
+        for (int y= 0; y <= coordinates->y; y++) {
+            for (int z = 0; z <= coordinates->z; z ++) {
                 LM_SetLedState(led_matrix, x, y, z, switch_state, color);
             }
         }
@@ -142,9 +142,9 @@ void EnablePlane::run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch sw
 }
 
 void EnableCuboid::run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color) {
-    for (int x = coordinates->start->x; x < coordinates->end->x; x++) {
-        for (int y= coordinates->start->y; y < coordinates->end->y; y++) {
-            for (int z = coordinates->start->z; z < coordinates->end->z; z ++) {
+    for (int x = coordinates->start->x; x <= coordinates->end->x; x++) {
+        for (int y= coordinates->start->y; y <= coordinates->end->y; y++) {
+            for (int z = coordinates->start->z; z <= coordinates->end->z; z ++) {
                 LM_SetLedState(led_matrix, x, y, z, switch_state, color);
             }
         }

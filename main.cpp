@@ -40,46 +40,76 @@ int main(void) {
     AnalogLedCubeRGB4x4x4MCP23017 memory_hub(i2c1);
     LedCubeAnalog4x4x4 cube(&memory_hub, &ledFactory);
 
-    // 1. EnableAll needs to be fixed. For now it needs greater coordinates than possible.
-
     /*
     TESTING
+    [X] Different configurations of Single Led
     [X] Different configurations of Planes
-    [ ] Different configurations of Columns
-    [ ] Different configurations of Cubiods
-    [ ] Different configurations of Single Led
+    [X] Different configurations of All
+    [X] Different configurations of Columns
+    [X] Different configurations of Cubiods
     */
 
-    // // Enable Single Diode
-    // for(int i = 0; i < 10; i ++) {
-    //     CartesianCoordinates cr(3, 3, 3);
-    //     EnableSingle enable_single(&cr);
-    //     cube.action(&enable_single, LedSwitch::ENABLE, Color::RED);
-    //     cube.render();
-    //     sleep_ms(200);
-    //     cube.action(&enable_single, LedSwitch::DISABLE);
-    //     cube.render();
-    //     sleep_ms(200);
-    // }
+    // Enable Single Diode
+    for(int i = 0; i < 10; i ++) {
+        CartesianCoordinates cr(3, 3, 3);
+        EnableSingle enable_single(&cr);
+        cube.action(&enable_single, LedSwitch::ENABLE, Color::RED);
+        cube.render();
+        sleep_ms(200);
+        cube.action(&enable_single, LedSwitch::DISABLE);
+        cube.render();
+        sleep_ms(200);
+    }
 
-    // // Enable Plane
-    // PlaneCoordinates plane(Plane::Z, 2);
-    // EnablePlane en_plane(&plane);
-    // cube.action(&en_plane, LedSwitch::ENABLE, Color::CYAN);
-    // cube.render();
-    // sleep_ms(2000);
-    // cube.action(&en_plane, LedSwitch::DISABLE);
-    // cube.render();
-    
-    // // Enable Plane
-    // sleep_ms(2000);
-    // PlaneCoordinates plane2(Plane::X, 3);
-    // EnablePlane en_plane2(&plane2);
-    // cube.action(&en_plane2, LedSwitch::ENABLE, Color::MAGENTA);
-    // cube.render();
-    // sleep_ms(2000);
-    // cube.action(&en_plane2, LedSwitch::DISABLE);
-    // cube.render();
+    // Enable Single Plane
+    for(int i = 0; i < 10; i ++) {
+        PlaneCoordinates plane(Plane::Z, 2);
+        EnablePlane en_plane(&plane);
+        cube.action(&en_plane, LedSwitch::ENABLE, Color::CYAN);
+        cube.render();
+        sleep_ms(200);
+        cube.action(&en_plane, LedSwitch::DISABLE);
+        cube.render();
+        sleep_ms(200);
+    }
+
+    // Enable All
+    for(int i = 0; i < 10; i ++) {
+        CartesianCoordinates cr2(3, 3, 3);
+        EnableAll all(&cr2);
+        cube.action(&all, LedSwitch::ENABLE, Color::YELLOW);
+        cube.render();
+        sleep_ms(200);
+        cube.action(&all, LedSwitch::DISABLE);
+        cube.render();
+        sleep_ms(200);
+    }
+
+    // Enable Single Column
+    for(int i = 0; i < 10; i ++) {
+        ColumnCoordinates cl(Plane::Y, 0, 0, 4);
+        EnableColumn column(&cl);
+        cube.action(&column, LedSwitch::ENABLE, Color::GREEN);
+        cube.render();
+        sleep_ms(200);
+        cube.action(&column, LedSwitch::DISABLE);
+        cube.render();
+        sleep_ms(200);
+    }
+
+    // Enable Single Column
+    for(int i = 0; i < 10; i ++) {
+        CartesianCoordinates cr3(1, 1, 1);
+        CartesianCoordinates cr4(2, 2, 2);
+        CuboidCoordinates cb(&cr3, &cr4);
+        EnableCuboid cuboid(&cb);
+        cube.action(&cuboid, LedSwitch::ENABLE, Color::RED);
+        cube.render();
+        sleep_ms(200);
+        cube.action(&cuboid, LedSwitch::DISABLE);
+        cube.render();
+        sleep_ms(200);
+    }
 
     while (true) {
     }

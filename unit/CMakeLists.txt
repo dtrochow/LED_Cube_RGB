@@ -30,8 +30,8 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../new_led_cube/led_matrix ${CMAKE_CURRENT_BINARY_DIR}/led_matirx)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../new_led_cube/led_rgb ${CMAKE_CURRENT_BINARY_DIR}/led_rgb)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../led_cube/led_matrix ${CMAKE_CURRENT_BINARY_DIR}/led_matirx)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../led_cube/led_rgb ${CMAKE_CURRENT_BINARY_DIR}/led_rgb)
 
 set (deps
   led_matrix
