@@ -7,4 +7,5 @@ function build {
 
 if ! build ; then
     echo Build failed!
+    exit -1
 fi

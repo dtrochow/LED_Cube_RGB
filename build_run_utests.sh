@@ -9,5 +9,6 @@ if build ; then
     cd build && ctest --output-on-failure
 else
     echo Build failed!
+    exit -1
 fi
 

@@ -23,6 +23,7 @@ target_link_libraries(${projname}
 	hardware_i2c
 	mcp23017_lib
 	cube
+	animations
 	)
 
 pico_enable_stdio_usb(${projname} 0)
