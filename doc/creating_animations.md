@@ -23,7 +23,7 @@
         AnimationName() {};
         ~AnimationName() override {};
     public:
-        void run(LedCube* cube, AnimationSpeed speed) override;
+        void run(LedCube* cube, AnimationSpeed speed, int iterations) override;
     };
     ```
 
@@ -44,7 +44,7 @@
     e.g.
     _animations.cpp_
     ```cpp
-    void AnimationName::run(LedCube* cube, AnimationSpeed speed) {
+    void AnimationName::run(LedCube* cube, AnimationSpeed speed, int iterations) {
 
     }
     ``` 
@@ -90,7 +90,7 @@
 
 All animations can use matrix operations, to manipulate led states in led matrix.
 
-#### EnableAll
+#### **EnableAll**
 Enable all leds from (0, 0, 0) position to position given through `CartesianCoordinates`.
 
 e.g.
@@ -103,7 +103,7 @@ cube->render();
 
 Leds can be also disabled in this way `LedSwitch::DISABLE`.
 
-#### EnableSingle
+#### **EnableSingle**
 Enable single led with position given in `CartesianCoordinates`.
 
 e.g.
@@ -114,7 +114,7 @@ cube->action(&single, LedSwitch::ENABLE, Color::BLUE);
 cube->render();
 ``` 
 
-#### EnableColumn
+#### **EnableColumn**
 Enable single column, which is being described by `ColumnCoordinates`.
 ColumnCoordinates parameters:
 1. Base plane
@@ -131,7 +131,7 @@ cube->action(&column, LedSwitch::ENABLE, Color::GREEN);
 cube->render();
 ``` 
 
-#### EnablePlane
+#### **EnablePlane**
 Enable single plane, which can be described by `PlaneCoordinates`.
 e.g.
 PlaneCoordinates parameters:
@@ -146,7 +146,7 @@ cube->action(&eplane, LedSwitch::ENABLE, Color::CYAN);
 cube->render();
 ``` 
 
-#### EnableCuboid
+#### **EnableCuboid**
 Enable single cuboid, which can be described by `CuboidCoordinates`, which consists of two `CartesianCoordinates` (Position of two opposite corners).
 
 e.g.

@@ -43,6 +43,7 @@ int main(void) {
 
     AnimationsRunner a_runner(&cube);
     a_runner.run(AnimationType::ALL_LEDS_ALL_COLORS);
+    a_runner.run(AnimationType::RANDOM_CUBE_AND_COLOR, AnimationSpeed::FAST, 400);
 
     while (true) {
     }
