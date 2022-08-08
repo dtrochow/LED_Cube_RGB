@@ -29,3 +29,11 @@ public:
 public:
     void run(LedCube* cube, AnimationSpeed speed) override;
 };
+
+class TennisBallSeam : public Animation {
+public:
+    TennisBallSeam() {};
+    ~TennisBallSeam() override {};
+public:
+    void run(LedCube* cube, AnimationSpeed speed) override;
+};

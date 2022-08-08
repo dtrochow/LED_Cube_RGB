@@ -42,7 +42,7 @@ int main(void) {
     LedCubeAnalog4x4x4 cube(&memory_hub, &ledFactory);
 
     AnimationsRunner a_runner(&cube);
-    a_runner.run(AnimationType::ALL_LEDS_ALL_COLORS);
+    a_runner.run(AnimationType::TENNIS_BALL_SEAM);
 
     while (true) {
     }

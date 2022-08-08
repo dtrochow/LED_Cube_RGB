@@ -13,6 +13,7 @@ constexpr std::initializer_list<Color> all_colors = {
 
 enum class AnimationType {
     ALL_LEDS_ALL_COLORS,
+    TENNIS_BALL_SEAM,
     NONE
 };
 

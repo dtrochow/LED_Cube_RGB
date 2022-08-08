@@ -38,7 +38,8 @@ static void la_seed_random_from_rosc(void) {
 AnimationsRunner::AnimationsRunner(LedCube* cube_) {
     cube = cube_;
     animations = {
-        { AnimationType::ALL_LEDS_ALL_COLORS, new AllLedsAllColors() }
+        { AnimationType::ALL_LEDS_ALL_COLORS, new AllLedsAllColors() },
+        { AnimationType::TENNIS_BALL_SEAM,    new TennisBallSeam()   }
     };
 }
 
@@ -69,4 +70,11 @@ void AllLedsAllColors::run(LedCube* cube, AnimationSpeed speed) {
             }
         }
     }
+}
+
+/**
+ * Enables consecutive leds in the path of cubic tennis ball seam.
+ */
+void TennisBallSeam::run(LedCube* cube, AnimationSpeed speed) {
+    // TODO: Add function body
 }
