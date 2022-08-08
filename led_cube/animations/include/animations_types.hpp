@@ -13,6 +13,7 @@ constexpr std::initializer_list<Color> all_colors = {
 
 enum class AnimationType {
     ALL_LEDS_ALL_COLORS,
+    RANDOM_CUBE_AND_COLOR,
     NONE
 };
 
@@ -23,3 +24,15 @@ enum class AnimationSpeed {
     FAST,
     VERY_FAST
 };
+
+typedef struct {
+    int x;
+    int y;
+    int z;
+} cartesianPos_t;
+
+typedef struct {
+    int x;
+    int y;
+    int z;
+} cubeDim_t;
