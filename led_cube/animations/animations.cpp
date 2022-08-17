@@ -4,18 +4,21 @@
 #include "hardware/regs/rosc.h"
 #include "hardware/regs/addressmap.h"
 
+#include "hardware/timer.h"
+
 /* -------------------------------------------------------------------------- */
 /*                             Static definitions                             */
 /* -------------------------------------------------------------------------- */
 
-static void la_seed_random_from_rosc(void);
+static void seed_random(void);
+static void get_cube_dimensions(LedCube* cube, cubeDim_t* dimensions);
 
 /* -------------------------------------------------------------------------- */
 
 /**
  * Inserts random seed from HW for random number generation.
  */
-static void la_seed_random_from_rosc(void) {
+static void seed_random(void) {
     uint32_t random = 0x811c9dc5;
     uint8_t next_byte = 0;
     volatile uint32_t *rnd_reg = (uint32_t *)(ROSC_BASE + ROSC_RANDOMBIT_OFFSET);
@@ -32,6 +35,24 @@ static void la_seed_random_from_rosc(void) {
     srand(random);
 }
 
+static void get_cube_dimensions(LedCube* cube, cubeDim_t* dimensions) {
+    dimensions->x = cube->getDimension(Dimension::X);
+    dimensions->y = cube->getDimension(Dimension::Y);
+    dimensions->z = cube->getDimension(Dimension::Z);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                 Enable page                                */
+/* -------------------------------------------------------------------------- */
+
+typedef std::pair<CartesianCoordinates, Color> LedDesc;
+
+void enable_page(LedCube* cube, LedDesc led_descriptors, int duration_ms)
+{
+
+}
+
+
 /* -------------------------------------------------------------------------- */
 /*                              Animations Runner                             */
 /* -------------------------------------------------------------------------- */
@@ -40,7 +61,8 @@ AnimationsRunner::AnimationsRunner(LedCube* cube_) {
     cube = cube_;
     animations = {
         { AnimationType::ALL_LEDS_ALL_COLORS,   new AllLedsAllColors()  },
-        { AnimationType::RANDOM_CUBE_AND_COLOR, new RandomCubeAndColor() }
+        { AnimationType::RANDOM_CUBE_AND_COLOR, new RandomCubeAndColor() },
+        { AnimationType::RAIN, new Rain() }
     };
 }
 
@@ -112,26 +134,24 @@ void RandomCubeAndColor::run(LedCube* cube, AnimationSpeed speed, int iterations
     cubeDim_t cube_dimensions = {0};
 
     // Get cube dimensions
-    cube_dimensions.x = cube->getDimension(Dimension::X);
-    cube_dimensions.y = cube->getDimension(Dimension::Y);
-    cube_dimensions.z = cube->getDimension(Dimension::Z);
+    get_cube_dimensions(cube, &cube_dimensions);
 
     // Define number of iteration
     for (int i = 0; i < iterations; i ++) {
         // 1. Get position of the cube
         cartesianPos_t pos = {0};
-        la_seed_random_from_rosc();
+        seed_random();
         pos.x = rand() % (cube_dimensions.x-1);
-        la_seed_random_from_rosc();
+        seed_random();
         pos.y = rand() % (cube_dimensions.y-1);
-        la_seed_random_from_rosc();
+        seed_random();
         pos.z = rand() % (cube_dimensions.z-1);
 
         // 2. Get size of the cube depending on available space.
         cube_size = std::min((cube_dimensions.x-pos.x), std::min((cube_dimensions.y-pos.y), (cube_dimensions.z-pos.z)));
 
         // 3. Get the color
-        la_seed_random_from_rosc();
+        seed_random();
         std::initializer_list<Color>::iterator color = all_colors.begin();
         std::advance(color, rand() % all_colors.size()-1);
         
@@ -147,4 +167,59 @@ void RandomCubeAndColor::run(LedCube* cube, AnimationSpeed speed, int iterations
     }
     cube->reset();
     cube->render();
+}
+
+/**
+ * Rain animation
+ */
+void Rain::run(LedCube* cube, AnimationSpeed speed, int iterations) {
+    int64_t one_frame_time = 300000/(int64_t)speed;
+    cubeDim_t cube_dimensions = {0};
+    get_cube_dimensions(cube, &cube_dimensions);
+    std::map<std::pair<int, int>, int> allocated_diodes;
+    std::map<std::pair<int,int>,int>::iterator it = allocated_diodes.end();
+
+    // Choosing color of the rain
+    Color color = Color::CYAN;
+
+    while(true) {
+        // 1. Randomly get one XY diode position
+        std::pair<int, int> xy_pos;
+        do {
+            seed_random();
+            xy_pos.first = rand() % (cube_dimensions.x);
+            seed_random();
+            xy_pos.second = rand() % (cube_dimensions.y);
+            it = allocated_diodes.find(xy_pos);
+        } while (it != allocated_diodes.end());
+
+        // 2. Iterate thorugh all allocated diodes and decrement Z value
+        for (it = allocated_diodes.begin(); it != allocated_diodes.end();) {
+            // Deallocate diode if Z value == 0
+            if (it->second == 0) {
+                it = allocated_diodes.erase(it);
+            }
+            else {
+                it->second--;
+                it++;
+            }
+        }
+
+        // 3. Allocate random diode from (1.) by adding it to map and set its Z value to maximum
+        allocated_diodes.insert({xy_pos, cube_dimensions.z-1});
+
+        // 4. Render the diodes from a map
+        absolute_time_t start = get_absolute_time();
+        while (absolute_time_diff_us(start, get_absolute_time()) < one_frame_time) {
+            for (it = allocated_diodes.begin(); it != allocated_diodes.end(); it++) {
+                std::pair<int, int> xy = it->first;
+                CartesianCoordinates cc(xy.first, xy.second, it->second);
+                EnableSingle single(&cc);
+                cube->action(&single, LedSwitch::ENABLE, color);
+                cube->render();
+                cube->action(&single, LedSwitch::DISABLE);
+                cube->render();
+            }
+        };
+    }
 }

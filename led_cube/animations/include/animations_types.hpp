@@ -14,6 +14,7 @@ constexpr std::initializer_list<Color> all_colors = {
 enum class AnimationType {
     ALL_LEDS_ALL_COLORS,
     RANDOM_CUBE_AND_COLOR,
+    RAIN,
     NONE
 };
 
