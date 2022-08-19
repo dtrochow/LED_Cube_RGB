@@ -62,7 +62,8 @@ AnimationsRunner::AnimationsRunner(LedCube* cube_) {
     animations = {
         { AnimationType::ALL_LEDS_ALL_COLORS,   new AllLedsAllColors()  },
         { AnimationType::RANDOM_CUBE_AND_COLOR, new RandomCubeAndColor() },
-        { AnimationType::RAIN, new Rain() }
+        { AnimationType::RAIN, new Rain() },
+        { AnimationType::RAISING_COLUMNS, new RaisingColumns() }
     };
 }
 
@@ -222,4 +223,11 @@ void Rain::run(LedCube* cube, AnimationSpeed speed, int iterations) {
             }
         };
     }
+}
+
+/**
+ * Raising Columns animation
+ */
+void RaisingColumns::run(LedCube* cube, AnimationSpeed speed, int iterations) {
+
 }
