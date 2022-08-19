@@ -241,11 +241,36 @@ void Rain::run(LedCube* cube, AnimationSpeed speed, int iterations) {
  *                   (O)-(O)-(I)-(I)/       
  *                    |   |   |   |/ 
  *      (0,0,0) -->  (O)-(O)-(I)-(I)  <-- (3,0,0)
- * 
- * The color will change during each iteration. There always will be two colors (O) and (I) as shown
- * on the ilustration above.
  */
 void ChessCubes::run(LedCube* cube, AnimationSpeed speed, int iterations) {
+    // 1. Create two lists of cubes
+    CuboidCoordinates* I_cubes[4] = {
+        new CuboidCoordinates(new CartesianCoordinates(0,0,0), new CartesianCoordinates(1,1,1)),
+        new CuboidCoordinates(new CartesianCoordinates(2,0,2), new CartesianCoordinates(3,1,3)),
+        new CuboidCoordinates(new CartesianCoordinates(0,2,2), new CartesianCoordinates(1,3,3)),
+        new CuboidCoordinates(new CartesianCoordinates(2,2,0), new CartesianCoordinates(3,3,1))
+    };
+    CuboidCoordinates* O_cubes[4] = {
+        new CuboidCoordinates(new CartesianCoordinates(0,2,0), new CartesianCoordinates(1,3,1)),
+        new CuboidCoordinates(new CartesianCoordinates(2,0,0), new CartesianCoordinates(3,1,1)),
+        new CuboidCoordinates(new CartesianCoordinates(0,0,2), new CartesianCoordinates(1,1,3)),
+        new CuboidCoordinates(new CartesianCoordinates(2,2,2), new CartesianCoordinates(3,3,3))
+    };
 
+    while (true) {
+        seed_random();
+        int i = rand() % 4;
+        EnableCuboid cuboid_i(I_cubes[i]);
+        seed_random();
+        int o = rand() % 4;
+        EnableCuboid cuboid_o(O_cubes[o]);
+        cube->action(&cuboid_i, LedSwitch::ENABLE, Color::BLUE);
+        cube->render();
+        cube->action(&cuboid_i, LedSwitch::DISABLE);
+        sleep_ms(300);
+        cube->action(&cuboid_o, LedSwitch::ENABLE, Color::RED);
+        cube->render();
+        cube->action(&cuboid_o, LedSwitch::DISABLE);
+        sleep_ms(300);
+    }
 }
-
