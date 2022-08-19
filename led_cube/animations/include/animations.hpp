@@ -50,3 +50,11 @@ public:
 public:
     void run(LedCube* cube, AnimationSpeed speed, int iterations) override;
 };
+
+class ChessCubes : public Animation {
+public:
+    ChessCubes() {};
+    ~ChessCubes() override {};
+public:
+    void run(LedCube* cube, AnimationSpeed speed, int iterations) override;
+};

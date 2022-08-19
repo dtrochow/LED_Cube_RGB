@@ -62,7 +62,8 @@ AnimationsRunner::AnimationsRunner(LedCube* cube_) {
     animations = {
         { AnimationType::ALL_LEDS_ALL_COLORS,   new AllLedsAllColors()  },
         { AnimationType::RANDOM_CUBE_AND_COLOR, new RandomCubeAndColor() },
-        { AnimationType::RAIN, new Rain() }
+        { AnimationType::RAIN, new Rain() },
+        { AnimationType::CHESS_CUBES, new ChessCubes() }
     };
 }
 
@@ -101,19 +102,19 @@ void AllLedsAllColors::run(LedCube* cube, AnimationSpeed speed, int iterations) 
  *    the coordinates of the last led (size_x-1, size_y-1, size_z-1)
  * 2. Get size of the cube depending on available space. 
  * 
- *    e.g. - the position drwan is (1,0,2) - marked by (X)
+ *    e.g. - the position drwan is (1,0,2) - marked by (I)
  *         - forbidden coordinates are marked by (F)
- *         - second coordinates od the cube are marked by (S)                         
+ *         - second coordinates od the cube are marked by (I)                         
  *              
  *            (0,3,3) -->   o - o - o -(F)   <-- (3,3,3)
  *                         /   /   /   /|  
  *                        o - o - o - o |  
  *                       /   /   /   /|/|
- *                      o - o -(S)- o / |     
+ *                      o - o -(I)- o / |     
  *                     /   /   /   /|/|/|  
  *      (0,0,3) -->   o - o - o - o / / |   <-- (3,3,0)    
  *                    |   |   |   |/|/|/   
- *                    o -(X)- o - o / /     
+ *                    o -(I)- o - o / /     
  *                    |   |   |   |/|/       
  *                    o - o - o - o /       
  *                    |   |   |   |/ 
@@ -223,3 +224,28 @@ void Rain::run(LedCube* cube, AnimationSpeed speed, int iterations) {
         };
     }
 }
+
+/**
+ * ChessCubes animation
+ * 
+ *            (0,3,3) -->  (O)-(O)-(I)-(I)  <-- (3,3,3)
+ *                         /   /   /   /|  
+ *                       (O)-(O)-(I)-(I)|  
+ *                       /   /   /   /|/|
+ *                     (I)-(I)-(O)-(O)/ |     
+ *                     /   /   /   /|/|/|  
+ *      (0,0,3) -->  (I)-(I)-(O)-(O)/ / |   <-- (3,3,0)    
+ *                    |   |   |   |/|/|/   
+ *                   (I)-(I)-(O)-(O)/ /     
+ *                    |   |   |   |/|/       
+ *                   (O)-(O)-(I)-(I)/       
+ *                    |   |   |   |/ 
+ *      (0,0,0) -->  (O)-(O)-(I)-(I)  <-- (3,0,0)
+ * 
+ * The color will change during each iteration. There always will be two colors (O) and (I) as shown
+ * on the ilustration above.
+ */
+void ChessCubes::run(LedCube* cube, AnimationSpeed speed, int iterations) {
+
+}
+
