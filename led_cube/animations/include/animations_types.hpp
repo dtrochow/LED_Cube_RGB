@@ -16,6 +16,7 @@ enum class AnimationType {
     RANDOM_CUBE_AND_COLOR,
     RAIN,
     RAISING_COLUMNS,
+    SNAKE,
     NONE
 };
 

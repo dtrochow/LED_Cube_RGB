@@ -70,7 +70,8 @@ AnimationsRunner::AnimationsRunner(LedCube* cube_) {
         { AnimationType::ALL_LEDS_ALL_COLORS,   new AllLedsAllColors()  },
         { AnimationType::RANDOM_CUBE_AND_COLOR, new RandomCubeAndColor() },
         { AnimationType::RAIN, new Rain() },
-        { AnimationType::RAISING_COLUMNS, new RaisingColumns() }
+        { AnimationType::RAISING_COLUMNS, new RaisingColumns() },
+        { AnimationType::SNAKE, new Snake() }
     };
 }
 
@@ -279,4 +280,11 @@ void RaisingColumns::run(LedCube* cube, AnimationSpeed speed, int iterations) {
             }
         };
     }
+}
+
+/**
+ * Snake animation
+ */
+void Snake::run(LedCube* cube, AnimationSpeed speed, int iterations) {
+
 }

@@ -58,3 +58,11 @@ public:
 public:
     void run(LedCube* cube, AnimationSpeed speed, int iterations) override;
 };
+
+class Snake : public Animation {
+public:
+    Snake() {};
+    ~Snake() override {};
+public:
+    void run(LedCube* cube, AnimationSpeed speed, int iterations) override;
+};
