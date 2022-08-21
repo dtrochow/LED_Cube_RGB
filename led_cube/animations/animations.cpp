@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <cmath>
+#include <algorithm>
 #include "animations.hpp"
 #include "led_matrix.hpp"
 #include "hardware/regs/rosc.h"
@@ -47,6 +49,35 @@ static Color get_random_color() {
     std::advance(color, rand() % all_colors.size()-1);
     return *color;
 }
+
+static cartesianPos_t get_random_pos(cubeDim_t cube_dim) {
+    cartesianPos_t pos = {0};
+    seed_random();
+    pos.x = rand() % (cube_dim.x-1);
+    seed_random();
+    pos.y = rand() % (cube_dim.y-1);
+    seed_random();
+    pos.z = rand() % (cube_dim.z-1);
+    return pos;
+}
+
+static std::pair<int, int> get_random_xy_pos(cubeDim_t cube_dim) {
+    std::pair<int, int> xy_pos;
+    seed_random();
+    xy_pos.first = rand() % (cube_dim.x);
+    seed_random();
+    xy_pos.second = rand() % (cube_dim.y);
+    return xy_pos;
+}
+
+std::map<Direction, cartesianPos_t> directions = {
+    { Direction::X_UP,      {1,0,0}},
+    { Direction::X_DOWN,    {-1,0,0}},
+    { Direction::Y_UP,      {0,1,0}},
+    { Direction::Y_DOWN,    {0,-1,0}},
+    { Direction::Z_UP,      {0,0,1}},
+    { Direction::Z_DOWN,    {0,0,-1}}
+};
 
 /* -------------------------------------------------------------------------- */
 /*                              Animations Runner                             */
@@ -136,13 +167,7 @@ void RandomCubeAndColor::run(LedCube* cube, AnimationSpeed speed, int iterations
     // Define number of iteration
     for (int i = 0; i < iterations; i ++) {
         // 1. Get position of the cube
-        cartesianPos_t pos = {0};
-        seed_random();
-        pos.x = rand() % (cube_dimensions.x-1);
-        seed_random();
-        pos.y = rand() % (cube_dimensions.y-1);
-        seed_random();
-        pos.z = rand() % (cube_dimensions.z-1);
+        cartesianPos_t pos = get_random_pos(cube_dimensions);
 
         // 2. Get size of the cube depending on available space.
         cube_size = std::min((cube_dimensions.x-pos.x), std::min((cube_dimensions.y-pos.y), (cube_dimensions.z-pos.z)));
@@ -181,10 +206,7 @@ void Rain::run(LedCube* cube, AnimationSpeed speed, int iterations) {
         // 1. Randomly get one XY diode position
         std::pair<int, int> xy_pos;
         do {
-            seed_random();
-            xy_pos.first = rand() % (cube_dimensions.x);
-            seed_random();
-            xy_pos.second = rand() % (cube_dimensions.y);
+            xy_pos = get_random_xy_pos(cube_dimensions);
             it = allocated_diodes.find(xy_pos);
         } while (it != allocated_diodes.end());
 
@@ -274,5 +296,107 @@ void RaisingColumns::run(LedCube* cube, AnimationSpeed speed, int iterations) {
  * Snake animation
  */
 void Snake::run(LedCube* cube, AnimationSpeed speed, int iterations) {
+    int snake_length = 8;
+    int color_segment_length = 2;
+    std::initializer_list<Color>::iterator it_color = all_colors.begin();
+    int64_t one_frame_time = 300000/(int64_t)speed;
 
+    cubeDim_t cube_dimensions = {0};
+    get_cube_dimensions(cube, &cube_dimensions);
+
+    std::vector<cartesianPos_t> allocated_diodes;
+    std::vector<cartesianPos_t>::iterator it = allocated_diodes.end();
+    std::vector<Direction> allowed_dir;
+    std::vector<Direction>::iterator it_dir = allowed_dir.begin();
+    Direction last_dir;
+    cartesianPos_t last_pos;
+    cartesianPos_t potential_next_pos;
+    cartesianPos_t next_pos;
+
+    // Choose first direction
+    seed_random();
+    Direction dir = (Direction)(rand() % (int)Direction::SIZE);
+
+    // Draw starting point
+    cartesianPos_t start_pos = get_random_pos(cube_dimensions);
+    allocated_diodes.push_back({start_pos.x, start_pos.y, start_pos.z});
+    sleep_ms(one_frame_time/1000);
+
+    while (true) {
+        last_dir = dir;
+        last_pos = allocated_diodes.back();
+
+        seed_random();
+        // Check if the wall has been hit
+        if ((last_pos.x == 0 && last_dir == Direction::X_DOWN) ||
+            (last_pos.x == cube_dimensions.x-1 && last_dir == Direction::X_UP) ||
+            (last_pos.y == 0 && last_dir == Direction::Y_DOWN) ||
+            (last_pos.y == cube_dimensions.y-1  && last_dir == Direction::Y_UP) ||
+            (last_pos.z == 0 && last_dir == Direction::Z_DOWN) ||
+            (last_pos.z == cube_dimensions.y-1 && last_dir == Direction::Z_UP) ||
+            (bool(rand() % 2)))
+        {
+            if ((last_pos.x != 0) && (last_dir != Direction::X_UP)) {
+                allowed_dir.push_back(Direction::X_DOWN);
+            }
+            if ((last_pos.x != cube_dimensions.x-1) && (last_dir != Direction::X_DOWN)) {
+                allowed_dir.push_back(Direction::X_UP);
+            }
+            if ((last_pos.y != 0) && (last_dir != Direction::Y_UP)) {
+                allowed_dir.push_back(Direction::Y_DOWN);
+            }
+            if ((last_pos.y != cube_dimensions.y-1) && (last_dir != Direction::Y_DOWN)) {
+                allowed_dir.push_back(Direction::Y_UP);
+            }
+            if ((last_pos.z != 0) && (last_dir != Direction::Z_UP)) {
+                allowed_dir.push_back(Direction::Z_DOWN);
+            } 
+            if ((last_pos.z != cube_dimensions.z-1) && (last_dir != Direction::Z_DOWN)) {
+                allowed_dir.push_back(Direction::Z_UP);
+            }
+            // Remove possibility of running into the snake tail
+            for (it_dir = allowed_dir.begin(); it_dir != allowed_dir.end();) {
+                potential_next_pos = last_pos + directions[*it_dir];
+                if (std::count(allocated_diodes.begin(), allocated_diodes.end(), potential_next_pos)) {
+                    it_dir = allowed_dir.erase(it_dir);
+                } else {
+                    it_dir++;
+                }
+            }
+            it_dir = allowed_dir.begin();
+            seed_random();
+            std::advance(it_dir, rand() % (allowed_dir.size()));
+            dir = *it_dir;
+        } else {
+            dir = last_dir;
+        }
+        allowed_dir.clear();
+
+        next_pos = last_pos + directions[dir];
+        allocated_diodes.push_back(next_pos);
+
+        if (allocated_diodes.size() > snake_length) {
+            allocated_diodes.erase(allocated_diodes.begin());
+        }
+        // Render the diodes from a map
+        absolute_time_t start = get_absolute_time();
+        while (absolute_time_diff_us(start, get_absolute_time()) < one_frame_time) {
+            int tail_pos = 0;
+            it_color = all_colors.begin();
+            for (it = allocated_diodes.begin(); it != allocated_diodes.end(); it++) {
+                cartesianPos_t pos = *it;
+                CartesianCoordinates cc(pos.x, pos.y, pos.z);
+                EnableSingle single(&cc);
+                cube->action(&single, LedSwitch::ENABLE, *it_color);
+                cube->render();
+                cube->action(&single, LedSwitch::DISABLE);
+                cube->render();
+                tail_pos++;
+                // Dividing the tail into separate color sections
+                if (tail_pos % color_segment_length == 0) {
+                    it_color++;
+                }
+            }
+        }; 
+    };
 }
