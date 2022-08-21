@@ -45,6 +45,7 @@ int main(void) {
     a_runner.run(AnimationType::ALL_LEDS_ALL_COLORS);
     a_runner.run(AnimationType::RANDOM_CUBE_AND_COLOR, AnimationSpeed::FAST, 400);
     a_runner.run(AnimationType::RAIN, AnimationSpeed::VERY_SLOW);
+    a_runner.run(AnimationType::RAISING_COLUMNS);
 
     while (true) {
     }
