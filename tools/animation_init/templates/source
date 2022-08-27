@@ -1,0 +1,5 @@
+#include "<<FILE_NAME>>"
+
+void <<CLASS_NAME>>::run(LedCube* cube, AnimationSpeed speed, int iterations) {
+
+}
