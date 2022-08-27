@@ -1,20 +1,6 @@
-#pragma once
-
-#include "animations_types.hpp"
+#include "animation_runner_types.hpp"
 #include "led_cube.hpp"
-#include <map>
-
-class Animation {
-public:
-    virtual ~Animation() {};
-public:
-    /**
-     * @param cube - pointer to a LedCube object
-     * @param speed  - one of 5 available speed options for animation
-     * @param iterations - number of animation iterations
-     */
-    virtual void run(LedCube* cube, AnimationSpeed speed, int iterations) = 0;
-};
+#include "animation_utils.hpp"
 
 class AnimationsRunner {
 public:

@@ -14,7 +14,7 @@
 #include "memory_hub.hpp"
 #include "led_rgb.hpp"
 #include "colors_config.hpp"
-#include "animations.hpp"
+#include "animation_runner.hpp"
 
 const int I2C_SPEED = 1000000;
 const uint LED_PIN = 25;
