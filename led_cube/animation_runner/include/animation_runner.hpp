@@ -13,14 +13,6 @@ private:
     std::map<AnimationType, Animation*> animations;
 };
 
-class RandomCubeAndColor : public Animation {
-public:
-    RandomCubeAndColor() {};
-    ~RandomCubeAndColor() override {};
-public:
-    void run(LedCube* cube, AnimationSpeed speed, int iterations) override;
-};
-
 class Rain : public Animation {
 public:
     Rain() {};

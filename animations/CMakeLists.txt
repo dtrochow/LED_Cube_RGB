@@ -1,9 +1,11 @@
+add_subdirectory(random_cube_and_color)
 add_subdirectory(all_leds_all_colors)
 add_subdirectory(animation_utils)
 
 set(modulename "animations")
 
 set(animations_modules
+	random_cube_and_color_animation
 	all_leds_all_colors_animation
     animation_utils
 )
