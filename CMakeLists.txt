@@ -12,6 +12,7 @@ pico_sdk_init()
 
 add_subdirectory(lib)
 add_subdirectory(led_cube)
+add_subdirectory(animations)
 
 add_executable(${projname}
 	main.cpp
@@ -23,6 +24,7 @@ target_link_libraries(${projname}
 	hardware_i2c
 	mcp23017_lib
 	cube
+	animation_runner
 	animations
 	)
 

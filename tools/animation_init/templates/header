@@ -1,0 +1,9 @@
+#include "animation_utils.hpp"
+
+class <<CLASS_NAME>> : public Animation {
+public:
+    <<CLASS_NAME>>() {};
+    ~<<CLASS_NAME>>() override {};
+public:
+    void run(LedCube* cube, AnimationSpeed speed, int iterations) override;
+};

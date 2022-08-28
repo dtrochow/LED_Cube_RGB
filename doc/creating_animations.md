@@ -13,78 +13,19 @@
 
 ## **How to create new animation**
 
-1. Create new animation class in _animations.hpp_ file.
+You can use script, which will does all module initialization in an automated way.
 
-    e.g.
-    _animations.hpp_
-    ```cpp
-    class AnimationName : public Animation {
-    public:
-        AnimationName() {};
-        ~AnimationName() override {};
-    public:
-        void run(LedCube* cube, AnimationSpeed speed, int iterations) override;
-    };
-    ```
+The scriot is located under `tools/animation_init/animation_init.py` directory.
 
-2. Add the animation name to _AnimationType_ enum in _animations_types.hpp_
+**Usage:**
+```bash
+python3 tools/animation_init/animation_init.py -n animation_name
+```
+IMPORTANT: `-n/--name` parameter value needs to follow the snake case naming convention.
 
-    e.g.
-    _animations_types.hpp_
-    ```cpp
-    enum class AnimationType {
-        ALL_LEDS_ALL_COLORS,
-        ANIMATION_NAME,
-        NONE
-    };
-    ```
+After calling an above command, all necessary files will be created and all needed configuration will be done. 
 
-3. Implement _run()_ method to newly created animation in _animations.cpp_ file
-
-    e.g.
-    _animations.cpp_
-    ```cpp
-    void AnimationName::run(LedCube* cube, AnimationSpeed speed, int iterations) {
-
-    }
-    ``` 
-    You can use all tools described in [Available tools for creating animations](#available-tools-for-creating-animations)
-
-4. Add newly created animation to _AnimationsRunner()_ constructor
-
-    e.g.
-    _animations.cpp_
-    ```cpp
-    AnimationsRunner::AnimationsRunner(LedCube* cube_) {
-        cube = cube_;
-        animations = {
-            { AnimationType::ALL_LEDS_ALL_COLORS, new AllLedsAllColors() },
-            { AnimationType::ANIMATION_NAME,      new AnimationName()    }
-        };
-    }
-    ```
-5. Now you should be able to use animation in your program.
-
-    e.g.
-    _main.cpp_
-    ```cpp
-    int main(void) {
-        .
-        .
-        .
-
-        AnalogLedCreator ledFactory(ledConfig_getColors());
-        AnalogLedCubeRGB4x4x4MCP23017 memory_hub(i2c1);
-        LedCubeAnalog4x4x4 cube(&memory_hub, &ledFactory);
-
-        AnimationsRunner a_runner(&cube);
-        a_runner.run(AnimationType::ANIMATION_NAME);
-
-        .
-        .
-        .
-    }
-    ```
+You can start developing the animation. Animation module will be located under `animations/animation_name` directory. The whole logic of an animation needs to be put in `AnimationName::run()` method body.
 
 ## Available tools for creating animations
 

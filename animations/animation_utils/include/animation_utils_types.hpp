@@ -1,32 +1,8 @@
-#include "led_rgb_types.hpp"
+#pragma once
+
+#include <map>
 #include <initializer_list>
-
-constexpr std::initializer_list<Color> all_colors = {
-    Color::RED,
-    Color::GREEN,
-    Color::BLUE,
-    Color::CYAN,
-    Color::MAGENTA,
-    Color::YELLOW,
-    Color::WHITE
-};
-
-enum class AnimationType {
-    ALL_LEDS_ALL_COLORS,
-    RANDOM_CUBE_AND_COLOR,
-    RAIN,
-    RAISING_COLUMNS,
-    SNAKE,
-    NONE
-};
-
-enum class AnimationSpeed {
-    VERY_SLOW = 1,
-    SLOW,
-    NORMAL,
-    FAST,
-    VERY_FAST
-};
+#include "led_rgb_types.hpp"
 
 struct cartesianPos_t {
     int x;
@@ -68,4 +44,22 @@ enum class Direction {
     Z_UP,
     Z_DOWN,
     SIZE
+};
+
+constexpr std::initializer_list<Color> all_colors = {
+    Color::RED,
+    Color::GREEN,
+    Color::BLUE,
+    Color::CYAN,
+    Color::MAGENTA,
+    Color::YELLOW,
+    Color::WHITE
+};
+
+enum class AnimationSpeed {
+    VERY_SLOW = 1,
+    SLOW,
+    NORMAL,
+    FAST,
+    VERY_FAST
 };
