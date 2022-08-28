@@ -13,14 +13,6 @@ private:
     std::map<AnimationType, Animation*> animations;
 };
 
-class RaisingColumns : public Animation {
-public:
-    RaisingColumns() {};
-    ~RaisingColumns() override {};
-public:
-    void run(LedCube* cube, AnimationSpeed speed, int iterations) override;
-};
-
 class Snake : public Animation {
 public:
     Snake() {};

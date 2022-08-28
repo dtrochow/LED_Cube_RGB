@@ -1,9 +1,9 @@
 
 enum class AnimationType {
+	RAISING_COLUMNS,
 	RAIN,
 	RANDOM_CUBE_AND_COLOR,
 	ALL_LEDS_ALL_COLORS,
-    RAISING_COLUMNS,
     SNAKE,
     NONE
 };
