@@ -1,6 +1,6 @@
-#include "mcp23017.h"
 #include <stdio.h>
 #include <string.h>
+#include "mcp23017.h"
 
 static mcpData_t mcpData[MAX_NUMBER_OF_MCP_MODULES];
 static uint8_t mcpBuf[2];
@@ -16,7 +16,7 @@ void mcp_enable(mcpAddress_e address) {
             mcpData[i].status = MCP_ENABLED;
         }
     } else {
-        mcpData[GET_ORDER_NUMBER(address)].status == MCP_ENABLED;
+        mcpData[GET_ORDER_NUMBER(address)].status = MCP_ENABLED;
     }
 }
 
@@ -87,14 +87,10 @@ uint8_t mcp_get_output_value_port(uint8_t address, uint8_t port) {
     switch (port) {
         case GPIOA:
             return mcpData[GET_ORDER_NUMBER(address)].state.portState.porta;
-
             break;
-
         case GPIOB:
             return mcpData[GET_ORDER_NUMBER(address)].state.portState.portb;
-
             break;
-
         default:
             return -1;
     }
@@ -110,11 +106,9 @@ void mcp_update_out_state_port(i2c_inst_t *i2c, uint8_t address, uint8_t port) {
         case GPIOA:
             mcpBuf[1] = mcpData[GET_ORDER_NUMBER(address)].state.portState.porta;
             break;
-
         case GPIOB:
             mcpBuf[1] = mcpData[GET_ORDER_NUMBER(address)].state.portState.portb;
             break;
-
         default:
             break;
     }
@@ -128,8 +122,8 @@ void mcp_update_out_state(i2c_inst_t *i2c, int8_t address) {
 
 void mcp_update_out_state_all(i2c_inst_t *i2c) {
     for (int i = 0; i < MAX_NUMBER_OF_MCP_MODULES; i++) {
-        // if (MCP_ENABLED == mcpData[i].status) {
+        if (MCP_ENABLED == mcpData[i].status) {
             mcp_update_out_state(i2c, GET_ADDR_FROM_NO(i));
-        // }
+        }
     }
 }

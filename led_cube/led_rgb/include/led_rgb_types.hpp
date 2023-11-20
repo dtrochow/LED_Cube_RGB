@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cinttypes>
 #include <tuple>
 
@@ -35,6 +36,6 @@ struct Led_t {
     LedState blue;
 
     bool operator==(const Led_t& rh) const {
-        return std::make_tuple( this->red, this->green, this->blue ) == std::make_tuple( rh.red, rh.green, rh.blue );
+        return std::make_tuple(this->red, this->green, this->blue) == std::make_tuple(rh.red, rh.green, rh.blue);
     }
 };

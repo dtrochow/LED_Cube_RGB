@@ -171,7 +171,6 @@ void mcp_update_out_state(i2c_inst_t *i2c, int8_t address);
  */
 void mcp_update_out_state_all(i2c_inst_t *i2c);
 
-// Declarations of this file
 #ifdef __cplusplus
 }
 #endif

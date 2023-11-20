@@ -3,7 +3,6 @@
 class AllLedsAllColors : public Animation {
 public:
     AllLedsAllColors() {};
-    ~AllLedsAllColors() override {};
 public:
-    void run(LedCube* cube, AnimationSpeed speed, int iterations) override;
+    void run(LedCube& cube, const AnimationSpeed speed, const int iterations) override;
 };

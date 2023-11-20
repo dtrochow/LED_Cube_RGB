@@ -1,60 +1,61 @@
 #pragma once
 
-#include "led_rgb_types.hpp"
 #include <map>
+#include <memory>
+
+#include "led_rgb_types.hpp"
+
+class LedColor;
+
+using ColorDefs = std::map<Color, LedColor>;
 
 class LedColor {
 public:
     LedColor(Color color_, LedState red, LedState green, LedState blue);
-    ~LedColor();
+    ~LedColor() = default;
     Color getLedColor();
     Led_t getLedStates();
-protected:
+private:
     Color color;
     Led_t led_states;
 };
 
 class LedRGB {
 public:
-    virtual ~LedRGB() {};
-    virtual void enable() {};
-    virtual void disable() {};
-    virtual void setColor(Color color_) {};
+    virtual ~LedRGB() = default;
+    virtual void enable() = 0;
+    virtual void disable() = 0;
+    virtual void setColor(Color color_) = 0;
     virtual Color getColor() = 0;
     virtual LedState getLedDiodeState(Led led) = 0;
 };
 
-typedef std::map<Color, LedColor> ColorDefs;
-
 class LedRGBAnalog : public LedRGB {
 public:
     LedRGBAnalog(ColorDefs colors_config);
-    ~LedRGBAnalog() {};
     void setColor(Color color_) override;
     Color getColor() override;
     LedState getLedDiodeState(Led led) override;
     void disable() override;
     void enable() override;
-protected:
+private:
     Color color_before_disable;
     Color color;
     Led_t led_states;
     ColorDefs available_colors;
-private:
     LedColor getColorObj(Color color_);
 };
 
 class LedCreator {
 public:
-    virtual ~LedCreator() {}
-    virtual LedRGB* CreateMethod() const = 0;
-    LedRGB* MakeLed() const;
+    virtual ~LedCreator() = default;
+    virtual std::unique_ptr<LedRGB> MakeLed() const = 0;
 };
 
-class AnalogLedCreator : public LedCreator{
+class AnalogLedCreator : public LedCreator {
 public:
     AnalogLedCreator(ColorDefs color_config);
-    LedRGB* CreateMethod() const override;
-protected:
+    std::unique_ptr<LedRGB> MakeLed() const override;
+private:
     ColorDefs colors;
 };

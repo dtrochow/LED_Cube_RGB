@@ -5,73 +5,62 @@
 
 #include <vector>
 #include <map>
-using namespace std;
+#include <variant>
 
-typedef vector<vector<vector<LedRGB*>>> LedRGB3DMatrix;
-typedef vector<vector<vector<int>>> Int3DMatrix;
+typedef std::vector<std::vector<std::vector<std::unique_ptr<LedRGB>>>>   LedRGB3DMatrix;
+typedef std::vector<std::vector<std::vector<int>>>                       Int3DMatrix;
 
-class MatrixOperation {
+class EnableAll {
 public:
-    virtual ~MatrixOperation() {};
-    virtual void run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color = Color::NONE) {};
+    EnableAll(const CartesianCoordinates& coordinates_) : coordinates(coordinates_) {};
+    CartesianCoordinates coordinates;
 };
 
-class EnableAll : public MatrixOperation {
+class EnableSingle{
 public:
-    EnableAll(CartesianCoordinates* coordinates_) {
-        coordinates = coordinates_;
-    };
-    void run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color = Color::NONE) override;
-    CartesianCoordinates* coordinates;
+    EnableSingle(const CartesianCoordinates& coordinates_) : coordinates(coordinates_) {};
+    CartesianCoordinates coordinates;
 };
 
-class EnableSingle : public MatrixOperation {
+class EnableColumn {
 public:
-    EnableSingle(CartesianCoordinates* coordinates_) {
-        coordinates = coordinates_;
-    }
-    void run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color = Color::NONE) override;
-    CartesianCoordinates* coordinates;
+    EnableColumn(const ColumnCoordinates& coordinates_) : coordinates(coordinates_) {};
+    ColumnCoordinates coordinates;
 };
 
-class EnableColumn: public MatrixOperation {
+class EnablePlane {
 public:
-    EnableColumn(ColumnCoordinates* coordinates_) {
-        coordinates = coordinates_;
-    }
-    void run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color = Color::NONE) override;
-    ColumnCoordinates* coordinates;
+    EnablePlane(const PlaneCoordinates& coordinates_) : coordinates(coordinates_) {};
+    PlaneCoordinates coordinates;
 };
 
-class EnablePlane: public MatrixOperation {
+class EnableCuboid {
 public:
-    EnablePlane(PlaneCoordinates* coordinates_) {
-        coordinates = coordinates_;
-    };
-    void run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color = Color::NONE) override;
-    PlaneCoordinates* coordinates;
+    EnableCuboid(const CuboidCoordinates& coordinates_) : coordinates(coordinates_) {};
+    CuboidCoordinates coordinates;
 };
 
-class EnableCuboid: public MatrixOperation {
+class Run {
 public:
-    EnableCuboid(CuboidCoordinates* coordinates_) {
-        coordinates = coordinates_;
-    }
-    void run(LedRGB3DMatrix led_matrix, matrixSize_t size, LedSwitch switch_state, Color color = Color::NONE) override;
-    CuboidCoordinates* coordinates;
+    void operator()(EnableAll const& op, LedRGB3DMatrix &led_matrix, matrixSize_t size, LedSwitch switch_state, Color color) const;
+    void operator()(EnableSingle const& op, LedRGB3DMatrix &led_matrix, matrixSize_t size, LedSwitch switch_state, Color color) const;
+    void operator()(EnableColumn const& op, LedRGB3DMatrix &led_matrix, matrixSize_t size, LedSwitch switch_state, Color color) const;
+    void operator()(EnablePlane const& op, LedRGB3DMatrix &led_matrix, matrixSize_t size, LedSwitch switch_state, Color color) const;
+    void operator()(EnableCuboid const& op, LedRGB3DMatrix &led_matrix, matrixSize_t size, LedSwitch switch_state, Color color) const;
 };
+
+using MatrixOperation = std::variant<EnableAll, EnableSingle, EnableColumn, EnablePlane, EnableCuboid>;
 
 class LedMatrix {
 public:
-    LedMatrix(int x, int y, int z, LedCreator* factory);
-    ~LedMatrix() {};
+    LedMatrix(int x, int y, int z, LedCreator& factory);
+    ~LedMatrix() = default;
     int getDimension(Dimension dim);
     LedRGB3DMatrix leds;
-    void action(MatrixOperation* operation, LedSwitch switch_state, Color color = Color::NONE);
+    void action(MatrixOperation const& operation, LedSwitch switch_state, Color color = Color::NONE);
     void reset();
-protected:
+private:
     matrixSize_t size;
     Int3DMatrix enable_counter;
-private:
-    void fillMatrixWithLeds(LedCreator* factory);
+    void fillMatrixWithLeds(LedCreator &factory);
 };
