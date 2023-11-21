@@ -53,10 +53,11 @@ using MatrixOperation = std::variant<EnableAll, EnableSingle, EnableColumn, Enab
 
 class LedMatrix {
 public:
+    LedRGB3DMatrix leds;
+
     LedMatrix(int x, int y, int z, LedCreator& factory);
     ~LedMatrix() = default;
     int getDimension(Dimension dim);
-    LedRGB3DMatrix leds;
     void action(MatrixOperation const& operation, LedSwitch switch_state, Color color = Color::NONE);
     void reset();
 private:
