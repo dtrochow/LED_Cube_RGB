@@ -4,6 +4,7 @@
 *  ************************************/
 
 #include <stdio.h>
+#include <memory>
 #include "pico/stdlib.h"
 #include "pico/multicore.h"
 #include "pico/time.h"
@@ -39,14 +40,14 @@ int main(void) {
 
     AnalogLedCreator ledFactory(ledConfig_getColors());
     AnalogLedCubeRGB4x4x4MCP23017 memory_hub(i2c1);
-    LedCubeAnalog4x4x4 cube(&memory_hub, &ledFactory);
 
-    AnimationsRunner a_runner(&cube);
-    a_runner.run(AnimationType::ALL_LEDS_ALL_COLORS);
-    a_runner.run(AnimationType::RANDOM_CUBE_AND_COLOR, AnimationSpeed::FAST, 400);
-    a_runner.run(AnimationType::RAIN, AnimationSpeed::VERY_SLOW);
-    a_runner.run(AnimationType::RAISING_COLUMNS);
-    a_runner.run(AnimationType::SNAKE);
+    AnimationsRunner a_runner(std::make_unique<LedCubeAnalog4x4x4>(memory_hub, ledFactory));
+
+    // a_runner.run(AnimationType::ALL_LEDS_ALL_COLORS, AnimationSpeed::VERY_FAST);
+    // a_runner.run(AnimationType::SNAKE, AnimationSpeed::NORMAL);
+    a_runner.run(AnimationType::RAIN, AnimationSpeed::FAST);
+    // a_runner.run(AnimationType::RAISING_COLUMNS, AnimationSpeed::FAST);
+    // a_runner.run(AnimationType::RANDOM_CUBE_AND_COLOR);
 
     while (true) {
     }
