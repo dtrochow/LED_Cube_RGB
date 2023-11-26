@@ -21,7 +21,7 @@ The scriot is located under `tools/animation_init/animation_init.py` directory.
 ```bash
 python3 tools/animation_init/animation_init.py -n animation_name
 ```
-IMPORTANT: `-n/--name` parameter value needs to follow the snake case naming convention.
+**IMPORTANT: `-n/--name` parameter value needs to follow the snake case naming convention.**
 
 After calling an above command, all necessary files will be created and all needed configuration will be done. 
 
@@ -36,10 +36,9 @@ Enable all leds from (0, 0, 0) position to position given through `CartesianCoor
 
 e.g.
 ```cpp
-CartesianCoordinates cc(3, 3, 3);
-EnableAll all(&cc);
-cube->action(&all, LedSwitch::ENABLE, Color::YELLOW);
-cube->render();
+MatrixOperation enable_all = EnableAll(CartesianCoordinates(3, 3, 3));
+cube.action(enable_all, LedSwitch::ENABLE, Color::YELLOW);
+cube.render();
 ``` 
 
 Leds can be also disabled in this way `LedSwitch::DISABLE`.
@@ -49,10 +48,9 @@ Enable single led with position given in `CartesianCoordinates`.
 
 e.g.
 ```cpp
-CartesianCoordinates cc(1, 2, 2);
-EnableSingle single(&cc);
-cube->action(&single, LedSwitch::ENABLE, Color::BLUE);
-cube->render();
+MatrixOperation enable_single = EnableSingle(CartesianCoordinates(1, 2, 2));
+cube.action(enable_single, LedSwitch::ENABLE, Color::BLUE);
+cube.render();
 ``` 
 
 #### **EnableColumn**
@@ -66,10 +64,9 @@ ColumnCoordinates parameters:
 
 e.g.
 ```cpp
-ColumnCoordinates cl(Plane::Y, 1, 1, 4);
-EnableColumn column(&cl);
-cube->action(&column, LedSwitch::ENABLE, Color::GREEN);
-cube->render();
+MatrixOperation enable_column = EnableColumn(ColumnCoordinates(Plane::Y, 1, 1, 4));
+cube.action(enable_column LedSwitch::ENABLE, Color::GREEN);
+cube.render();
 ``` 
 
 #### **EnablePlane**
@@ -81,10 +78,9 @@ PlaneCoordinates parameters:
 
 e.g.
 ```cpp
-PlaneCoordinates p(Plane::Z, 2);
-EnablePlane plane(&p);
-cube->action(&eplane, LedSwitch::ENABLE, Color::CYAN);
-cube->render();
+MatrixOperation enable_plane = EnablePlane(PlaneCoordinates(Plane::Z, 2));
+cube.action(enable_plane, LedSwitch::ENABLE, Color::CYAN);
+cube.render();
 ``` 
 
 #### **EnableCuboid**
@@ -92,12 +88,11 @@ Enable single cuboid, which can be described by `CuboidCoordinates`, which consi
 
 e.g.
 ```cpp
-CartesianCoordinates cc1(1, 1, 1);
-CartesianCoordinates cc2(2, 2, 2);
-CuboidCoordinates cb(&cc1, &cc2);
-EnableCuboid cuboid(&cb);
-cube->action(&cuboid, LedSwitch::ENABLE, Color::RED);
-cube->render();
+CartesianCoordinates X(1, 1, 1);
+CartesianCoordinates S(2, 2, 2);
+MatrixOperation enable_cuboid = EnableCuboid(CuboidCoordinates(X, S));
+cube.action(enable_cuboid LedSwitch::ENABLE, Color::RED);
+cube.render();
 ``` 
 
 ## **Update led states**
@@ -106,5 +101,5 @@ To update the actual state of the leds depending on LedMatrix state, you can use
 It will write all the leds data to LedCube hardware.
 
 ```cpp
-cube->render();
+cube.render();
 ```
