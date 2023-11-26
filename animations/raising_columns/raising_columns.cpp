@@ -15,7 +15,8 @@ using AllocatedColumnsMap = std::map<CartesianCoordinates, ColumnDescriptor>;
 /**
  * Raising Columns animation
  */
-void RaisingColumns::run(LedCube& cube, const AnimationSpeed speed, const int iterations) {
+void RaisingColumns::run(LedCube& cube, const AnimationSpeed speed, const int iterations)
+{
     const int64_t one_frame_time = (300000 / utils::to_underlying(speed));
     const cubeDim_t cube_dimensions = utils::get_cube_dimensions(cube);
 

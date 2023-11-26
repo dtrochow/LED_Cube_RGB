@@ -13,6 +13,7 @@ static std::map<Color, LedColor> led_colors = {
     { Color::WHITE,   LedColor(Color::WHITE,   LedState::ENABLED,       LedState::ENABLED,         LedState::ENABLED)   },
 };
 
-std::map<Color, LedColor> ledConfig_getColors() {
+std::map<Color, LedColor> ledConfig_getColors()
+{
     return led_colors;
 }

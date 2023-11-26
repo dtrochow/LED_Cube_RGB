@@ -7,36 +7,41 @@
 #include <map>
 #include <variant>
 
-typedef std::vector<std::vector<std::vector<std::unique_ptr<LedRGB>>>>   LedRGB3DMatrix;
-typedef std::vector<std::vector<std::vector<int>>>                       Int3DMatrix;
+typedef std::vector<std::vector<std::vector<std::unique_ptr<LedRGB> > > >   LedRGB3DMatrix;
+typedef std::vector<std::vector<std::vector<int> > >                       Int3DMatrix;
 
 class EnableAll {
 public:
-    EnableAll(const CartesianCoordinates& coordinates_) : coordinates(coordinates_) {};
+    EnableAll(const CartesianCoordinates& coordinates_) :
+        coordinates(coordinates_) {};
     CartesianCoordinates coordinates;
 };
 
-class EnableSingle{
+class EnableSingle {
 public:
-    EnableSingle(const CartesianCoordinates& coordinates_) : coordinates(coordinates_) {};
+    EnableSingle(const CartesianCoordinates& coordinates_) :
+        coordinates(coordinates_) {};
     CartesianCoordinates coordinates;
 };
 
 class EnableColumn {
 public:
-    EnableColumn(const ColumnCoordinates& coordinates_) : coordinates(coordinates_) {};
+    EnableColumn(const ColumnCoordinates& coordinates_) :
+        coordinates(coordinates_) {};
     ColumnCoordinates coordinates;
 };
 
 class EnablePlane {
 public:
-    EnablePlane(const PlaneCoordinates& coordinates_) : coordinates(coordinates_) {};
+    EnablePlane(const PlaneCoordinates& coordinates_) :
+        coordinates(coordinates_) {};
     PlaneCoordinates coordinates;
 };
 
 class EnableCuboid {
 public:
-    EnableCuboid(const CuboidCoordinates& coordinates_) : coordinates(coordinates_) {};
+    EnableCuboid(const CuboidCoordinates& coordinates_) :
+        coordinates(coordinates_) {};
     CuboidCoordinates coordinates;
 };
 

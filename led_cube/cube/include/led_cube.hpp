@@ -13,7 +13,7 @@
 class LedCube {
 public:
     LedCube(int x_size, int y_size, int z_size, LedCreator &factory) :
-            matrix(x_size, y_size, z_size, factory) {};
+        matrix(x_size, y_size, z_size, factory) {};
     virtual ~LedCube() = default;
 public:
     /**

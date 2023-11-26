@@ -4,23 +4,30 @@
 namespace
 {
 
-void enableDisableLed(LedRGB3DMatrix &led_matrix, int x, int y, int z, LedSwitch switch_state) {
+void enableDisableLed(LedRGB3DMatrix &led_matrix, int x, int y, int z, LedSwitch switch_state)
+{
     if (LedSwitch::ENABLE == switch_state) {
         led_matrix[x][y][z]->enable();
     } else if (LedSwitch::DISABLE == switch_state) {
         led_matrix[x][y][z]->disable();
     }
 }
-void setLedColor(LedRGB3DMatrix &led_matrix, int x, int y, int z, Color color) {
+
+void setLedColor(LedRGB3DMatrix &led_matrix, int x, int y, int z, Color color)
+{
     if (!(Color::NONE == color)) {
         led_matrix[x][y][z]->setColor(color);
     }
 }
-void setLedState(LedRGB3DMatrix &led_matrix, int x, int y, int z, LedSwitch switch_state, Color color) {
+
+void setLedState(LedRGB3DMatrix &led_matrix, int x, int y, int z, LedSwitch switch_state, Color color)
+{
     enableDisableLed(led_matrix, x, y, z, switch_state);
     setLedColor(led_matrix, x, y, z, color);
 }
-void resizeMatrixVector(LedRGB3DMatrix &matrix, const int x_dim, const int y_dim, const int z_dim) {
+
+void resizeMatrixVector(LedRGB3DMatrix &matrix, const int x_dim, const int y_dim, const int z_dim)
+{
     matrix.resize(x_dim);
     for (auto& vecX : matrix) {
         vecX.resize(y_dim);
@@ -32,15 +39,17 @@ void resizeMatrixVector(LedRGB3DMatrix &matrix, const int x_dim, const int y_dim
 
 }
 
-LedMatrix::LedMatrix(int x, int y, int z, LedCreator &factory) {
+LedMatrix::LedMatrix(int x, int y, int z, LedCreator &factory)
+{
     size.x = x;
     size.y = y;
     size.z = z;
     fillMatrixWithLeds(factory);
-    enable_counter.resize(size.x, std::vector<std::vector<int>>(size.y, std::vector<int>(size.z, 0)));
+    enable_counter.resize(size.x, std::vector<std::vector<int> >(size.y, std::vector<int>(size.z, 0)));
 }
 
-void LedMatrix::fillMatrixWithLeds(LedCreator &factory) {
+void LedMatrix::fillMatrixWithLeds(LedCreator &factory)
+{
     resizeMatrixVector(leds, size.x, size.y, size.z);
 
     for (int x = 0; x < size.x; x++) {
@@ -52,7 +61,8 @@ void LedMatrix::fillMatrixWithLeds(LedCreator &factory) {
     }
 }
 
-int LedMatrix::getDimension(Dimension dim) {
+int LedMatrix::getDimension(Dimension dim)
+{
     int dimension = 0;
 
     switch (dim) {
@@ -69,7 +79,8 @@ int LedMatrix::getDimension(Dimension dim) {
     return dimension;
 }
 
-void LedMatrix::reset() {
+void LedMatrix::reset()
+{
     for (int x = 0; x < size.x; x++) {
         for (int y = 0; y < size.y; y++) {
             for (int z = 0; z < size.z; z++) {
@@ -79,10 +90,11 @@ void LedMatrix::reset() {
     }
 }
 
-void LedMatrix::action(MatrixOperation const& operation, LedSwitch switch_state, Color color) {
+void LedMatrix::action(MatrixOperation const& operation, LedSwitch switch_state, Color color)
+{
     auto matrixOperationCall = [&](const auto& matrix_operation) {
-        Run{}(matrix_operation, leds, size, switch_state, color);
-    };
+                                   Run{}(matrix_operation, leds, size, switch_state, color);
+                               };
     std::visit(matrixOperationCall, operation);
 }
 
@@ -114,19 +126,19 @@ void Run::operator()(EnableColumn const& op, LedRGB3DMatrix &led_matrix, matrixS
         case Plane::X:
             for (int x = op.coordinates.start; x < end; x++) {
                 setLedState(led_matrix, x, op.coordinates.first_coordinate,
-                               op.coordinates.second_coordinate, switch_state, color);
+                            op.coordinates.second_coordinate, switch_state, color);
             }
             break;
         case Plane::Y:
             for (int y = op.coordinates.start; y < end; y++) {
                 setLedState(led_matrix, op.coordinates.first_coordinate, y,
-                               op.coordinates.second_coordinate, switch_state, color);
+                            op.coordinates.second_coordinate, switch_state, color);
             }
             break;
         case Plane::Z:
             for (int z = op.coordinates.start; z < end; z++) {
                 setLedState(led_matrix, op.coordinates.first_coordinate,
-                               op.coordinates.second_coordinate, z, switch_state, color);
+                            op.coordinates.second_coordinate, z, switch_state, color);
             }
             break;
     }
@@ -139,7 +151,7 @@ void Run::operator()(EnablePlane const& op, LedRGB3DMatrix &led_matrix, matrixSi
             for (int y = 0; y < size.y; y++) {
                 for (int z = 0; z < size.z; z++) {
                     setLedState(led_matrix, op.coordinates.position,
-                                   y, z, switch_state, color);
+                                y, z, switch_state, color);
                 }
             }
             break;
@@ -147,7 +159,7 @@ void Run::operator()(EnablePlane const& op, LedRGB3DMatrix &led_matrix, matrixSi
             for (int x = 0; x < size.x; x++) {
                 for (int z = 0; z < size.z; z++) {
                     setLedState(led_matrix, x, op.coordinates.position,
-                                   z, switch_state, color);
+                                z, switch_state, color);
                 }
             }
             break;
@@ -155,7 +167,7 @@ void Run::operator()(EnablePlane const& op, LedRGB3DMatrix &led_matrix, matrixSi
             for (int x = 0; x < size.x; x++) {
                 for (int y = 0; y < size.y; y++) {
                     setLedState(led_matrix, x, y,
-                                   op.coordinates.position, switch_state, color);
+                                op.coordinates.position, switch_state, color);
                 }
             }
             break;

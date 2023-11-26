@@ -1,7 +1,9 @@
 #include "memory_hub.hpp"
 
 
-AnalogLedCubeRGB4x4x4MCP23017::AnalogLedCubeRGB4x4x4MCP23017(i2c_inst_t *i2c_) : i2c(i2c_) {
+AnalogLedCubeRGB4x4x4MCP23017::AnalogLedCubeRGB4x4x4MCP23017(i2c_inst_t *i2c_) :
+    i2c(i2c_)
+{
     // 1. Initialize hardware
     hardware_init();
     // Cube columns to HW outputs mapping
@@ -27,7 +29,8 @@ AnalogLedCubeRGB4x4x4MCP23017::AnalogLedCubeRGB4x4x4MCP23017(i2c_inst_t *i2c_) :
     rows.resize(rows_count, false);
 }
 
-void AnalogLedCubeRGB4x4x4MCP23017::hardware_init() {
+void AnalogLedCubeRGB4x4x4MCP23017::hardware_init()
+{
     mcp_enable(ADDRESS1);
     mcp_enable(ADDRESS2);
 
@@ -42,7 +45,8 @@ void AnalogLedCubeRGB4x4x4MCP23017::hardware_init() {
     mcp_write(i2c, ADDRESS2, GPIOB, 0x00, true);
 }
 
-void AnalogLedCubeRGB4x4x4MCP23017::writeMatrixToMemory(LedMatrix& led_matrix) {
+void AnalogLedCubeRGB4x4x4MCP23017::writeMatrixToMemory(LedMatrix& led_matrix)
+{
     // Clear buffers
     std::fill(columns.begin(), columns.end(), false);
     std::fill(rows.begin(), rows.end(), false);

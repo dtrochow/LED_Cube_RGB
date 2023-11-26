@@ -22,8 +22,9 @@ namespace utils
 {
 
 template <typename EnumType>
-constexpr typename std::underlying_type<EnumType>::type to_underlying(EnumType value) {
-    return static_cast<std::underlying_type_t<EnumType>>(value);
+constexpr typename std::underlying_type<EnumType>::type to_underlying(EnumType value)
+{
+    return static_cast<std::underlying_type_t<EnumType> >(value);
 }
 
 void seed_random(void);

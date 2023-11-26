@@ -10,39 +10,43 @@ using ::testing::Return;
 template<class T> class DeleteVector
 {
 public:
-bool operator()(T x) const {
-    delete x;
-    return true;
-}
+    bool operator()(T x) const
+    {
+        delete x;
+        return true;
+    }
+
 };
 
 class MockLedCreator : public LedCreator {
 public:
-MockLedCreator() {
-};
-LedRGB* CreateMethod() const override {
-    return new MockLedRGB;
-}
+    MockLedCreator(){};
+    LedRGB* CreateMethod() const override
+    {
+        return new MockLedRGB;
+    }
+
 };
 
 class LedMatrixTest : public ::testing::Test {
 public:
-void SetUp() override {
-}
+    void SetUp() override {};
 
-void TearDown() override {
-    for_each(mock_leds.begin(), mock_leds.end(), DeleteVector<MockLedRGB *>());
-}
+    void TearDown() override
+    {
+        for_each(mock_leds.begin(), mock_leds.end(), DeleteVector<MockLedRGB *>());
+    }
 
-LedMatrixTest() {
-};
-MockLedRGB * GetSingleLedMock(int x, int y, int z, LedRGB3DMatrix matrix) {
-    return (MockLedRGB *)matrix[x][y][z];
-}
+    LedMatrixTest(){};
+
+    MockLedRGB * GetSingleLedMock(int x, int y, int z, LedRGB3DMatrix matrix)
+    {
+        return (MockLedRGB *)matrix[x][y][z];
+    }
 
 protected:
-LedCreator *ledFactory = new MockLedCreator();
-vector<MockLedRGB *> mock_leds;
+    LedCreator *ledFactory = new MockLedCreator();
+    vector<MockLedRGB *> mock_leds;
 };
 
 TEST_F(LedMatrixTest, CanSetTheMatrixSize) {

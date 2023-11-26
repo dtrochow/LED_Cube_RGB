@@ -7,7 +7,8 @@
 /*                              Animations Runner                             */
 /* -------------------------------------------------------------------------- */
 
-AnimationsRunner::AnimationsRunner(std::unique_ptr<LedCube> cube_) {
+AnimationsRunner::AnimationsRunner(std::unique_ptr<LedCube> cube_)
+{
     cube = std::move(cube_);
     animations = {
         { AnimationType::SNAKE,                 new Snake() },
@@ -18,6 +19,7 @@ AnimationsRunner::AnimationsRunner(std::unique_ptr<LedCube> cube_) {
     };
 }
 
-void AnimationsRunner::run(AnimationType a_type, AnimationSpeed speed, int iterations) {
+void AnimationsRunner::run(AnimationType a_type, AnimationSpeed speed, int iterations)
+{
     animations[a_type]->run(*cube, speed, iterations);
 }

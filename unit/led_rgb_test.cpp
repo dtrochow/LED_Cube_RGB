@@ -13,11 +13,14 @@ protected:
     std::unique_ptr<LedRGB> lRGB;
 };
 
-LedRGBAnalogTest::LedRGBAnalogTest() : ledFactory(ledConfig_getColors()) {
+LedRGBAnalogTest::LedRGBAnalogTest() :
+    ledFactory(ledConfig_getColors())
+{
     lRGB = std::move(ledFactory.MakeLed());
 }
 
-Led_t getLedStates(LedRGB& led_rgb) {
+Led_t getLedStates(LedRGB& led_rgb)
+{
     return Led_t {
         .red   = led_rgb.getLedDiodeState(Led::RED),
         .green = led_rgb.getLedDiodeState(Led::GREEN),
