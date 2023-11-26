@@ -1,3 +1,4 @@
+add_subdirectory(fan)
 add_subdirectory(snake)
 add_subdirectory(raising_columns)
 add_subdirectory(rain)
@@ -8,6 +9,7 @@ add_subdirectory(animation_utils)
 set(modulename "animations")
 
 set(animations_modules
+	fan_animation
 	snake_animation
 	raising_columns_animation
 	rain_animation

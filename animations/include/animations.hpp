@@ -2,4 +2,5 @@
 #include "rain.hpp"
 #include "raising_columns.hpp"
 #include "snake.hpp"
+#include "fan.hpp"
 #include "all_leds_all_colors.hpp"
