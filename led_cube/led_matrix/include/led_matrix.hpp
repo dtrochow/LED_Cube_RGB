@@ -8,7 +8,7 @@
 #include <variant>
 
 typedef std::vector<std::vector<std::vector<std::unique_ptr<LedRGB> > > >   LedRGB3DMatrix;
-typedef std::vector<std::vector<std::vector<int> > >                       Int3DMatrix;
+typedef std::vector<std::vector<std::vector<int> > >                        Int3DMatrix;
 
 class EnableAll {
 public:
