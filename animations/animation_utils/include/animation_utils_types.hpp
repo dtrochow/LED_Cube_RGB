@@ -37,7 +37,7 @@ struct cubeDim_t{
     int z;
 };
 
-enum class Direction {
+enum class Direction : int {
     X_UP,
     X_DOWN,
     Y_UP,
@@ -57,7 +57,7 @@ constexpr std::initializer_list<Color> all_colors = {
     Color::WHITE
 };
 
-enum class AnimationSpeed : int64_t{
+enum class AnimationSpeed : int64_t {
     VERY_SLOW   = 1,
     SLOW        = 2,
     NORMAL      = 3,

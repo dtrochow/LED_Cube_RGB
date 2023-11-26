@@ -28,8 +28,7 @@ void Snake::run(LedCube& cube, const AnimationSpeed speed, const int iterations)
 
         moveSnake(dir);
         render(cube);
-    }
-    ;
+    };
 }
 
 bool Snake::isHitTheWall() const {
@@ -54,7 +53,7 @@ void Snake::drawStartingPoint() {
 
 Direction Snake::drawFirstDirection() const {
     utils::seed_random();
-    return (Direction)(rand() % (int)Direction::SIZE);
+    return static_cast<Direction>(rand() % utils::to_underlying(Direction::SIZE));
 }
 
 std::vector<Direction> Snake::getAllCurrentPossibleDirs() const {

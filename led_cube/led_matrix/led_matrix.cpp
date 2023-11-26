@@ -80,7 +80,7 @@ void LedMatrix::reset() {
 }
 
 void LedMatrix::action(MatrixOperation const& operation, LedSwitch switch_state, Color color) {
-    auto matrixOperationCall = [&](auto&& matrix_operation) {
+    auto matrixOperationCall = [&](const auto& matrix_operation) {
         Run{}(matrix_operation, leds, size, switch_state, color);
     };
     std::visit(matrixOperationCall, operation);
