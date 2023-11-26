@@ -17,15 +17,17 @@
 #include "colors_config.hpp"
 #include "animation_runner.hpp"
 
-const int I2C_SPEED = 1000000;
-const uint LED_PIN = 25;
+constexpr int I2C_SPEED = 1000000;
+constexpr uint LED_PIN = 25;
 
-void core1_entry() {
+void core1_entry()
+{
     while (1) {
     }
 }
 
-int main(void) {
+auto main() -> int
+{
     stdio_init_all();
 
     gpio_init(LED_PIN);
@@ -43,11 +45,7 @@ int main(void) {
 
     AnimationsRunner a_runner(std::make_unique<LedCubeAnalog4x4x4>(memory_hub, ledFactory));
 
-    // a_runner.run(AnimationType::ALL_LEDS_ALL_COLORS, AnimationSpeed::VERY_FAST);
-    // a_runner.run(AnimationType::SNAKE, AnimationSpeed::NORMAL);
-    a_runner.run(AnimationType::RAIN, AnimationSpeed::FAST);
-    // a_runner.run(AnimationType::RAISING_COLUMNS, AnimationSpeed::FAST);
-    // a_runner.run(AnimationType::RANDOM_CUBE_AND_COLOR);
+    a_runner.run(AnimationType::SNAKE, AnimationSpeed::NORMAL);
 
     while (true) {
     }

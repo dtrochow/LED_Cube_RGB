@@ -30,7 +30,8 @@
  * 3. Get the color of the cube
  * 4. Draw cube
  */
-void RandomCubeAndColor::run(LedCube& cube, const AnimationSpeed speed, const int iterations) {
+void RandomCubeAndColor::run(LedCube& cube, const AnimationSpeed speed, const int iterations)
+{
     // Define speed of the animation
     constexpr uint32_t base_interval = 1000;
     const uint32_t interval = (base_interval / (2 * utils::to_underlying(speed)));

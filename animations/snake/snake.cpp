@@ -1,14 +1,16 @@
 #include <algorithm>
 #include "snake.hpp"
 
-Snake::Snake() {
+Snake::Snake()
+{
     next_color = utils::get_random_color();
 }
 
 /**
  * Snake animation
  */
-void Snake::run(LedCube& cube, const AnimationSpeed speed, const int iterations) {
+void Snake::run(LedCube& cube, const AnimationSpeed speed, const int iterations)
+{
     cube_dimensions = utils::get_cube_dimensions(cube);
     one_frame_time_us = 300000 / (int64_t)speed;
 
@@ -28,11 +30,11 @@ void Snake::run(LedCube& cube, const AnimationSpeed speed, const int iterations)
 
         moveSnake(dir);
         render(cube);
-    }
-    ;
+    };
 }
 
-bool Snake::isHitTheWall() const {
+bool Snake::isHitTheWall() const
+{
     return ((last_pos.x == 0 && last_dir == Direction::X_DOWN) ||
             (last_pos.x == cube_dimensions.x - 1 && last_dir == Direction::X_UP) ||
             (last_pos.y == 0 && last_dir == Direction::Y_DOWN) ||
@@ -41,23 +43,27 @@ bool Snake::isHitTheWall() const {
             (last_pos.z == cube_dimensions.y - 1 && last_dir == Direction::Z_UP));
 }
 
-bool Snake::isChangeDirection() const {
+bool Snake::isChangeDirection() const
+{
     utils::seed_random();
     return (bool(rand() % 2));
 }
 
-void Snake::drawStartingPoint() {
+void Snake::drawStartingPoint()
+{
     start_pos = utils::get_random_pos(cube_dimensions);
     allocated_diodes.push_back({ { start_pos.x, start_pos.y, start_pos.z }, next_color });
     sleep_ms(one_frame_time_us / 1000);
 }
 
-Direction Snake::drawFirstDirection() const {
+Direction Snake::drawFirstDirection() const
+{
     utils::seed_random();
-    return (Direction)(rand() % (int)Direction::SIZE);
+    return static_cast<Direction>(rand() % utils::to_underlying(Direction::SIZE));
 }
 
-std::vector<Direction> Snake::getAllCurrentPossibleDirs() const {
+std::vector<Direction> Snake::getAllCurrentPossibleDirs() const
+{
     std::vector<Direction> allowed_dir{};
     cartesianPos_t potential_next_pos{};
 
@@ -89,7 +95,7 @@ std::vector<Direction> Snake::getAllCurrentPossibleDirs() const {
     for (auto it_dir = allowed_dir.begin(); it_dir != allowed_dir.end();) {
         potential_next_pos = last_pos + utils::get_direction(*it_dir);
         const bool if_intersect = (std::find_if(allocated_diodes.begin(), allocated_diodes.end(),
-                                          [&potential_next_pos](const std::pair<cartesianPos_t, Color> &diode)
+                                                [&potential_next_pos](const std::pair<cartesianPos_t, Color> &diode)
         {
             return potential_next_pos == diode.first;
         }) != allocated_diodes.end());
@@ -99,7 +105,8 @@ std::vector<Direction> Snake::getAllCurrentPossibleDirs() const {
     return allowed_dir;
 }
 
-Direction Snake::drawDirection(std::vector<Direction> const& dirs) const {
+Direction Snake::drawDirection(std::vector<Direction> const& dirs) const
+{
     auto it_dir = dirs.begin();
 
     utils::seed_random();
@@ -107,7 +114,8 @@ Direction Snake::drawDirection(std::vector<Direction> const& dirs) const {
     return *it_dir;
 }
 
-void Snake::moveSnake(Direction dir) {
+void Snake::moveSnake(Direction dir)
+{
     cartesianPos_t next_pos = last_pos + utils::get_direction(dir);
 
     allocated_diodes.insert(allocated_diodes.begin(), { next_pos, next_color });
@@ -123,7 +131,8 @@ void Snake::moveSnake(Direction dir) {
     }
 }
 
-void Snake::render(LedCube& cube) const {
+void Snake::render(LedCube& cube) const
+{
     const absolute_time_t start = get_absolute_time();
 
     while (absolute_time_diff_us(start, get_absolute_time()) < one_frame_time_us) {

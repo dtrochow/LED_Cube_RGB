@@ -5,7 +5,7 @@ version: 2.1
 jobs:
   unittests:
     docker:
-      - image: dtrochow/ledrgb:pico
+      - image: dtrochow/ledrgb:pico_v2
     environment:
       PICO_SDK_PATH: "/tmp/deps/pico-sdk"
     steps:
@@ -18,7 +18,7 @@ jobs:
           command: "bash build_run_utests.sh"
   build_fw:
     docker:
-      - image: dtrochow/ledrgb:pico
+      - image: dtrochow/ledrgb:pico_v2
     environment:
       PICO_SDK_PATH: "/tmp/deps/pico-sdk"
     steps:
@@ -29,6 +29,14 @@ jobs:
       - run:
           name: "Build LED Cube RGB FW"
           command: "bash build_led_cube_rgb.sh"
+  format_check:
+    docker:
+      - image: dtrochow/ledrgb:pico_v2
+    steps:
+      - checkout
+      - run:
+          name: "Run uncrustify formatter check"
+          command: "python3 run_uncrustify.py --check"
 
 
 # Invoke jobs via workflows
@@ -38,3 +46,4 @@ workflows:
     jobs:
       - unittests
       - build_fw
+      - format_check

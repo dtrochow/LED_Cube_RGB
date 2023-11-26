@@ -12,7 +12,7 @@ private:
     int color_segment_length = 7;
     uint snake_move_counter = 0;
     Color next_color;
-    std::vector<std::pair<cartesianPos_t, Color>> allocated_diodes;
+    std::vector<std::pair<cartesianPos_t, Color> > allocated_diodes;
     int64_t one_frame_time_us;
     cartesianPos_t start_pos;
     cartesianPos_t last_pos;

@@ -7,7 +7,8 @@
 class AnimationsRunner {
 public:
     AnimationsRunner(std::unique_ptr<LedCube> cube_);
-    ~AnimationsRunner() {
+    ~AnimationsRunner()
+    {
         for (auto &animation: animations) {
             delete animation.second;
         }

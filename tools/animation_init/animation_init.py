@@ -22,6 +22,8 @@ FILE_NAME_PATTERN = "<<FILE_NAME>>"
 
 def create_animation_directory(args):
     animation_directory = os.path.join(CUBE_REPO_PATH, "animations", args.name.lower())
+    if (os.path.isdir(animation_directory)):
+        raise SystemExit(f"The {animation_directory} animation directory already exists!")
     os.makedirs(animation_directory)
     return animation_directory
 
@@ -34,7 +36,7 @@ def create_cmakelist_file(args, anim_directory, source_file_name):
             cmakelist_data = cmakelists_template.read().replace(FILE_NAME_PATTERN, source_file_name).replace(MODULE_NAME_PATTERN, module_name)
             cmakelists.write(cmakelist_data)
     return module_name
-        
+
 
 def create_header_file(anim_directory):
     class_name = ''.join([part[0].upper()+part[1:].lower() for part in args.name.split('_')])
@@ -75,7 +77,7 @@ def add_animation_to_runner(args, class_name):
     animations_table_entry = "{ "+f"AnimationType::{animation_enum_value}, new {class_name}() "+"},"
     with open(ANIMATION_RUNNER_TYPES_PATH, 'r') as types:
         types_data = types.readlines()
-        animation_types_pos = types_data.index("enum class AnimationType {\n")
+        animation_types_pos = types_data.index("enum class AnimationType : int {\n")
         types_data.insert(animation_types_pos+1, '\t'+animation_enum_value+',\n')
     with open(ANIMATION_RUNNER_TYPES_PATH, 'w') as types:
         types.writelines(types_data)

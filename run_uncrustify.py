@@ -1,6 +1,7 @@
 from subprocess import Popen
 import sys
 import os
+import argparse
 
 
 REPO_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -43,16 +44,28 @@ class UncrustifyParser():
     def run(self):
         files_to_parse = self._search_for_files_to_parse()
         for file_path in files_to_parse:
-            Popen(self._create_cmd(file_path), cwd=self._repo_path).wait()
+            status = Popen(self._create_cmd(file_path), cwd=self._repo_path).wait()
+            if (status != 0):
+                raise SystemExit("Uncrustify command failure.");
 
 
-def main():
+def main(args):
     uncrustify = UncrustifyParser(REPO_PATH, UNCRUSTIFY_CONFIG_PATH, 
                                   EXTENSIONS_TO_PARSE, EXCLUDED_DIRECTORIES)
-    uncrustify.add_option('--no-backup')
+    if (args.check):
+        uncrustify.add_option('--check')
+    else:
+        uncrustify.add_option('--no-backup')
     uncrustify.run()
-    
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Simple script with a boolean parameter.")
+
+    parser.add_argument('-c', '--check', action='store_true', help='Check if uncrustify passes on all files')
+    return parser.parse_args()
+
 
 if __name__ == "__main__":
-    ret = main()
+    ret = main(parse_args())
     sys.exit(ret)

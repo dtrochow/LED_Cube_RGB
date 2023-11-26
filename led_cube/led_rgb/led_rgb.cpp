@@ -1,18 +1,21 @@
 #include "led_rgb.hpp"
 
 
-LedColor::LedColor(Color color_, LedState red, LedState green, LedState blue) : 
+LedColor::LedColor(Color color_, LedState red, LedState green, LedState blue) :
     color(color_), led_states({red, green, blue}) {};
 
-Led_t LedColor::getLedStates() {
+Led_t LedColor::getLedStates()
+{
     return led_states;
 }
 
-Color LedColor::getLedColor() {
+Color LedColor::getLedColor()
+{
     return color;
 }
 
-LedRGBAnalog::LedRGBAnalog(ColorDefs colors_config) {
+LedRGBAnalog::LedRGBAnalog(ColorDefs colors_config)
+{
     available_colors = colors_config;
     constexpr Led_t all_disabled = {
         .red   = LedState::DISABLED,
@@ -25,18 +28,21 @@ LedRGBAnalog::LedRGBAnalog(ColorDefs colors_config) {
     color_before_disable = Color::NONE;
 }
 
-void LedRGBAnalog::setColor(Color color_) {
+void LedRGBAnalog::setColor(Color color_)
+{
     LedColor colorObj = getColorObj(color_);
 
     color = colorObj.getLedColor();
     led_states = colorObj.getLedStates();
 }
 
-Color LedRGBAnalog::getColor() {
+Color LedRGBAnalog::getColor()
+{
     return color;
 }
 
-LedState LedRGBAnalog::getLedDiodeState(Led led) {
+LedState LedRGBAnalog::getLedDiodeState(Led led)
+{
     LedState state = LedState::DISABLED;
 
     switch (led) {
@@ -53,11 +59,13 @@ LedState LedRGBAnalog::getLedDiodeState(Led led) {
     return state;
 }
 
-LedColor LedRGBAnalog::getColorObj(Color color) {
+LedColor LedRGBAnalog::getColorObj(Color color)
+{
     return available_colors.find(color)->second;
 }
 
-void LedRGBAnalog::disable() {
+void LedRGBAnalog::disable()
+{
     constexpr Led_t all_disabled = {
         .red   = LedState::DISABLED,
         .green = LedState::DISABLED,
@@ -69,14 +77,17 @@ void LedRGBAnalog::disable() {
     led_states = all_disabled;
 }
 
-void LedRGBAnalog::enable() {
+void LedRGBAnalog::enable()
+{
     setColor(color_before_disable);
 }
 
-AnalogLedCreator::AnalogLedCreator(ColorDefs color_config) {
+AnalogLedCreator::AnalogLedCreator(ColorDefs color_config)
+{
     colors = color_config;
 }
 
-std::unique_ptr<LedRGB> AnalogLedCreator::MakeLed() const {
+std::unique_ptr<LedRGB> AnalogLedCreator::MakeLed() const
+{
     return std::make_unique<LedRGBAnalog>(colors);
 }

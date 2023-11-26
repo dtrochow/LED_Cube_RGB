@@ -39,4 +39,4 @@ set (deps
 )
 
 add_utest("led_rgb_test" led_rgb_test.cpp ${deps})
-# add_utest("led_matrix_test" led_matrix_test.cpp ${deps})
+add_utest("led_matrix_test" led_matrix_test.cpp ${deps})

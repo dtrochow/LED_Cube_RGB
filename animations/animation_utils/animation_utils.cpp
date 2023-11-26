@@ -1,23 +1,27 @@
 #include "animation_utils.hpp"
 
 namespace {
-    std::map<Direction, cartesianPos_t> directions{
-        { Direction::X_UP,          { 1,  0,   0   } },
-        { Direction::X_DOWN,        { -1, 0,   0   } },
-        { Direction::Y_UP,          { 0,  1,   0   } },
-        { Direction::Y_DOWN,        { 0,  -1,  0   } },
-        { Direction::Z_UP,          { 0,  0,   1   } },
-        { Direction::Z_DOWN,        { 0,  0,   -1  } }};
+
+std::map<Direction, cartesianPos_t> directions{
+    { Direction::X_UP,          { 1,  0,   0   } },
+    { Direction::X_DOWN,        { -1, 0,   0   } },
+    { Direction::Y_UP,          { 0,  1,   0   } },
+    { Direction::Y_DOWN,        { 0,  -1,  0   } },
+    { Direction::Z_UP,          { 0,  0,   1   } },
+    { Direction::Z_DOWN,        { 0,  0,   -1  } }};
+
 }
 
-cartesianPos_t utils::get_direction(Direction dir) {
+cartesianPos_t utils::get_direction(Direction dir)
+{
     return directions[dir];
 }
 
 /**
  * Inserts random seed from HW for random number generation.
  */
-void utils::seed_random(void) {
+void utils::seed_random(void)
+{
     uint32_t random = 0x811c9dc5;
     uint8_t next_byte = 0;
     volatile uint32_t *rnd_reg = (uint32_t *)(ROSC_BASE + ROSC_RANDOMBIT_OFFSET);
@@ -34,7 +38,8 @@ void utils::seed_random(void) {
     srand(random);
 }
 
-cubeDim_t utils::get_cube_dimensions(LedCube& cube) {
+cubeDim_t utils::get_cube_dimensions(LedCube& cube)
+{
     return cubeDim_t{
         .x = cube.getDimension(Dimension::X),
         .y = cube.getDimension(Dimension::Y),
@@ -42,14 +47,16 @@ cubeDim_t utils::get_cube_dimensions(LedCube& cube) {
     };
 }
 
-Color utils::get_random_color() {
+Color utils::get_random_color()
+{
     utils::seed_random();
     std::initializer_list<Color>::iterator color = all_colors.begin();
     std::advance(color, rand() % all_colors.size() - 1);
     return *color;
 }
 
-cartesianPos_t utils::get_random_pos(cubeDim_t cube_dim) {
+cartesianPos_t utils::get_random_pos(cubeDim_t cube_dim)
+{
     cartesianPos_t pos = { 0 };
 
     utils::seed_random();
@@ -61,7 +68,8 @@ cartesianPos_t utils::get_random_pos(cubeDim_t cube_dim) {
     return pos;
 }
 
-std::pair<int, int> utils::get_random_xy_pos(cubeDim_t cube_dim) {
+std::pair<int, int> utils::get_random_xy_pos(cubeDim_t cube_dim)
+{
     std::pair<int, int> xy_pos;
 
     utils::seed_random();
