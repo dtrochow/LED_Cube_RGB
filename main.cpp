@@ -45,7 +45,7 @@ auto main() -> int
 
     AnimationsRunner a_runner(std::make_unique<LedCubeAnalog4x4x4>(memory_hub, ledFactory));
 
-    a_runner.run(AnimationType::SNAKE, AnimationSpeed::NORMAL);
+    a_runner.run(AnimationType::FAN, AnimationSpeed::SLOW, 1000);
 
     while (true) {
     }

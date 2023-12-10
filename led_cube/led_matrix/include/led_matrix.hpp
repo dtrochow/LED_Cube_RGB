@@ -12,16 +12,16 @@ typedef std::vector<std::vector<std::vector<int> > >                        Int3
 
 class EnableAll {
 public:
-    EnableAll(const CartesianCoordinates& coordinates_) :
+    EnableAll(const XYZCoordinates& coordinates_) :
         coordinates(coordinates_) {};
-    CartesianCoordinates coordinates;
+    XYZCoordinates coordinates;
 };
 
 class EnableSingle {
 public:
-    EnableSingle(const CartesianCoordinates& coordinates_) :
+    EnableSingle(const XYZCoordinates& coordinates_) :
         coordinates(coordinates_) {};
-    CartesianCoordinates coordinates;
+    XYZCoordinates coordinates;
 };
 
 class EnableColumn {

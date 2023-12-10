@@ -1,5 +1,5 @@
 enum class AnimationType : int {
-	FAN,
+    FAN,
     SNAKE,
     RAISING_COLUMNS,
     RAIN,

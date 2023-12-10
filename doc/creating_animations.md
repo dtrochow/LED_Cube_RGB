@@ -32,11 +32,11 @@ You can start developing the animation. Animation module will be located under `
 All animations can use matrix operations, to manipulate led states in led matrix.
 
 #### **EnableAll**
-Enable all leds from (0, 0, 0) position to position given through `CartesianCoordinates`.
+Enable all leds from (0, 0, 0) position to position given through `XYZCoordinates`.
 
 e.g.
 ```cpp
-MatrixOperation enable_all = EnableAll(CartesianCoordinates(3, 3, 3));
+MatrixOperation enable_all = EnableAll(XYZCoordinates(3, 3, 3));
 cube.action(enable_all, LedSwitch::ENABLE, Color::YELLOW);
 cube.render();
 ``` 
@@ -44,11 +44,11 @@ cube.render();
 Leds can be also disabled in this way `LedSwitch::DISABLE`.
 
 #### **EnableSingle**
-Enable single led with position given in `CartesianCoordinates`.
+Enable single led with position given in `XYZCoordinates`.
 
 e.g.
 ```cpp
-MatrixOperation enable_single = EnableSingle(CartesianCoordinates(1, 2, 2));
+MatrixOperation enable_single = EnableSingle(XYZCoordinates(1, 2, 2));
 cube.action(enable_single, LedSwitch::ENABLE, Color::BLUE);
 cube.render();
 ``` 
@@ -84,12 +84,12 @@ cube.render();
 ``` 
 
 #### **EnableCuboid**
-Enable single cuboid, which can be described by `CuboidCoordinates`, which consists of two `CartesianCoordinates` (Position of two opposite corners).
+Enable single cuboid, which can be described by `CuboidCoordinates`, which consists of two `XYZCoordinates` (Position of two opposite corners).
 
 e.g.
 ```cpp
-CartesianCoordinates X(1, 1, 1);
-CartesianCoordinates S(2, 2, 2);
+XYZCoordinates X(1, 1, 1);
+XYZCoordinates S(2, 2, 2);
 MatrixOperation enable_cuboid = EnableCuboid(CuboidCoordinates(X, S));
 cube.action(enable_cuboid LedSwitch::ENABLE, Color::RED);
 cube.render();

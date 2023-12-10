@@ -21,22 +21,39 @@ public:
     virtual ~Coordinates() = default;
 };
 
-class CartesianCoordinates : public Coordinates {
+class XYZCoordinates : public Coordinates {
 public:
-    CartesianCoordinates(int x_, int y_, int z_) :
+    XYZCoordinates(int x_, int y_, int z_) :
         x(x_), y(y_), z(z_) {};
     int x;
     int y;
     int z;
 
     // Implement the less-than operator for comparison
-    bool operator<(const CartesianCoordinates& other) const
+    bool operator<(const XYZCoordinates& other) const
     {
         if (x < other.x) return true;
         if (x > other.x) return false;
         if (y < other.y) return true;
         if (y > other.y) return false;
         return z < other.z;
+    }
+
+};
+
+class XYCoordinates : public Coordinates {
+public:
+    XYCoordinates(int x_, int y_) :
+        x(x_), y(y_) {};
+    int x;
+    int y;
+
+    // Implement the less-than operator for comparison
+    bool operator<(const XYZCoordinates& other) const
+    {
+        if (x < other.x) return true;
+        if (x > other.x) return false;
+        return y < other.y;
     }
 
 };
@@ -62,8 +79,8 @@ public:
 
 class CuboidCoordinates : public Coordinates {
 public:
-    CuboidCoordinates(CartesianCoordinates& cr_start_, CartesianCoordinates& cr_end_) :
+    CuboidCoordinates(XYZCoordinates& cr_start_, XYZCoordinates& cr_end_) :
         start(cr_start_), end(cr_end_){};
-    CartesianCoordinates start;
-    CartesianCoordinates end;
+    XYZCoordinates start;
+    XYZCoordinates end;
 };

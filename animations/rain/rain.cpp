@@ -43,7 +43,7 @@ void Rain::run(LedCube& cube, const AnimationSpeed speed, const int iterations)
             for (it = allocated_diodes.begin(); it != allocated_diodes.end(); it++) {
                 const std::pair<int, int> xy = it->first;
 
-                MatrixOperation enable_single = EnableSingle(CartesianCoordinates(xy.first, xy.second, it->second));
+                MatrixOperation enable_single = EnableSingle(XYZCoordinates(xy.first, xy.second, it->second));
                 utils::render_single_frame(cube, enable_single, rain_color);
             }
         };

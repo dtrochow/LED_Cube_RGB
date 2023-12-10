@@ -12,7 +12,7 @@ Snake::Snake()
 void Snake::run(LedCube& cube, const AnimationSpeed speed, const int iterations)
 {
     cube_dimensions = utils::get_cube_dimensions(cube);
-    one_frame_time_us = 300000 / (int64_t)speed;
+    one_frame_time_us = 300000 / utils::to_underlying(speed);
 
     dir = drawFirstDirection();
     drawStartingPoint();
@@ -139,7 +139,7 @@ void Snake::render(LedCube& cube) const
         for (auto it = allocated_diodes.begin(); it != allocated_diodes.end(); it++) {
             const cartesianPos_t pos = it->first;
             const Color color = it->second;
-            MatrixOperation enable_single = EnableSingle(CartesianCoordinates(pos.x, pos.y, pos.z));
+            MatrixOperation enable_single = EnableSingle(XYZCoordinates(pos.x, pos.y, pos.z));
             utils::render_single_frame(cube, enable_single, color);
         }
     };

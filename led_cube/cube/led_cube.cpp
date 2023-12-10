@@ -17,7 +17,7 @@ void LedCubeAnalog4x4x4::render()
     led_cube_memory_hub.writeMatrixToMemory(matrix);
 }
 
-void LedCubeAnalog4x4x4::action(MatrixOperation& operation, LedSwitch switch_state, Color color)
+void LedCubeAnalog4x4x4::action(const MatrixOperation& operation, LedSwitch switch_state, Color color)
 {
     matrix.action(operation, switch_state, color);
 }

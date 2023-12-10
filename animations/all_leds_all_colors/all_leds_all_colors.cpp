@@ -5,7 +5,7 @@
 
 namespace {
 
-void performActions(LedCube& cube, const Color color, CartesianCoordinates cr, AnimationSpeed speed)
+void performActions(LedCube& cube, const Color color, XYZCoordinates cr, AnimationSpeed speed)
 {
     constexpr uint32_t base_interval_ms = 1000;
     const uint32_t interval_ms = (base_interval_ms / static_cast<uint32_t>(utils::to_underlying(speed)));
@@ -26,7 +26,7 @@ void AllLedsAllColors::run(LedCube& cube, const AnimationSpeed speed, const int 
             for (int x = 0; x < cube.getDimension(Dimension::X); x++) {
                 std::for_each(all_colors.begin(), all_colors.end(),
                               [&](const Color& color) {
-                    performActions(cube, color, CartesianCoordinates(x, y, z), speed);
+                    performActions(cube, color, XYZCoordinates(x, y, z), speed);
                 });
             }
         }

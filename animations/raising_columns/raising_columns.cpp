@@ -8,7 +8,7 @@ struct ColumnDescriptor {
     Color color;
 };
 
-using AllocatedColumnsMap = std::map<CartesianCoordinates, ColumnDescriptor>;
+using AllocatedColumnsMap = std::map<XYZCoordinates, ColumnDescriptor>;
 
 }
 
@@ -25,7 +25,7 @@ void RaisingColumns::run(LedCube& cube, const AnimationSpeed speed, const int it
 
     while (true) {
         // 1. Randomly get one XY diode position
-        CartesianCoordinates xy_pos(0, 0, 0);
+        XYZCoordinates xy_pos(0, 0, 0);
         do {
             utils::seed_random();
             xy_pos.x = rand() % (cube_dimensions.x);

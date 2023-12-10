@@ -49,8 +49,8 @@ void RandomCubeAndColor::run(LedCube& cube, const AnimationSpeed speed, const in
         const Color color = utils::get_random_color();
 
         // 4. Draw the cube
-        CartesianCoordinates X(pos.x, pos.y, pos.z);
-        CartesianCoordinates S((pos.x + (cube_size - 1)),
+        XYZCoordinates X(pos.x, pos.y, pos.z);
+        XYZCoordinates S((pos.x + (cube_size - 1)),
                                (pos.y + (cube_size - 1)),
                                (pos.z + (cube_size - 1)));
         MatrixOperation enable_cuboid = EnableCuboid(CuboidCoordinates(X, S));

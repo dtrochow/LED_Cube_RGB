@@ -54,7 +54,7 @@ TEST_F(LedMatrixTest, CanEnableAllLedsInArray) {
         }
     }
 
-    MatrixOperation enable_all = EnableAll(CartesianCoordinates(3, 3, 3));
+    MatrixOperation enable_all = EnableAll(XYZCoordinates(3, 3, 3));
     matrix.action(enable_all, LedSwitch::ENABLE);
 }
 
@@ -70,7 +70,7 @@ TEST_F(LedMatrixTest, CanDisableAllLedsInArray) {
         }
     }
 
-    MatrixOperation enable_all = EnableAll(CartesianCoordinates(3, 3, 3));
+    MatrixOperation enable_all = EnableAll(XYZCoordinates(3, 3, 3));
     matrix.action(enable_all, LedSwitch::DISABLE);
 }
 
@@ -81,7 +81,7 @@ TEST_F(LedMatrixTest, CanSetColorToSingleLed) {
     EXPECT_CALL(*led, setColor(Color::RED)).Times(1);
     EXPECT_CALL(*led, enable()).Times(1);
 
-    MatrixOperation enable_single = EnableSingle(CartesianCoordinates(2, 2, 2));
+    MatrixOperation enable_single = EnableSingle(XYZCoordinates(2, 2, 2));
     matrix.action(enable_single, LedSwitch::ENABLE, Color::RED);
 }
 
@@ -91,7 +91,7 @@ TEST_F(LedMatrixTest, CanDisableSingleLedInArray) {
     MockLedRGB* led = GetSingleLedMock(1, 2, 3, matrix.leds);
     EXPECT_CALL(*led, disable()).Times(1);
 
-    MatrixOperation enable_single = EnableSingle(CartesianCoordinates(1, 2, 3));
+    MatrixOperation enable_single = EnableSingle(XYZCoordinates(1, 2, 3));
     matrix.action(enable_single, LedSwitch::DISABLE);
 }
 
@@ -193,8 +193,8 @@ TEST_F(LedMatrixTest, CanEnableSingleCuboid) {
         }
     }
 
-    CartesianCoordinates S = CartesianCoordinates(2, 2, 2);
-    CartesianCoordinates E = CartesianCoordinates(3, 3, 3);
+    XYZCoordinates S = XYZCoordinates(2, 2, 2);
+    XYZCoordinates E = XYZCoordinates(3, 3, 3);
     MatrixOperation enable_cuboid = EnableCuboid(CuboidCoordinates(S, E));
     matrix.action(enable_cuboid, LedSwitch::ENABLE);
 }

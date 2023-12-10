@@ -11,7 +11,7 @@ AnimationsRunner::AnimationsRunner(std::unique_ptr<LedCube> cube_)
 {
     cube = std::move(cube_);
     animations = {
-		{ AnimationType::FAN, new Fan() },
+        { AnimationType::FAN,                   new Fan() },
         { AnimationType::SNAKE,                 new Snake() },
         { AnimationType::RAISING_COLUMNS,       new RaisingColumns() },
         { AnimationType::RAIN,                  new Rain() },
