@@ -1,0 +1,56 @@
+name: Pull Request Checks
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ] 
+  workflow_dispatch:
+
+env:
+    PICO_SDK_PATH: "/tmp/deps/pico-sdk"
+
+jobs:
+  build_firmware:
+    runs-on: ubuntu-latest
+    container: dtrochow/ledrgb:pico_v3
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+    - name: Clone pico-sdk
+      run: |
+        git clone https://github.com/raspberrypi/pico-sdk.git /tmp/deps/pico-sdk
+    
+    - name: Build Led Cube RGB firmware
+      run: |
+        bash build_led_cube_rgb.sh
+
+  check_code_formatting:
+    runs-on: ubuntu-latest
+    container: dtrochow/ledrgb:pico_v3
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+    - name: Run uncrustify formatter check
+      run: |
+        python3 run_uncrustify.py --check
+
+  unit_tests:
+    runs-on: ubuntu-latest
+    container: dtrochow/ledrgb:pico_v3
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+    - name: Clone pico-sdk
+      run: |
+        git clone https://github.com/raspberrypi/pico-sdk.git /tmp/deps/pico-sdk
+    
+    - name: Run unit tests
+      run: |
+        bash build_run_utests.sh
